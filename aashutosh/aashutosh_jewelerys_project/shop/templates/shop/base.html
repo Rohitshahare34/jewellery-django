@@ -30,115 +30,118 @@
             
             <!-- Navbar Links -->
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 align-items-lg-center">
                     <!-- HOME -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">
+                        <a class="nav-link d-flex align-items-center" href="{% url 'home' %}">
                             <i class="fas fa-home me-1"></i> Home
                         </a>
                     </li>
 
                     <!-- SERVICES -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'services' %}">
+                        <a class="nav-link d-flex align-items-center" href="{% url 'services' %}">
                             <i class="fas fa-concierge-bell me-1"></i> Services
                         </a>
                     </li>
 
                     <!-- GOLD DROPDOWN -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="goldDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="goldDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-coins me-1 text-warning"></i> Gold
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="goldDropdown">
                             <!-- Submenu: Mangal sutra -->
                             <li class="dropdown-submenu">
-                                <a class="dropdown-item dropdown-toggle" href="#">
+                                <a class="dropdown-item dropdown-toggle d-flex align-items-center" href="#">
                                     <i class="fas fa-heart me-2"></i> Mangal sutra
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=long-mangalsutra">
+                                    <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=long-mangalsutra">
                                         <i class="fas fa-minus me-2"></i> Long Mangalsutra</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=short-mangalsutra">
+                                    <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=short-mangalsutra">
                                         <i class="fas fa-compress me-2"></i> Short Mangalsutra</a></li>
                                 </ul>
                             </li>
 
-                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=necklace-set">
+                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=necklace-set">
                                 <i class="fas fa-gem me-2"></i> Necklace Set</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=chain">
+                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=chain">
                                 <i class="fas fa-link me-2"></i> Chain</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=chain-pendant">
+                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=chain-pendant">
                                 <i class="fas fa-circle me-2"></i> Chain Pendant</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=earrings">
+                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=earrings">
                                 <i class="fas fa-dot-circle me-2"></i> Earrings</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=ring">
+                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=ring">
                                 <i class="fas fa-ring me-2"></i> Ring</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=nath">
+                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=nath">
                                 <i class="fas fa-gem me-2"></i> Nath</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=womens-bracelet">
+                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=womens-bracelet">
                                 <i class="fas fa-hand-paper me-2"></i> Womens Bracelet / Kada</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=mens-bracelet">
+                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=mens-bracelet">
                                 <i class="fas fa-hand-rock me-2"></i> Mens Bracelet / Kada</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=bangles">
+                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=bangles">
                                 <i class="fas fa-circle-notch me-2"></i> Bangles</a></li>
                         </ul>
                     </li>
 
                     <!-- SILVER DROPDOWN -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="silverDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="silverDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-coins me-1 text-secondary"></i> Silver
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="silverDropdown">
-                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=sterling-silver-mangalsutra">
+                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=sterling-silver-mangalsutra">
                                 <i class="fas fa-heart me-2"></i> Sterling Silver Mangalsutra</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=silver-chain-set">
+                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=silver-chain-set">
                                 <i class="fas fa-gem me-2"></i> Silver Chain Set</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=silver-bracelet">
+                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=silver-bracelet">
                                 <i class="fas fa-hand-paper me-2"></i> Silver Bracelet</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=silver-ring">
+                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=silver-ring">
                                 <i class="fas fa-ring me-2"></i> Silver Ring</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=silver-payal">
+                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=silver-payal">
                                 <i class="fas fa-shoe-prints me-2"></i> Silver Payal</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=silver-toering">
+                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=silver-toering">
                                 <i class="fas fa-shoe-prints me-2"></i> Silver Toering</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=silver-kada">
+                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=silver-kada">
                                 <i class="fas fa-hand-rock me-2"></i> Silver Kada</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=silver-ladies-ring">
+                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=silver-ladies-ring">
                                 <i class="fas fa-ring me-2"></i> Silver Ladies Ring</a></li>
                         </ul>
                     </li>
                 </ul>
 
-                <!-- Right Side -->
-                <div class="d-flex align-items-center">
+                <!-- Right Side UI Fix for Mobile & Desktop -->
+                <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-lg-end gap-2 gap-lg-4 mt-3 mt-lg-0 pb-3 pb-lg-0" style="flex: 0 0 auto;">
                     <!-- Search -->
-                    <form class="search-form me-3" method="GET" action="{% url 'shop' %}">
+                    <form class="search-form w-100 m-0 mb-2 mb-lg-0" style="max-width: 350px;" method="GET" action="{% url 'shop' %}">
                         <div class="input-group">
                             <input class="form-control" type="search" name="q" placeholder="Search jewellery..." aria-label="Search">
-                            <button class="btn btn-gold" type="submit"><i class="fas fa-search"></i></button>
+                            <button class="btn btn-gold px-3" type="submit"><i class="fas fa-search"></i></button>
                         </div>
                     </form>
 
                     <!-- Cart -->
-                    <div class="nav-item me-3">
-                        <a class="nav-link position-relative" href="{% url 'cart' %}">
-                            <i class="fas fa-shopping-cart"></i>
-                            {% if cart_items_count > 0 %}
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge">
-                                {{ cart_items_count }}
-                            </span>
-                            {% endif %}
+                    <div class="nav-item w-100 w-lg-auto border-top border-lg-0 pt-2 pt-lg-0">
+                        <a class="nav-link d-flex align-items-center py-2 px-1 px-lg-2 m-0" href="{% url 'cart' %}">
+                            <div class="position-relative me-3">
+                                <i class="fas fa-shopping-cart fs-5 text-dark"></i>
+                                {% if cart_items_count > 0 %}
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
+                                    {{ cart_items_count }}
+                                </span>
+                                {% endif %}
+                            </div>
+                            <span class="fs-6 fw-medium text-dark">Cart</span>
                         </a>
                     </div>
 
-                    <!-- User Dropdown -->
+                    <!-- User Dropdown & Login -->
                     {% if user.is_authenticated %}
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle me-2"></i>
-                            <span>{{ user.username }}</span>
+                    <div class="nav-item dropdown w-100 w-lg-auto border-top border-lg-0 pt-2 pt-lg-0">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center py-2 px-1 px-lg-2 m-0" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle fs-5 text-dark me-3"></i>
+                            <span class="fs-6 fw-medium text-dark">{{ user.username }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user me-2"></i> My Account</a></li>
@@ -157,9 +160,9 @@
                         </ul>
                     </div>
                     {% else %}
-                    <div class="nav-item">
-                        <a class="btn btn-gold" href="{% url 'login' %}">
-                            <i class="fas fa-sign-in-alt me-1"></i> Login
+                    <div class="nav-item w-100 w-lg-auto border-top border-lg-0 pt-3 pt-lg-0 mt-2 mt-lg-0">
+                        <a class="btn btn-gold d-flex align-items-center justify-content-center px-4 py-2 w-100 w-lg-auto" href="{% url 'login' %}">
+                            <i class="fas fa-sign-in-alt me-2"></i> <span class="fw-medium">Login</span>
                         </a>
                     </div>
                     {% endif %}
@@ -231,6 +234,7 @@
             <hr class="my-4 bg-light opacity-10">
             <div class="text-center pt-2">
                 <p class="mb-0">&copy; 2025 Aashutosh Jewellers. All rights reserved.</p>
+                <p class="mb-0 small text-muted">Developed by <a href="https://devoraxsolution.com" target="_blank" class="text-gold text-decoration-none">DevoraXSolution.com</a></p>
             </div>
         </div>
     </footer>
@@ -340,6 +344,74 @@
             }
         });
     </script>
+
+    <!-- WhatsApp Floating Button - Desktop with Text, Mobile Icon Only -->
+    <a href="https://wa.me/9188668865990" 
+       target="_blank" 
+       class="whatsapp-float" 
+       title="Chat with us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+        <span class="whatsapp-text">Chat with us</span>
+    </a>
+
+    <style>
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25d366;
+            color: white;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: flex; /* Show by default */
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0 15px;
+            min-width: 160px;
+            height: 50px;
+        }
+
+        .whatsapp-float:hover {
+            background-color: #128C7E;
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .whatsapp-float i {
+            font-size: 18px;
+            margin-right: 8px;
+        }
+
+        .whatsapp-text {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 500;
+        }
+
+        /* Mobile: Icon only, smaller size */
+        @media (max-width: 768px) {
+            .whatsapp-float {
+                width: 60px;
+                height: 60px;
+                min-width: 60px;
+                padding: 0;
+                border-radius: 50%;
+            }
+
+            .whatsapp-float i {
+                font-size: 24px;
+                margin-right: 0;
+            }
+
+            .whatsapp-text {
+                display: none;
+            }
+        }
+    </style>
 
     {% block extra_scripts %}{% endblock %}
 
