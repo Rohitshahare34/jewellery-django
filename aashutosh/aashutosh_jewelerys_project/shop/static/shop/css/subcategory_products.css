@@ -1,0 +1,19 @@
+.product-card img {
+  height: 260px;
+  object-fit: cover;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  transition: all 0.3s ease;
+}
+
+.btn-outline-dark {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.btn-outline-dark:hover {
+  background-color: var(--gold);
+  color: white;
+}

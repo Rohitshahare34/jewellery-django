@@ -1,0 +1,383 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<!-- AOS (Animate on Scroll) -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+        color: white;
+        padding: 80px 0 60px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="100" fill="rgba(255,255,255,0.03)">✦</text></svg>');
+        background-size: 40px 40px;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .contact-section {
+        background: linear-gradient(to bottom right, #fff8f0, #ffffff);
+        padding: 80px 0;
+    }
+
+    .contact-heading {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #222;
+        position: relative;
+        text-align: center;
+    }
+
+    .contact-heading::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -10px;
+        width: 100px;
+        height: 4px;
+        background-color: #D4AF37;
+        border-radius: 3px;
+    }
+
+    .text-gold {
+        color: #D4AF37 !important;
+    }
+
+    .card-contact {
+        border-radius: 20px;
+        transition: all 0.4s ease;
+        border: none;
+        background: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+
+    .card-contact:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(212, 175, 55, 0.3);
+    }
+
+    .contact-icon {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, #D4AF37, #B8941F);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 1.8rem;
+        color: white;
+    }
+
+    .form-control {
+        border-radius: 12px;
+        padding: 12px 15px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #D4AF37;
+        box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+    }
+
+    .btn-gold {
+        background: linear-gradient(135deg, #D4AF37, #B8941F);
+        border: none;
+        border-radius: 50px;
+        color: #fff;
+        font-weight: 600;
+        padding: 12px 30px;
+        transition: all 0.4s ease;
+    }
+
+    .btn-gold:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+        color: #fff;
+    }
+
+    .map-container {
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .working-hours {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 15px;
+    }
+
+    .working-hours h6 {
+        color: #D4AF37;
+        font-weight: 600;
+    }
+
+    .info-section {
+        background: #111;
+        color: white;
+        padding: 60px 0;
+    }
+
+    .info-card {
+        background: rgba(255,255,255,0.05);
+        border-radius: 15px;
+        padding: 25px;
+        text-align: center;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .info-card:hover {
+        background: rgba(212, 175, 55, 0.1);
+        transform: translateY(-5px);
+    }
+
+    @media (max-width: 768px) {
+        .contact-heading {
+            font-size: 2rem;
+        }
+        .hero-section {
+            padding: 60px 0 40px;
+        }
+    }
+</style>
+
+<!-- HERO SECTION -->
+<section class="hero-section">
+    <div class="container">
+        <div class="hero-content text-center" data-aos="fade-up">
+            <h1 class="display-4 fw-bold mb-3">Get in Touch</h1>
+            <p class="lead mb-0">We're here to help you find the perfect piece</p>
+        </div>
+    </div>
+</section>
+
+<section class="contact-section">
+    <div class="container">
+        <!-- Contact Info Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-4" data-aos="fade-up">
+                <div class="card card-contact shadow-sm h-100 text-center p-4">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Visit Our Store</h5>
+                    <p class="text-muted mb-3">
+                        Keshav Nagar, Krishna Apartment<br>
+                        Ring Road, Akola<br>
+                        Maharashtra 444004
+                    </p>
+                    <div class="working-hours">
+                        <h6>Store Hours</h6>
+                        <p class="small mb-0">Monday - Saturday: 11:00 AM - 8:00 PM<br>
+                        Sunday: 11:00 AM - 6:00 PM</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card card-contact shadow-sm h-100 text-center p-4">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Call Us</h5>
+                    <p class="text-muted mb-2">
+                        <strong>Landline:</strong><br>
+                        +91 86688 65990
+                    </p>
+                    <p class="text-muted mb-2">
+                        <strong>Mobile:</strong><br>
+                        +91 70588 65990
+                    </p>
+                    <p class="text-muted">
+                        <strong>WhatsApp:</strong><br>
+                        +91 86688 65990
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="card card-contact shadow-sm h-100 text-center p-4">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Email Us</h5>
+                    <p class="text-muted mb-2">
+                        <strong>General:</strong><br>
+                        aashutoshjeweller@gmail.com
+                    </p>
+                    <p class="text-muted mb-2">
+                        <strong>Orders:</strong><br>
+                        orders@aashutoshjeweller.com
+                    </p>
+                    <p class="text-muted mb-0">
+                        <strong>Support:</strong><br>
+                        support@aashutoshjeweller.com
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form & Map -->
+        <div class="row g-4">
+            <div class="col-lg-7" data-aos="zoom-in">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-md-5">
+                        <h4 class="text-center mb-4 fw-bold text-gold">Send Us a Message</h4>
+                        <form id="contactForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Your Name *</label>
+                                    <input type="text" class="form-control" id="name" placeholder="John Doe" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Phone Number *</label>
+                                    <input type="tel" class="form-control" id="phone" placeholder="+91 98765 43210" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" id="email" placeholder="you@example.com" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Subject *</label>
+                                <select class="form-control" id="subject" required>
+                                    <option value="">Select a subject</option>
+                                    <option value="general">General Inquiry</option>
+                                    <option value="custom">Custom Jewelry Design</option>
+                                    <option value="order">Order Status</option>
+                                    <option value="repair">Jewelry Repair</option>
+                                    <option value="feedback">Feedback</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Message *</label>
+                                <textarea class="form-control" id="message" rows="5" placeholder="Tell us how we can help you..." required></textarea>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="whatsapp" checked>
+                                <label class="form-check-label" for="whatsapp">
+                                    You can contact me via WhatsApp for faster response
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-gold btn-lg w-100">
+                                <i class="fas fa-paper-plane me-2"></i>Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5" data-aos="fade-left">
+                <div class="map-container">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.4417916304897!2d77.018396!3d20.680464!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bd72d44483d1517%3A0xb2ce31bc60729829!2sAashutosh%20Jewellers!5e0!3m2!1sen!2sin!4v1730110000000!5m2!1sen!2sin"
+                        width="100%"
+                        height="450"
+                        style="border:0; border-radius: 20px;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- INFO SECTION -->
+<section class="info-section">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="display-5 fw-bold text-white">Why Choose Aashutosh Jewelers?</h2>
+            <p class="lead text-light">Experience the difference of working with jewelry experts</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="info-card">
+                    <i class="fas fa-certificate text-gold fs-2 mb-3"></i>
+                    <h5>Certified Quality</h5>
+                    <p class="small text-light">All our jewelry comes with authenticity certificates</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="info-card">
+                    <i class="fas fa-truck text-gold fs-2 mb-3"></i>
+                    <h5>Free Shipping</h5>
+                    <p class="small text-light">Complimentary insured shipping on all orders</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="info-card">
+                    <i class="fas fa-shield-alt text-gold fs-2 mb-3"></i>
+                    <h5>Lifetime Warranty</h5>
+                    <p class="small text-light">Lifetime warranty on all our jewelry pieces</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="info-card">
+                    <i class="fas fa-undo text-gold fs-2 mb-3"></i>
+                    <h5>30-Day Returns</h5>
+                    <p class="small text-light">Hassle-free returns within 30 days</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+
+    // Contact form submission
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get form values
+        const name = document.getElementById('name').value;
+        const phone = document.getElementById('phone').value;
+        const email = document.getElementById('email').value;
+        const subject = document.getElementById('subject').value;
+        const message = document.getElementById('message').value;
+        const whatsapp = document.getElementById('whatsapp').checked;
+        
+        // Create WhatsApp message
+        const whatsappText = `Hello Aashutosh Jewelers!%0A%0A` +
+            `Name: ${name}%0A` +
+            `Phone: ${phone}%0A` +
+            `Email: ${email}%0A` +
+            `Subject: ${subject}%0A%0A` +
+            `Message: ${message}%0A%0A` +
+            `Preferred contact method: ${whatsapp ? 'WhatsApp' : 'Email/Phone'}`;
+        
+        // Open WhatsApp with pre-filled message
+        if (whatsapp) {
+            window.open(`https://wa.me/918668865990?text=${whatsappText}`, '_blank');
+        } else {
+            // For non-WhatsApp, you could integrate with an email service or show a success message
+            alert('Thank you for your message! We will contact you soon.');
+            this.reset();
+        }
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,339 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<!-- AOS Animation Library -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+        color: white;
+        padding: 100px 0 80px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="100" fill="rgba(255,255,255,0.03)">✧</text></svg>');
+        background-size: 50px 50px;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .services-section {
+        background: linear-gradient(to bottom right, #fff8f0, #ffffff);
+        padding: 80px 0;
+    }
+
+    .service-card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        transition: all 0.4s ease;
+        height: 100%;
+        border: 2px solid transparent;
+    }
+
+    .service-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(212, 175, 55, 0.3);
+        border-color: #D4AF37;
+    }
+
+    .service-icon {
+        width: 90px;
+        height: 90px;
+        background: linear-gradient(135deg, #D4AF37, #B8941F);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        font-size: 2.5rem;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .service-card:hover .service-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .text-gold {
+        color: #D4AF37 !important;
+    }
+
+    .process-section {
+        background: #111;
+        color: white;
+        padding: 80px 0;
+    }
+
+    .process-step {
+        text-align: center;
+        position: relative;
+        padding: 30px 20px;
+    }
+
+    .process-number {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #D4AF37, #B8941F);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: white;
+    }
+
+    .cta-section {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        padding: 60px 0;
+    }
+
+    .btn-gold {
+        background: linear-gradient(135deg, #D4AF37, #B8941F);
+        border: none;
+        border-radius: 50px;
+        color: #fff;
+        font-weight: 600;
+        padding: 12px 30px;
+        transition: all 0.4s ease;
+    }
+
+    .btn-gold:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+        color: #fff;
+    }
+
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 80px 0 60px;
+        }
+        .service-card {
+            margin-bottom: 20px;
+        }
+    }
+</style>
+
+<!-- HERO SECTION -->
+<section class="hero-section">
+    <div class="container">
+        <div class="hero-content text-center" data-aos="fade-up">
+            <h1 class="display-4 fw-bold mb-4">Our Jewelry Services</h1>
+            <p class="lead mb-4">Expert craftsmanship meets personalized service</p>
+            <p class="mb-0">From custom designs to professional repairs, we offer complete jewelry solutions</p>
+        </div>
+    </div>
+</section>
+
+<!-- SERVICES SECTION -->
+<section class="services-section">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="display-5 fw-bold">What We Offer</h2>
+            <p class="lead text-muted">Comprehensive jewelry services tailored to your needs</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-pencil-ruler"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Custom Jewelry Design</h4>
+                    <p class="text-muted mb-4">
+                        Bring your vision to life with our custom jewelry design service. 
+                        Our expert artisans work closely with you to create unique pieces that reflect your style and personality.
+                    </p>
+                    <ul class="text-start text-muted small">
+                        <li><i class="fas fa-check text-gold me-2"></i>Personalized consultations</li>
+                        <li><i class="fas fa-check text-gold me-2"></i>3D design previews</li>
+                        <li><i class="fas fa-check text-gold me-2"></i>Material selection guidance</li>
+                        <li><i class="fas fa-check text-gold me-2"></i>Regular progress updates</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Gemstone Consultation</h4>
+                    <p class="text-muted mb-4">
+                        Expert guidance on selecting and setting the perfect gemstones. 
+                        We help you understand quality, value, and beauty of precious and semi-precious stones.
+                    </p>
+                    <ul class="text-start text-muted small">
+                        <li><i class="fas fa-check text-gold me-2"></i>Certified gemstone sourcing</li>
+                        <li><i class="fas fa-check text-gold me-2"></i>Quality assessment</li>
+                        <li><i class="fas fa-check text-gold me-2"></i>Investment guidance</li>
+                        <li><i class="fas fa-check text-gold me-2"></i>Birthstone recommendations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Jewelry Repair & Restoration</h4>
+                    <p class="text-muted mb-4">
+                        Professional repair and restoration services to bring your treasured pieces back to life. 
+                        From simple fixes to complete restoration, we handle it all with care.
+                    </p>
+                    <ul class="text-start text-muted small">
+                        <li><i class="fas fa-check text-gold me-2"></i>Ring resizing</li>
+                        <li><i class="fas fa-check text-gold me-2"></i>Claw repair</li>
+                        <li><i class="fas fa-check text-gold me-2"></i>Chain repair</li>
+                        <li><i class="fas fa-check text-gold me-2"></i>Polishing & cleaning</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Jewelry Appraisal</h4>
+                    <p class="text-muted mb-4">
+                        Professional valuation services for insurance, resale, or estate purposes. 
+                        Our certified appraisers provide accurate and detailed assessments.
+                    </p>
+                    <ul class="text-start text-muted small">
+                        <li><i class="fas fa-check text-gold me-2"></i>Certified appraisals</li>
+                        <li><i class="fas fa-check text-gold me-2"></i>Detailed documentation</li>
+                        <li><i class="fas fa-check text-gold me-2"></i>Market value analysis</li>
+                        <li><i class="fas fa-check text-gold me-2"></i>Insurance reports</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-ring"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Wedding & Engagement</h4>
+                    <p class="text-muted mb-4">
+                        Specialized services for wedding and engagement jewelry. 
+                        From custom engagement rings to complete wedding jewelry sets.
+                    </p>
+                    <ul class="text-start text-muted small">
+                        <li><i class="fas fa-check text-gold me-2"></i>Custom engagement rings</li>
+                        <li><i class="fas fa-check text-gold me-2"></i>Wedding bands</li>
+                        <li><i class="fas fa-check text-gold me-2"></i>Bridal jewelry sets</li>
+                        <li><i class="fas fa-check text-gold me-2"></i>Groom accessories</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Exchange & Upgrade</h4>
+                    <p class="text-muted mb-4">
+                        Flexible exchange and upgrade programs for your jewelry. 
+                        Trade in your old pieces for new designs or upgrade existing ones.
+                    </p>
+                    <ul class="text-start text-muted small">
+                        <li><i class="fas fa-check text-gold me-2"></i>Old gold exchange</li>
+                        <li><i class="fas fa-check text-gold me-2"></i>Design upgrades</li>
+                        <li><i class="fas fa-check text-gold me-2"></i>Trade-in programs</li>
+                        <li><i class="fas fa-check text-gold me-2"></i>Fair market value</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PROCESS SECTION -->
+<section class="process-section">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="display-5 fw-bold text-white">Our Process</h2>
+            <p class="lead text-light">Simple steps to get your perfect jewelry</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="process-step">
+                    <div class="process-number">1</div>
+                    <h5 class="text-gold">Consultation</h5>
+                    <p class="text-light small">Discuss your requirements and preferences with our experts</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="process-step">
+                    <div class="process-number">2</div>
+                    <h5 class="text-gold">Design</h5>
+                    <p class="text-light small">Create detailed designs and select materials</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="process-step">
+                    <div class="process-number">3</div>
+                    <h5 class="text-gold">Crafting</h5>
+                    <p class="text-light small">Our artisans bring your design to life</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="process-step">
+                    <div class="process-number">4</div>
+                    <h5 class="text-gold">Delivery</h5>
+                    <p class="text-light small">Quality check and delivery of your perfect piece</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="cta-section">
+    <div class="container">
+        <div class="text-center" data-aos="zoom-in">
+            <h2 class="display-5 fw-bold mb-4">Ready to Get Started?</h2>
+            <p class="lead text-muted mb-4">
+                Schedule a consultation with our jewelry experts and let us create something beautiful for you
+            </p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'contact' %}" class="btn btn-gold btn-lg">
+                    <i class="fas fa-calendar me-2"></i>Book Consultation
+                </a>
+                <a href="tel:+918668865990" class="btn btn-outline-dark btn-lg">
+                    <i class="fas fa-phone me-2"></i>Call Now
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Aashutosh Jewellers - Exquisite Handcrafted Jewellery{% endblock %}</title>
+
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'shop/css/base.css' %}">
+</head>
+
+<body>
+    <!-- ======== NAVBAR ======== -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand fw-bold" href="{% url 'home' %}">
+                <img src="{% static 'shop/images/logo_aashu.png' %}" alt="Aashutosh Jewellers" class="navbar-logo">
+            </a>
+            
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Navbar Links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- HOME -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">
+                            <i class="fas fa-home me-1"></i> Home
+                        </a>
+                    </li>
+
+                    <!-- SERVICES -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'services' %}">
+                            <i class="fas fa-concierge-bell me-1"></i> Services
+                        </a>
+                    </li>
+
+                    <!-- GOLD DROPDOWN -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="goldDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-coins me-1 text-warning"></i> Gold
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="goldDropdown">
+                            <!-- Submenu: Mangal sutra -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#">
+                                    <i class="fas fa-heart me-2"></i> Mangal sutra
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=long-mangalsutra">
+                                        <i class="fas fa-minus me-2"></i> Long Mangalsutra</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=short-mangalsutra">
+                                        <i class="fas fa-compress me-2"></i> Short Mangalsutra</a></li>
+                                </ul>
+                            </li>
+
+                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=necklace-set">
+                                <i class="fas fa-gem me-2"></i> Necklace Set</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=chain">
+                                <i class="fas fa-link me-2"></i> Chain</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=chain-pendant">
+                                <i class="fas fa-circle me-2"></i> Chain Pendant</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=earrings">
+                                <i class="fas fa-dot-circle me-2"></i> Earrings</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=ring">
+                                <i class="fas fa-ring me-2"></i> Ring</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=nath">
+                                <i class="fas fa-gem me-2"></i> Nath</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=womens-bracelet">
+                                <i class="fas fa-hand-paper me-2"></i> Womens Bracelet / Kada</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=mens-bracelet">
+                                <i class="fas fa-hand-rock me-2"></i> Mens Bracelet / Kada</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=bangles">
+                                <i class="fas fa-circle-notch me-2"></i> Bangles</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- SILVER DROPDOWN -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="silverDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-coins me-1 text-secondary"></i> Silver
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="silverDropdown">
+                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=sterling-silver-mangalsutra">
+                                <i class="fas fa-heart me-2"></i> Sterling Silver Mangalsutra</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=silver-chain-set">
+                                <i class="fas fa-gem me-2"></i> Silver Chain Set</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=silver-bracelet">
+                                <i class="fas fa-hand-paper me-2"></i> Silver Bracelet</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=silver-ring">
+                                <i class="fas fa-ring me-2"></i> Silver Ring</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=silver-payal">
+                                <i class="fas fa-shoe-prints me-2"></i> Silver Payal</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=silver-toering">
+                                <i class="fas fa-shoe-prints me-2"></i> Silver Toering</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=silver-kada">
+                                <i class="fas fa-hand-rock me-2"></i> Silver Kada</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop' %}?subcategory=silver-ladies-ring">
+                                <i class="fas fa-ring me-2"></i> Silver Ladies Ring</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <!-- Right Side -->
+                <div class="d-flex align-items-center">
+                    <!-- Search -->
+                    <form class="search-form me-3" method="GET" action="{% url 'shop' %}">
+                        <div class="input-group">
+                            <input class="form-control" type="search" name="q" placeholder="Search jewellery..." aria-label="Search">
+                            <button class="btn btn-gold" type="submit"><i class="fas fa-search"></i></button>
+                        </div>
+                    </form>
+
+                    <!-- Cart -->
+                    <div class="nav-item me-3">
+                        <a class="nav-link position-relative" href="{% url 'cart' %}">
+                            <i class="fas fa-shopping-cart"></i>
+                            {% if cart_items_count > 0 %}
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge">
+                                {{ cart_items_count }}
+                            </span>
+                            {% endif %}
+                        </a>
+                    </div>
+
+                    <!-- User Dropdown -->
+                    {% if user.is_authenticated %}
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-2"></i>
+                            <span>{{ user.username }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user me-2"></i> My Account</a></li>
+                            <li><a class="dropdown-item" href="{% url 'wishlist' %}"><i class="fas fa-heart me-2 text-danger"></i> Wishlist</a></li>
+                            <li><a class="dropdown-item" href="{% url 'about' %}"><i class="fas fa-info-circle me-2"></i> About</a></li>
+                            <li><a class="dropdown-item" href="{% url 'contact' %}"><i class="fas fa-phone me-2"></i> Contact</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="post" action="{% url 'logout' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item text-danger">
+                                        <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <div class="nav-item">
+                        <a class="btn btn-gold" href="{% url 'login' %}">
+                            <i class="fas fa-sign-in-alt me-1"></i> Login
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ======== MAIN CONTENT ======== -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ======== WHATSAPP FLOAT ======== -->
+    <a href="https://wa.me/918668865990?text=Hi%20Aashutosh%20Jewellers,%20I'm%20interested%20in%20your%20products" 
+       class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp fa-lg"></i> Chat With Us
+    </a>
+
+    <!-- ======== FOOTER ======== -->
+    <footer class="footer mt-5">
+        <div class="container position-relative">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5 class="logo mb-3"><i class="fas fa-gem me-2"></i>Aashutosh Jewellers</h5>
+                    <p class="mb-4">Exquisite handcrafted jewellery that tells your story. Quality craftsmanship meets timeless elegance.</p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/aashutosh_jewellers_?utm_source=qr&igsh=bDN4NHk4czZnaXM1" class="text-light me-2"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/aashutosh_jewellers_?utm_source=qr&igsh=bDN4NHk4czZnaXM1" class="text-light me-2"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                {% comment %} <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="{% url 'home' %}?category=gold" class="text-light text-decoration-none">Gold</a></li>
+                        <li class="mb-2"><a href="{% url 'shop' %}?category=silver" class="text-light text-decoration-none">Silver</a></li>
+                        <li class="mb-2"><a href="{% url 'shop' %}?category=coin" class="text-light text-decoration-none">Coin</a></li>
+                        <li class="mb-2"><a href="{% url 'about' %}" class="text-light text-decoration-none">About</a></li>
+                        <li class="mb-2"><a href="{% url 'contact' %}" class="text-light text-decoration-none">Contact</a></li>
+                    </ul>
+                </div> {% endcomment %}
+
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Contact Info</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>Keshav Nagar, Krishna Apartment, Ring Road, Akola</li>
+                        <li class="mb-2"><i class="fas fa-phone me-2"></i> +91 86688 65990</li>
+                        <li class="mb-2"><i class="fas fa-phone me-2"></i> +91 70588 65990</li>
+                        <li class="mb-2"><i class="fas fa-envelope me-2"></i> aashutoshjeweller@gmail.com</li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Newsletter</h5>
+                    <p class="mb-3">Subscribe for updates and exclusive offers</p>
+                    <form class="newsletter-form">
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder="Your email" required>
+                            <button class="btn btn-gold" type="submit">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <p class="small text-muted">We respect your privacy. Unsubscribe anytime.</p>
+                </div>
+            </div>
+
+            <hr class="my-4 bg-light opacity-10">
+            <div class="text-center pt-2">
+                <p class="mb-0">&copy; 2025 Aashutosh Jewellers. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ======== SCRIPTS ======== -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Navbar scroll shadow effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            navbar.classList.toggle('navbar-scrolled', window.scrollY > 100);
+        });
+
+        // Smooth dropdown hover functionality without blinking
+        function initDropdowns() {
+            const dropdowns = document.querySelectorAll('.dropdown');
+            const submenus = document.querySelectorAll('.dropdown-submenu');
+            
+            // Main dropdowns
+            dropdowns.forEach(function(dropdown) {
+                let timeout;
+                
+                dropdown.addEventListener('mouseenter', function() {
+                    clearTimeout(timeout);
+                    const menu = dropdown.querySelector('.dropdown-menu');
+                    const toggle = dropdown.querySelector('.dropdown-toggle');
+                    
+                    if (menu) {
+                        menu.classList.add('show');
+                        dropdown.classList.add('show');
+                        if (toggle) {
+                            toggle.setAttribute('aria-expanded', 'true');
+                        }
+                    }
+                });
+                
+                dropdown.addEventListener('mouseleave', function() {
+                    const self = this;
+                    timeout = setTimeout(function() {
+                        const menu = self.querySelector('.dropdown-menu');
+                        const toggle = self.querySelector('.dropdown-toggle');
+                        
+                        if (menu && !self.matches(':hover')) {
+                            menu.classList.remove('show');
+                            self.classList.remove('show');
+                            if (toggle) {
+                                toggle.setAttribute('aria-expanded', 'false');
+                            }
+                        }
+                    }, 100); // Small delay to prevent flickering
+                });
+            });
+            
+            // Submenus
+            submenus.forEach(function(submenu) {
+                let timeout;
+                
+                submenu.addEventListener('mouseenter', function() {
+                    clearTimeout(timeout);
+                    const menu = submenu.querySelector('.dropdown-menu');
+                    if (menu) {
+                        menu.classList.add('show');
+                        submenu.classList.add('show');
+                    }
+                });
+                
+                submenu.addEventListener('mouseleave', function() {
+                    const self = this;
+                    timeout = setTimeout(function() {
+                        const menu = self.querySelector('.dropdown-menu');
+                        if (menu && !self.matches(':hover')) {
+                            menu.classList.remove('show');
+                            self.classList.remove('show');
+                        }
+                    }, 100);
+                });
+            });
+        }
+
+        // Initialize dropdowns when DOM is ready
+        document.addEventListener('DOMContentLoaded', initDropdowns);
+
+        // Prevent dropdown from closing when clicking inside
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.dropdown-menu')) {
+                e.stopPropagation();
+            }
+        });
+    </script>
+
+    {% block extra_scripts %}{% endblock %}
+
+    
+</body>
+</html>

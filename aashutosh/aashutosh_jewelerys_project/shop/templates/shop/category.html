@@ -1,0 +1,98 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- 🌟 Breadcrumb -->
+<section class="bg-light py-3 border-bottom">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-dark">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'shop' %}" class="text-decoration-none text-dark">Shop</a></li>
+                <li class="breadcrumb-item active text-gold" aria-current="page">{{ category.name }}</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- 💎 Category Header -->
+<section class="py-5 text-center bg-white">
+    <div class="container">
+        <h1 class="display-5 fw-bold text-gold mb-3">{{ category.name }}</h1>
+        <p class="lead text-muted mb-4">
+            Explore our exquisite collection of handcrafted jewellery under <strong>{{ category.name }}</strong>.
+        </p>
+        {% if category.image %}
+        <img src="{{ category.image.url }}" alt="{{ category.name }}" class="img-fluid rounded shadow-sm" style="max-height: 350px; object-fit: cover;">
+        {% endif %}
+    </div>
+</section>
+
+<!-- 🛍️ Products Grid -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="card product-card h-100 border-0 shadow-sm">
+                    <div class="position-relative">
+                        <img src="{{ product.image.url }}" class="card-img-top product-image rounded-top" alt="{{ product.name }}">
+                        {% if product.badge != 'NONE' %}
+                        <span class="position-absolute top-0 start-0 m-2 badge bg-{{ product.get_badge_color }}">
+                            {{ product.get_badge_display }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="card-body d-flex flex-column text-center">
+                        <h6 class="card-title fw-semibold mb-2">{{ product.name|truncatewords:4 }}</h6>
+                        <p class="text-muted small mb-2">{{ product.stone_type }} • {{ product.color }}</p>
+                        <p class="fw-bold text-gold mb-3">₹{{ product.price }}</p>
+                        <a href="{% url 'product_detail' product.pk %}" class="btn btn-gold btn-sm mt-auto">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted fs-5">No products available in this category yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ✨ Styling Enhancements -->
+<style>
+.text-gold {
+    color: #d4af37 !important;
+}
+
+.btn-gold {
+    background-color: #d4af37;
+    color: #fff;
+    border: none;
+    transition: all 0.3s ease;
+}
+.btn-gold:hover {
+    background-color: #b7950b;
+    color: #fff;
+}
+
+.product-card {
+    border-radius: 15px;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.product-image {
+    height: 250px;
+    object-fit: cover;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+</style>
+
+{% endblock %}

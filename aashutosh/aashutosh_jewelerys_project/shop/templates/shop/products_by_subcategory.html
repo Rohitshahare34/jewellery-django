@@ -1,0 +1,104 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- ===== HEADER ===== -->
+<section class="subcategory-header py-5 text-center text-white position-relative" 
+         style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                url('{% static "shop/images/subcategory-banner.jpg" %}') center/cover no-repeat;">
+  <div class="container py-5">
+    <h1 class="display-5 fw-bold mb-3">{{ subcategory.name }}</h1>
+    <p class="lead mb-0 text-light">Explore all products under {{ subcategory.name }}</p>
+  </div>
+</section>
+
+<!-- ===== PRODUCT GRID ===== -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold display-6">Our Collection</h2>
+      <p class="text-muted">Beautifully crafted pieces for every occasion</p>
+    </div>
+
+    <div class="row g-4">
+      {% for product in products %}
+      <div class="col-lg-3 col-md-4 col-sm-6 col-6 d-flex">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden w-100 product-card">
+          <div class="position-relative overflow-hidden" style="height: 250px;">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" class="card-img-top h-100 w-100" alt="{{ product.name }}" style="object-fit: cover;">
+            {% else %}
+              <img src="{% static 'shop/images/placeholder.jpg' %}" class="card-img-top h-100 w-100" alt="{{ product.name }}" style="object-fit: cover;">
+            {% endif %}
+            <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+              <a href="{% url 'product_detail' product.id %}" class="btn overlay-btn">View Details</a>
+            </div>
+          </div>
+          <div class="card-body text-center py-4">
+            <h5 class="fw-bold mb-2">{{ product.name }}</h5>
+            <p class="text-muted mb-0 fs-5">₹{{ product.price }}</p>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center py-5">
+        <p class="text-muted fs-5">No products available under this subcategory.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ===== STYLES ===== -->
+<style>
+:root {
+  --gold: #f9d648;
+  --gold-dark: #d4af37;
+  --transition: all 0.3s ease;
+}
+
+.product-card {
+  background: #fff;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.12);
+}
+
+.overlay {
+  opacity: 0;
+  background: rgba(0, 0, 0, 0.55);
+  transition: var(--transition);
+}
+.card:hover .overlay {
+  opacity: 1;
+}
+
+.overlay-btn {
+  background: var(--gold);
+  color: #000;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  transition: var(--transition);
+}
+.overlay-btn:hover {
+  background: var(--gold-dark);
+  color: #fff;
+}
+
+.subcategory-header {
+  background-position: center;
+  background-size: cover;
+  color: #fff;
+}
+</style>
+
+{% endblock %}

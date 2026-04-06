@@ -1,0 +1,118 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- ===== HEADER SECTION ===== -->
+<section class="subcategory-header py-5 text-center text-white position-relative" 
+         style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                url('{% static "shop/images/subcategory-banner.jpg" %}') center/cover no-repeat;">
+  <div class="container py-5">
+    <h1 class="display-5 fw-bold mb-3">{{ category.name }}</h1>
+    <p class="lead mb-0 text-light">Explore all collections under {{ category.name }}</p>
+  </div>
+</section>
+
+<!-- ===== SUBCATEGORY GRID ===== -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold display-6">Explore Subcategories</h2>
+      <p class="text-muted">Find your perfect jewellery type below</p>
+    </div>
+
+    <div class="row g-4">
+      {% for subcategory in subcategories %}
+      <div class="col-lg-3 col-md-4 col-sm-6 col-6 d-flex">
+        <a href="{% url 'subcategory_products' subcategory.id %}" class="text-decoration-none text-dark w-100">
+          <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 product-card">
+            <div class="position-relative overflow-hidden rounded-top-4" style="height: 220px;">
+              {% if subcategory.image %}
+                <img src="{{ subcategory.image.url }}" class="card-img-top h-100 w-100" alt="{{ subcategory.name }}" style="object-fit: cover;">
+              {% else %}
+                <img src="{% static 'shop/images/placeholder.jpg' %}" class="card-img-top h-100 w-100" alt="{{ subcategory.name }}" style="object-fit: cover;">
+              {% endif %}
+              <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                <span class="btn overlay-btn">View Products</span>
+              </div>
+            </div>
+            <div class="card-body text-center py-4">
+              <h5 class="fw-bold mb-0">{{ subcategory.name }}</h5>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center py-5">
+        <p class="text-muted fs-5">No subcategories available under this category.</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- ===== VIEW ALL PRODUCTS BUTTON ===== -->
+    <div class="text-center mt-5">
+      <a href="{% url 'all_products' %}" class="btn btn-warning px-5 py-2 fw-semibold rounded-pill shadow-sm">
+        View All Products
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== STYLES ===== -->
+<style>
+:root {
+  --gold: #f9d648;
+  --gold-dark: #d4af37;
+  --transition: all 0.3s ease;
+}
+
+.subcategory-header {
+  background-position: center;
+  background-size: cover;
+  color: #fff;
+}
+
+.product-card {
+  background: #fff;
+  transition: var(--transition);
+}
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.12);
+}
+
+.overlay {
+  opacity: 0;
+  background: rgba(0, 0, 0, 0.55);
+  transition: var(--transition);
+}
+.card:hover .overlay {
+  opacity: 1;
+}
+.overlay-btn {
+  background: var(--gold);
+  color: #000;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  transition: var(--transition);
+}
+.overlay-btn:hover {
+  background: var(--gold-dark);
+  color: #fff;
+}
+
+.text-gold {
+  color: var(--gold-dark);
+}
+.bg-gold {
+  background-color: var(--gold);
+  color: #000;
+  font-weight: 600;
+}
+</style>
+
+{% endblock %}

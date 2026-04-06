@@ -1,0 +1,112 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<style>
+    /* Custom styling for signature */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    .crafted-signature {
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        animation: glow 3s infinite alternate ease-in-out;
+    }
+
+    /* Gradient only for the name */
+    .signature-name {
+        background: linear-gradient(90deg, #e9c46a, #8e44ad, #e4a11b);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 600;
+    }
+
+    @keyframes glow {
+        0% { text-shadow: 0 0 5px rgba(233,196,106,0.3); }
+        100% { text-shadow: 0 0 12px rgba(142,68,173,0.6); }
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-5">
+
+                    <!-- Messages (errors / info) -->
+                    {% if messages %}
+                    <div class="mb-3">
+                        {% for message in messages %}
+                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% if login_form %}
+                    <h2 class="text-center mb-4">Welcome Back</h2>
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        {% if request.GET.next %}
+                        <input type="hidden" name="next" value="{{ request.GET.next }}">
+                        {% elif request.POST.next %}
+                        <input type="hidden" name="next" value="{{ request.POST.next }}">
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input type="text" name="username" class="form-control" required autofocus>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Password</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-gold w-100 btn-lg">Sign In</button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <p>Don't have an account? <a href="{% url 'register' %}" style="color:#e9c46a;">Register here</a></p>
+                    </div>
+
+                    {% else %}
+                    <h2 class="text-center mb-4">Create Account</h2>
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                            <div class="text-danger small">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-gold w-100 btn-lg">Register</button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <p>Already have an account? <a href="{% url 'login' %}" style="color:#e9c46a;">Login here</a></p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Signature -->
+            <div class="text-center mt-4">
+                <small class="crafted-signature">
+                    <span style="color:black;">Crafted by</span>
+                    <span class="signature-name"> Vrushabh Gillarkar ✨</span>
+                </small>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

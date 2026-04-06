@@ -1,0 +1,421 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'home' %}#shop">Shop</a></li>
+      {% if product.category %}
+      <li class="breadcrumb-item">
+        <a href="{% url 'category_products' product.category.id %}">
+          {{ product.category.name }}
+        </a>
+      </li>
+      {% endif %}
+      <li class="breadcrumb-item active">{{ product.name }}</li>
+    </ol>
+  </nav>
+
+  <div class="row g-5">
+    <!-- Product Images -->
+    <div class="col-lg-6">
+      <div class="product-image-main mb-4 text-center position-relative">
+        <!-- Main Product Image -->
+        <img id="mainProductImage"
+             src="{{ product.image.url }}"
+             alt="{{ product.name }}"
+             class="img-fluid rounded shadow w-100 product-zoom"
+             style="max-height: 500px; object-fit: contain; transition: 0.3s ease;">
+
+        <!-- Badge (if any) -->
+        {% if product.badge != 'NONE' %}
+        <span class="position-absolute top-0 start-0 m-3 badge badge-{{ product.get_badge_color }} fs-6 py-2 px-3">
+          {{ product.get_badge_display }}
+        </span>
+        {% endif %}
+      </div>
+
+      <!-- Thumbnail Gallery -->
+      <div class="d-flex justify-content-center flex-wrap gap-3">
+        <!-- Main Image Thumbnail -->
+        <img src="{{ product.image.url }}"
+             class="img-thumbnail product-thumb active-thumb"
+             style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+             onclick="changeImage(this)">
+
+        <!-- Extra Images from Admin -->
+        {% for img in product.images.all %}
+          <img src="{{ img.image.url }}"
+               alt="{{ img.alt_text }}"
+               class="img-thumbnail product-thumb"
+               style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+               onclick="changeImage(this)">
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Product Info -->
+    <div class="col-lg-6">
+      <div class="product-info-card p-4 rounded shadow-sm">
+        <h1 class="display-5 fw-bold mb-3">{{ product.name }}</h1>
+        <p class="h2 text-gold mb-4">₹{{ product.price }}</p>
+
+        <div class="product-meta mb-4">
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <p><strong><i class="fas fa-gem me-2"></i>Stone Type:</strong> {{ product.get_stone_type_display }}</p>
+            </div>
+            <div class="col-sm-6">
+              <p><strong><i class="fas fa-palette me-2"></i>Color:</strong> {{ product.get_color_display }}</p>
+            </div>
+            <div class="col-sm-12">
+              <p><strong><i class="fas fa-tags me-2"></i>Category:</strong> {{ product.category.name|default:"Uncategorized" }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-description mb-4">
+          <h5 class="mb-3">Description</h5>
+          <p class="text-muted lh-lg">{{ product.description }}</p>
+        </div>
+
+        <div class="product-actions mb-4">
+          <div class="d-grid gap-2 d-md-flex">
+            <a href="https://wa.me/917058865990?text=Hello%20Aashutosh%20Jewellers,%20I%20am%20interested%20in%20{{ product.name }}.%20Here%20is%20the%20link:%20{{ request.build_absolute_uri }}" 
+               target="_blank"
+               class="btn btn-success btn-lg flex-fill me-md-2 d-flex align-items-center justify-content-center"
+               style="background-color:#25D366; border:none;">
+              <i class="fab fa-whatsapp me-2 fs-5"></i>Enquire on WhatsApp
+            </a>
+
+           <!-- ❤️ Wishlist Button -->
+<button id="wishlistBtn"
+    class="btn {% if product in wishlist_items %}btn-danger{% else %}btn-outline-dark{% endif %} btn-lg flex-fill d-flex align-items-center justify-content-center"
+    data-product-id="{{ product.id }}">
+    <i class="fas fa-heart me-2 fs-5 {% if product in wishlist_items %}text-danger{% endif %}"></i>
+    <span id="wishlistText">
+        {% if product in wishlist_items %}
+            Remove from Wishlist
+        {% else %}
+            Add to Wishlist
+        {% endif %}
+    </span>
+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== JEWELLERY DETAILS SECTION ==================== -->
+  <div class="mt-5">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-white border-0 py-3">
+        <ul class="nav nav-tabs border-0" id="detailsTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active px-4 py-2" id="details-tab" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab">
+              <i class="fas fa-info-circle me-2"></i>Jewellery Details
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link px-4 py-2" id="price-tab" data-bs-toggle="tab" data-bs-target="#price" type="button" role="tab">
+              <i class="fas fa-rupee-sign me-2"></i>Price Breakup
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card-body p-0">
+        <div class="tab-content" id="detailsTabContent">
+          <!-- Jewellery Details -->
+          <div class="tab-pane fade show active" id="details" role="tabpanel">
+            <div class="accordion" id="accordionDetails">
+
+              <div class="accordion-item border-0">
+                <h2 class="accordion-header" id="headingMetal">
+                  <button class="accordion-button py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMetal" aria-expanded="true">
+                    <i class="fas fa-ring me-2 text-gold"></i>Metal Details
+                  </button>
+                </h2>
+                <div id="collapseMetal" class="accordion-collapse collapse show" data-bs-parent="#accordionDetails">
+                  <div class="accordion-body">
+                    <div class="row">
+                      <div class="col-md-4 mb-2">
+                        <p><strong>Metal Type:</strong><br>{{ product.metal_type|default:"Gold" }}</p>
+                      </div>
+                      <div class="col-md-4 mb-2">
+                        <p><strong>Purity:</strong><br>{{ product.gold_purity|default:"22K" }}</p>
+                      </div>
+                      <div class="col-md-4 mb-2">
+                        <p><strong>Weight:</strong><br>{{ product.gold_weight|default:"15g" }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item border-0">
+                <h2 class="accordion-header" id="headingDiamond">
+                  <button class="accordion-button collapsed py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDiamond">
+                    <i class="fas fa-gem me-2 text-gold"></i>Diamond Details
+                  </button>
+                </h2>
+                <div id="collapseDiamond" class="accordion-collapse collapse" data-bs-parent="#accordionDetails">
+                  <div class="accordion-body">
+                    <div class="row">
+                      <div class="col-md-4 mb-2">
+                        <p><strong>Diamond Weight:</strong><br>{{ product.diamond_weight|default:"0.75 ct" }}</p>
+                      </div>
+                      <div class="col-md-4 mb-2">
+                        <p><strong>Clarity:</strong><br>{{ product.diamond_clarity|default:"VVS1" }}</p>
+                      </div>
+                      <div class="col-md-4 mb-2">
+                        <p><strong>Color:</strong><br>{{ product.diamond_color|default:"F" }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item border-0">
+                <h2 class="accordion-header" id="headingGeneral">
+                  <button class="accordion-button collapsed py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGeneral">
+                    <i class="fas fa-list-alt me-2 text-gold"></i>General Details
+                  </button>
+                </h2>
+                <div id="collapseGeneral" class="accordion-collapse collapse" data-bs-parent="#accordionDetails">
+                  <div class="accordion-body">
+                    <div class="row">
+                      <div class="col-md-6 mb-2">
+                        <p><strong>Occasion:</strong><br>{{ product.occasion|default:"Festive / Wedding" }}</p>
+                      </div>
+                      <div class="col-md-6 mb-2">
+                        <p><strong>Collection:</strong><br>{{ product.collection|default:"Royal Heritage" }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item border-0">
+                <h2 class="accordion-header" id="headingDesc">
+                  <button class="accordion-button collapsed py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDesc">
+                    <i class="fas fa-file-alt me-2 text-gold"></i>Description
+                  </button>
+                </h2>
+                <div id="collapseDesc" class="accordion-collapse collapse" data-bs-parent="#accordionDetails">
+                  <div class="accordion-body">
+                    <p>{{ product.description|default:"No description available." }}</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Price Breakup -->
+          <div class="tab-pane fade" id="price" role="tabpanel">
+            <div class="p-4">
+              <div class="table-responsive">
+                <table class="table table-bordered align-middle text-center">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Component</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Value</td>
+                      <td>₹{{ product.gold_value|default:"0" }}</td>
+                    </tr>
+                    <tr>
+                      <td>Stone Value</td>
+                      <td>₹{{ product.stone_value|default:"0" }}</td>
+                    </tr>
+                    <tr>
+                      <td>Making Charges</td>
+                      <td>₹{{ product.making_charges|default:"0" }}</td>
+                    </tr>
+                    <tr>
+                      <td>GST (3%)</td>
+                      <td>₹{{ product.gst|default:"0" }}</td>
+                    </tr>
+                    <tr class="table-warning fw-bold">
+                      <td>Total</td>
+                      <td>₹{{ product.price }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const wishlistBtn = document.getElementById("wishlistBtn");
+  const wishlistText = document.getElementById("wishlistText");
+  const wishlistIcon = wishlistBtn.querySelector("i");
+
+  if (!wishlistBtn) return;
+
+  wishlistBtn.addEventListener("click", function() {
+    const productId = this.dataset.productId;
+
+    fetch(`/wishlist/toggle/${productId}/`, {   // ✅ Correct URL path
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+    })
+    .then((response) => {
+      if (!response.ok) throw new Error("Network error");
+      return response.json();
+    })
+    .then((data) => {
+      if (data.success) {
+        if (data.added) {
+          wishlistText.textContent = "Remove from Wishlist";
+          wishlistBtn.classList.remove("btn-outline-dark");
+          wishlistBtn.classList.add("btn-danger");
+          wishlistIcon.classList.add("text-danger");
+        } else {
+          wishlistText.textContent = "Add to Wishlist";
+          wishlistBtn.classList.remove("btn-danger");
+          wishlistBtn.classList.add("btn-outline-dark");
+          wishlistIcon.classList.remove("text-danger");
+        }
+      } else {
+        console.error("Wishlist action failed:", data.message);
+      }
+    })
+    .catch((error) => console.error("Error:", error));
+  });
+});
+</script>
+
+
+
+
+
+<!-- ==================== STYLES ==================== -->
+<style>
+.text-gold { color: #b89c00; }
+.btn-gold { background-color: #b89c00; color: white; border: none; transition: 0.3s; }
+.btn-gold:hover { background-color: #a58900; transform: translateY(-2px); }
+
+.product-info-card {
+  background-color: #fff;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.product-thumb.active-thumb { 
+  border: 2px solid #b89c00 !important; 
+  box-shadow: 0 0 8px rgba(184, 156, 0, 0.7); 
+}
+
+.product-card.hover-scale:hover { 
+  transform: translateY(-5px); 
+  transition: all 0.3s ease; 
+}
+
+.product-zoom { 
+  transition: transform 0.3s ease; 
+}
+.product-zoom:hover { 
+  transform: scale(1.05); 
+  cursor: zoom-in; 
+}
+
+.accordion-button:not(.collapsed) {
+  color: #b89c00;
+  background-color: #fffbea;
+  box-shadow: none;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+  border-color: rgba(0,0,0,.125);
+}
+
+.product-thumb {
+  border: 2px solid transparent;
+  transition: all 0.2s ease-in-out;
+}
+.product-thumb:hover {
+  transform: scale(1.05);
+  border-color: #f0c14b;
+}
+
+.nav-tabs .nav-link {
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.nav-tabs .nav-link.active {
+  color: #b89c00;
+  border-bottom: 3px solid #b89c00;
+  background-color: transparent;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.badge {
+  font-size: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .display-5 {
+    font-size: 1.8rem;
+  }
+  
+  .h2 {
+    font-size: 1.5rem;
+  }
+  
+  .product-actions .d-md-flex {
+    flex-direction: column;
+  }
+  
+  .product-actions .me-md-2 {
+    margin-right: 0 !important;
+    margin-bottom: 10px;
+  }
+}
+
+.heart-animate-pop {
+  animation: heartPop 0.3s ease-in-out;
+}
+
+.heart-animate-shrink {
+  animation: heartShrink 0.3s ease-in-out;
+}
+
+@keyframes heartPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+
+@keyframes heartShrink {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.8); }
+  100% { transform: scale(1); }
+}
+
+</style>
+{% endblock %}

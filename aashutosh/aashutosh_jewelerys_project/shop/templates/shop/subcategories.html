@@ -1,0 +1,19 @@
+{% extends 'shop/base.html' %}
+{% block content %}
+<div class="container py-5 text-center">
+  <h2 class="mb-4">{{ category.name }} Subcategories</h2>
+  <div class="row justify-content-center">
+    {% for sub in subcategories %}
+    <div class="col-md-4 mb-4">
+      <a href="{% url 'products_by_subcategory' sub.slug %}" class="text-decoration-none">
+        <div class="card shadow-lg border-0 rounded-4">
+          <div class="card-body">
+            <h5 class="text-dark fw-bold">{{ sub.name }}</h5>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

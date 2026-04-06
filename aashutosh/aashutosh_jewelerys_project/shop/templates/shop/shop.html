@@ -1,0 +1,302 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Filters Sidebar -->
+        <div class="col-lg-3 col-md-4 mb-4">
+            <div class="filter-sidebar p-3 shadow rounded-4 bg-white position-sticky" style="top: 20px;">
+                <h5 class="mb-4">Filters</h5>
+
+                <!-- Collapsible for mobile -->
+                <button class="btn btn-gold w-100 mb-3 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#filter-collapse">
+                    Show Filters
+                </button>
+
+                <div class="collapse d-lg-block" id="filter-collapse">
+                    <form id="filter-form">
+                        <!-- Category Filter -->
+                        <div class="mb-4">
+                            <h6>Category</h6>
+                            {% for category in categories %}
+                            <div class="form-check">
+                                <input class="form-check-input filter-input" type="checkbox" name="category" value="{{ category.id }}" id="cat-{{ category.id }}">
+                                <label class="form-check-label" for="cat-{{ category.id }}">
+                                    <a href="{% url 'category_subcategories' category.id %}" class="text-decoration-none text-dark">
+                                        {{ category.name }}
+                                    </a>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Price Range -->
+                        <div class="mb-4">
+                            <h6>Price Range</h6>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input type="number" class="form-control form-control-sm filter-input" placeholder="Min" name="price_min">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" class="form-control form-control-sm filter-input" placeholder="Max" name="price_max">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Filter Button -->
+                        <button type="button" id="apply-filters" class="btn btn-gold w-100 mt-3">Filter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Section -->
+        <div class="col-lg-9 col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
+                <h2 class="mb-0">
+                    {% if current_category %}
+                        {{ current_category.name }}
+                    {% else %}
+                        All Jewellery
+                    {% endif %}
+                </h2>
+                <div class="d-flex align-items-center mt-2 mt-md-0">
+                    <span class="me-2">Sort by:</span>
+                    <select id="sort-select" class="form-select form-select-sm" style="width: auto;">
+                        <option value="newest">Newest First</option>
+                        <option value="price_low">Price: Low to High</option>
+                        <option value="price_high">Price: High to Low</option>
+                        <option value="name">Name A-Z</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Show Subcategories (if available) -->
+            {% if subcategories %}
+            <div class="row mb-4">
+                {% for sub in subcategories %}
+                <div class="col-md-3 mb-4">
+                    <a href="#" class="text-decoration-none text-dark">
+                        <div class="card shadow-sm border-0 rounded-4 overflow-hidden text-center">
+                            {% if sub.image %}
+                                <img src="{{ sub.image.url }}" class="card-img-top" alt="{{ sub.name }}" style="height: 180px; object-fit: cover;">
+                            {% else %}
+                                <img src="{% static 'images/no-image.png' %}" class="card-img-top" alt="{{ sub.name }}">
+                            {% endif %}
+                            <div class="card-body py-2">
+                                <h6 class="card-title mb-0">{{ sub.name }}</h6>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Active Filters Chips -->
+            <div id="active-filters" class="mb-3 d-flex flex-wrap gap-2"></div>
+
+            <!-- Loader -->
+            <div id="loader" class="text-center py-5" style="display:none;">
+                <div class="spinner-border text-gold" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="row g-4" id="products-container">
+                {% for product in products %}
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 d-flex">
+                    <div class="card product-card h-100 shadow-sm rounded-4 overflow-hidden transition-hover d-flex flex-column">
+                        <div class="position-relative product-image-wrapper">
+                            <img src="{{ product.image.url }}" class="card-img-top product-image" alt="{{ product.name }}">
+                            {% if product.badge != 'NONE' %}
+                            <span class="position-absolute top-0 start-0 m-2 badge badge-{{ product.get_badge_color }}">
+                                {{ product.get_badge_display }}
+                            </span>
+                            {% endif %}
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title mb-1">{{ product.name }}</h5>
+                            <p class="card-text text-muted small mb-1">{{ product.stone_type }} • {{ product.color }}</p>
+                            <p class="card-text fw-bold text-gold mb-2 mt-0" style="font-size: 1.1rem;">₹{{ product.price }}</p>
+                            <div class="mt-auto d-flex gap-2">
+                                <a href="{% url 'product_detail' product.pk %}" class="btn btn-gold btn-sm flex-grow-1">View</a>
+                                <button class="btn btn-outline-gold btn-sm flex-grow-1" data-bs-toggle="modal" data-bs-target="#quickViewModal-{{ product.pk }}">Quick View</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick View Modal -->
+                <div class="modal fade" id="quickViewModal-{{ product.pk }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content rounded-4">
+                            <div class="modal-header border-0">
+                                <h5 class="modal-title">{{ product.name }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <img src="{{ product.image.url }}" class="img-fluid rounded-4" alt="{{ product.name }}">
+                                    </div>
+                                    <div class="col-md-6 d-flex flex-column justify-content-between">
+                                        <p class="text-muted">{{ product.stone_type }} • {{ product.color }}</p>
+                                        <p class="fw-bold text-gold h4">₹{{ product.price }}</p>
+                                        <a href="{% url 'product_detail' product.pk %}" class="btn btn-gold w-100 mb-2">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.product-card { display: flex; flex-direction: column; height: 100%; }
+.card-body { display: flex; flex-direction: column; flex: 1; }
+.mt-auto { margin-top: auto; }
+.product-image-wrapper { height: 220px; overflow: hidden; }
+.product-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.product-card:hover .product-image { transform: scale(1.05); }
+.transition-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.transition-hover:hover { transform: translateY(-6px); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+.btn-gold { background: linear-gradient(90deg, #D4AF37, #FFD700); color: #fff; border: none; }
+.btn-gold:hover { background: linear-gradient(90deg, #FFD700, #D4AF37); color: #fff; }
+.btn-outline-gold { border: 1px solid #D4AF37; color: #D4AF37; }
+.btn-outline-gold:hover { background: #FFD700; color: #000; }
+.badge { padding: 0.35em 0.65em; font-size: 0.75em; font-weight: 500; border-radius: 0.5rem; }
+.text-gold { color: #D4AF37; }
+.filter-chip { background: #FFD700; color: #000; padding: 0.25rem 0.6rem; border-radius: 15px; font-size: 0.875rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; }
+.filter-chip:hover { background: #D4AF37; }
+.filter-chip .remove-chip { font-weight: bold; cursor: pointer; }
+.fade-in { animation: fadeIn 0.5s ease forwards; opacity: 0; }
+@keyframes fadeIn { to { opacity: 1; } }
+@media (max-width: 575.98px) { .product-image-wrapper { height: 180px; } }
+</style>
+
+<script>
+function getSortLabel(value) {
+    switch(value) {
+        case 'newest': return 'Newest First';
+        case 'price_low': return 'Price: Low to High';
+        case 'price_high': return 'Price: High to Low';
+        case 'name': return 'Name A-Z';
+        default: return value;
+    }
+}
+
+function updateActiveFiltersChips() {
+    const container = document.getElementById('active-filters');
+    container.innerHTML = '';
+    document.querySelectorAll('input[name="category"]:checked').forEach(cb => {
+        const labelText = document.querySelector(`label[for="${cb.id}"]`).textContent.trim();
+        const chip = document.createElement('div');
+        chip.className = 'filter-chip';
+        chip.innerHTML = `${labelText} <span class="remove-chip" data-type="category" data-value="${cb.value}">&times;</span>`;
+        container.appendChild(chip);
+    });
+    const min = document.querySelector('input[name="price_min"]').value;
+    const max = document.querySelector('input[name="price_max"]').value;
+    if(min || max) {
+        const chip = document.createElement('div');
+        chip.className = 'filter-chip';
+        chip.innerHTML = `Price: ${min || '0'} - ${max || '∞'} <span class="remove-chip" data-type="price">&times;</span>`;
+        container.appendChild(chip);
+    }
+    const sortValue = document.getElementById('sort-select').value;
+    if(sortValue && sortValue !== 'newest') {
+        const chip = document.createElement('div');
+        chip.className = 'filter-chip';
+        chip.innerHTML = `Sort: ${getSortLabel(sortValue)} <span class="remove-chip" data-type="sort">&times;</span>`;
+        container.appendChild(chip);
+    }
+    if(container.children.length > 0) {
+        const chip = document.createElement('div');
+        chip.className = 'filter-chip';
+        chip.innerHTML = `Clear All <span class="remove-chip" data-type="clear-all">&times;</span>`;
+        container.appendChild(chip);
+    }
+    container.querySelectorAll('.remove-chip').forEach(el => {
+        el.addEventListener('click', () => {
+            const type = el.getAttribute('data-type');
+            if(type === 'category') {
+                document.querySelector(`input[name="category"][value="${el.getAttribute('data-value')}"]`).checked = false;
+            } else if(type === 'price') {
+                document.querySelector('input[name="price_min"]').value = '';
+                document.querySelector('input[name="price_max"]').value = '';
+            } else if(type === 'sort') {
+                document.getElementById('sort-select').value = 'newest';
+            } else if(type === 'clear-all') {
+                document.querySelectorAll('input[name="category"]').forEach(cb => cb.checked = false);
+                document.querySelector('input[name="price_min"]').value = '';
+                document.querySelector('input[name="price_max"]').value = '';
+                document.getElementById('sort-select').value = 'newest';
+            }
+            fetchProducts();
+        });
+    });
+}
+
+function fetchProducts(updateURL = true) {
+    const form = document.getElementById('filter-form');
+    const formData = new FormData();
+    document.querySelectorAll('input[name="category"]:checked').forEach(cb => formData.append('category', cb.value));
+    const priceMin = form.querySelector('input[name="price_min"]').value;
+    const priceMax = form.querySelector('input[name="price_max"]').value;
+    if(priceMin) formData.append('price_min', priceMin);
+    if(priceMax) formData.append('price_max', priceMax);
+    formData.append('sort', document.getElementById('sort-select').value);
+    const params = new URLSearchParams();
+    formData.forEach((value, key) => params.append(key, value));
+    document.getElementById('loader').style.display = 'block';
+    document.getElementById('products-container').style.opacity = 0.5;
+    fetch("{% url 'shop' %}?" + params.toString(), {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(response => response.text())
+    .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const newProducts = doc.getElementById('products-container').innerHTML;
+        const container = document.getElementById('products-container');
+        container.innerHTML = newProducts;
+        container.querySelectorAll('.col-xl-3, .col-lg-4, .col-md-6, .col-sm-6').forEach(el => el.classList.add('fade-in'));
+        document.getElementById('loader').style.display = 'none';
+        container.style.opacity = 1;
+        updateSidebarCheckboxes();
+        if(updateURL) window.history.pushState({ path: window.location.pathname + '?' + params.toString() }, '', window.location.pathname + '?' + params.toString());
+        updateActiveFiltersChips();
+    });
+}
+
+function updateSidebarCheckboxes() {
+    document.querySelectorAll('input[name="category"]').forEach(cb => cb.checked = false);
+    const params = new URLSearchParams(window.location.search);
+    params.getAll('category').forEach(id => {
+        const cb = document.querySelector(`input[name="category"][value="${id}"]`);
+        if(cb) cb.checked = true;
+    });
+    const min = params.get('price_min');
+    const max = params.get('price_max');
+    if(min) document.querySelector('input[name="price_min"]').value = min;
+    if(max) document.querySelector('input[name="price_max"]').value = max;
+    document.getElementById('sort-select').value = params.get('sort') || 'newest';
+}
+
+document.getElementById('apply-filters').addEventListener('click', fetchProducts);
+document.getElementById('sort-select').addEventListener('change', fetchProducts);
+document.querySelectorAll('.filter-input').forEach(el => el.addEventListener('change', updateActiveFiltersChips));
+window.addEventListener('popstate', () => fetchProducts(false));
+window.addEventListener('DOMContentLoaded', () => { 
+    updateActiveFiltersChips(); 
+    updateSidebarCheckboxes();
+});
+</script>
+{% endblock %}

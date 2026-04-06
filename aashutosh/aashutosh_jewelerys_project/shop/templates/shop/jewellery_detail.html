@@ -1,0 +1,11 @@
+<div class="row mt-4">
+  {% for image in jewellery.images.all %}
+    <div class="col-md-3 col-6 mb-3">
+      <div class="border rounded-3 overflow-hidden shadow-sm">
+        <img src="{{ image.image.url }}" alt="{{ image.alt_text }}" class="img-fluid" style="height: 200px; object-fit: cover;">
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-muted">No extra images available for this jewellery.</p>
+  {% endfor %}
+</div>

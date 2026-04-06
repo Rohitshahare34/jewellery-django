@@ -1,0 +1,491 @@
+/* =========================================================
+   BASE.CSS — GLOBAL THEME, NAVIGATION, FOOTER, RESPONSIVE DESIGN
+   ========================================================= */
+
+/* ===== ROOT VARIABLES ===== */
+:root {
+  --primary-gold: #D4AF37;
+  --gold-dark: #B8941F;
+  --gold-light: #F4E8C1;
+  --gold-very-light: #FDF8EC;
+  --dark-charcoal: #2C2C2C;
+  --dark-medium: #3A3A3A;
+  --light-bg: #FAFAFA;
+  --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --transition-slow: all 0.6s ease;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+  --shadow-strong: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== GLOBAL RESETS & BASE STYLES ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--light-bg);
+  color: var(--dark-charcoal);
+  overflow-x: hidden;
+}
+
+main {
+  padding-top: 100px;
+  min-height: calc(100vh - 400px);
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { 
+  width: 8px; 
+}
+
+::-webkit-scrollbar-track { 
+  background: #f1f1f1; 
+}
+
+::-webkit-scrollbar-thumb { 
+  background: var(--primary-gold); 
+  border-radius: 4px; 
+}
+
+::-webkit-scrollbar-thumb:hover { 
+  background: var(--gold-dark); 
+}
+
+/* ===== NAVBAR STYLING ===== */
+.navbar {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  padding: 8px 0 !important;
+  z-index: 1000;
+}
+
+.navbar-scrolled {
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  padding: 6px 0 !important;
+}
+
+.nav-link {
+  color: var(--dark-charcoal) !important;
+  font-weight: 500;
+  margin: 0 10px;
+  padding: 6px 14px !important;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--primary-gold);
+  transform: translateX(-50%);
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+.nav-link:hover,
+.navbar .dropdown-item:hover {
+  color: var(--primary-gold) !important;
+}
+
+.nav-link.active {
+  color: var(--primary-gold) !important;
+  border-bottom: 2px solid var(--primary-gold);
+}
+
+/* ===== LOGO STYLING ===== */
+.logo {
+  font-family: 'Georgia', serif;
+  font-weight: bold;
+  color: var(--primary-gold) !important;
+  font-size: 1.5rem;
+  position: relative;
+}
+
+.logo::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 10px;
+  height: 10px;
+  background: var(--primary-gold);
+  border-radius: 50%;
+  opacity: 0.7;
+  animation: sparkle 3s infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { 
+    opacity: 0.3; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.2); 
+  }
+}
+
+.navbar-logo {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.5s ease;
+}
+
+.navbar-logo:hover {
+  transform: scale(1.05);
+}
+
+/* ===== DROPDOWN MENUS ===== */
+.dropdown-menu {
+  border: none;
+  border-top: 3px solid var(--primary-gold);
+  border-radius: 12px;
+  padding: 10px 0;
+  box-shadow: var(--shadow-strong);
+  animation: dropdownFade 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+}
+
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+@keyframes dropdownFade {
+  from { 
+    opacity: 0; 
+    transform: translateY(-10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.dropdown-item {
+  font-weight: 500;
+  color: #333;
+  padding: 10px 15px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.dropdown-item::before {
+  content: '';
+  position: absolute;
+  left: -100%;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.dropdown-item:hover::before {
+  left: 100%;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(212, 175, 55, 0.1);
+  color: var(--primary-gold);
+}
+
+/* ===== DROPDOWN SUBMENU ===== */
+.dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-left: 0.1rem;
+  margin-top: -0.2rem;
+  border-radius: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+}
+
+.dropdown-submenu:hover > .dropdown-menu,
+.dropdown-submenu .dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+}
+
+/* ===== SEARCH BAR ===== */
+.search-form {
+  position: relative;
+}
+
+.search-form .form-control {
+  border-radius: 50px;
+  padding: 10px 20px;
+  border: 2px solid #e9ecef;
+  transition: var(--transition);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.search-form .form-control:focus {
+  border-color: var(--primary-gold);
+  box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+  background: white;
+}
+
+/* ===== CART BADGE ===== */
+.cart-badge {
+  transition: var(--transition);
+  font-size: 0.7rem;
+  padding: 3px 5px;
+}
+
+.nav-link:hover .cart-badge {
+  transform: scale(1.1);
+  box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+}
+
+/* ===== CATEGORY NAVBAR ===== */
+.category-navbar-wrapper {
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+  margin-top: 80px;
+  text-align: center;
+}
+
+.category-navbar {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  gap: 40px;
+}
+
+.category-navbar li {
+  display: inline-block;
+}
+
+.category-navbar .cat-link {
+  text-decoration: none;
+  font-weight: 500;
+  color: #222;
+  transition: color 0.3s ease;
+}
+
+.category-navbar .cat-link:hover {
+  color: var(--primary-gold);
+}
+
+/* ===== BUTTON STYLING ===== */
+.btn-gold {
+  background: linear-gradient(135deg, var(--primary-gold) 0%, var(--gold-dark) 100%);
+  border: none;
+  color: white;
+  transition: var(--transition);
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-gold::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.7s ease;
+}
+
+.btn-gold:hover::before {
+  left: 100%;
+}
+
+.btn-gold:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4);
+  color: white;
+}
+
+/* ===== FOOTER STYLING ===== */
+.footer {
+  background: linear-gradient(135deg, var(--dark-charcoal) 0%, var(--dark-medium) 100%);
+  color: white;
+  padding: 60px 0 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer h5 {
+  color: var(--primary-gold);
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.footer h5::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: var(--primary-gold);
+}
+
+.footer a {
+  transition: var(--transition);
+}
+
+.footer a:hover {
+  color: var(--primary-gold) !important;
+  padding-left: 5px;
+}
+
+/* ===== SOCIAL ICONS ===== */
+.social-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transition: var(--transition);
+  font-size: 1.2rem;
+  color: var(--primary-gold);
+}
+
+.social-links a:hover {
+  background: var(--primary-gold);
+  color: #fff !important;
+  transform: translateY(-3px);
+}
+
+/* ===== WHATSAPP FLOAT ===== */
+.whatsapp-float {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  color: white;
+  border-radius: 50px;
+  padding: 15px 20px;
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition);
+  animation: pulse-green 2s infinite;
+}
+
+.whatsapp-float:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(37, 211, 102, 0.6);
+  color: white;
+  background: #1ebd5a;
+}
+
+@keyframes pulse-green {
+  0%, 100% { 
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4); 
+  }
+  50% { 
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.8); 
+  }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .navbar-collapse {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-strong);
+    margin-top: 10px;
+  }
+
+  .nav-link::after { 
+    display: none; 
+  }
+
+  .search-form { 
+    margin: 15px 0; 
+  }
+
+  .whatsapp-float {
+    bottom: 15px;
+    right: 15px;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
+
+  .footer { 
+    padding: 40px 0 20px; 
+  }
+
+  .category-navbar-wrapper {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 8px 0;
+  }
+
+  .category-navbar {
+    flex-wrap: nowrap;
+    gap: 25px;
+    padding: 0 10px;
+  }
+
+  .category-navbar li {
+    display: inline-block;
+  }
+
+  .navbar .nav-link {
+    text-align: center;
+  }
+
+  .dropdown-submenu .dropdown-menu {
+    left: 0 !important;
+    top: 100% !important;
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .logo::before {
+    animation: none;
+  }
+  
+  .whatsapp-float {
+    animation: none;
+  }
+}

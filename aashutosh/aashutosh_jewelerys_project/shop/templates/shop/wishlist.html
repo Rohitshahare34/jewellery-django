@@ -1,0 +1,175 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  /* ====== WISHLIST PAGE STYLING ====== */
+  .wishlist-wrapper {
+    padding: 60px 0;
+    background: linear-gradient(180deg, #fffdf8 0%, #f9f7f0 100%);
+    min-height: 80vh;
+  }
+
+  .wishlist-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .wishlist-header h2 {
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  .wishlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+  }
+
+  .wishlist-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .wishlist-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+  }
+
+  .wishlist-card img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .wishlist-card:hover img {
+    transform: scale(1.05);
+  }
+
+  .wishlist-body {
+    padding: 15px;
+  }
+
+  .wishlist-body h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 8px;
+  }
+
+  .wishlist-body p {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+  }
+
+  .wishlist-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+  }
+
+  .btn-remove {
+    background-color: #fff0f0;
+    border: 1px solid #f5baba;
+    color: #d9534f;
+    transition: 0.3s;
+  }
+
+  .btn-remove:hover {
+    background-color: #d9534f;
+    color: #fff;
+  }
+
+  .btn-cart {
+    background-color: #d4af37;
+    border: none;
+    color: #fff;
+    transition: 0.3s;
+  }
+
+  .btn-cart:hover {
+    background-color: #b8952b;
+  }
+
+  .empty-wishlist {
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .empty-wishlist i {
+    font-size: 4rem;
+    color: #d4af37;
+    margin-bottom: 15px;
+  }
+
+  .empty-wishlist h4 {
+    font-weight: 600;
+    color: #444;
+  }
+
+  .empty-wishlist a {
+    margin-top: 15px;
+    display: inline-block;
+    background-color: #d4af37;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.3s;
+  }
+
+  .empty-wishlist a:hover {
+    background-color: #b8952b;
+  }
+</style>
+
+<div class="wishlist-wrapper">
+  <div class="container">
+    <div class="wishlist-header">
+      <h2><i class="fas fa-heart text-danger me-2"></i>My Wishlist</h2>
+      <p class="text-muted">Your saved products — ready when you are ❤️</p>
+    </div>
+
+    {% if wishlist_items %}
+      <div class="wishlist-grid">
+        {% for item in wishlist_items %}
+          <div class="wishlist-card">
+            <a href="{{ item.product.get_absolute_url }}">
+              <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+            </a>
+            <div class="wishlist-body">
+              <h5>{{ item.product.name }}</h5>
+              <p class="mb-2">₹{{ item.product.price }}</p>
+              <div class="wishlist-actions">
+                <form method="post" action="{% url 'toggle_wishlist' item.product.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-remove btn-sm w-100">
+                    <i class="fas fa-times me-1"></i> Remove
+                  </button>
+                </form>
+                <a href="#" class="btn btn-cart btn-sm w-100">
+                  <i class="fas fa-shopping-bag me-1"></i> Add to Cart
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-wishlist">
+        <i class="fas fa-heart-broken"></i>
+        <h4>Your wishlist is empty</h4>
+        <p class="text-muted">Browse the shop and add your favorite jewelry!</p>
+        <a href="{% url 'shop' %}">Go to Shop</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
