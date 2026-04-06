@@ -254,6 +254,7 @@
                 let timeout;
                 
                 dropdown.addEventListener('mouseenter', function() {
+                    if (window.innerWidth < 992) return; // Disable hover logic on mobile
                     clearTimeout(timeout);
                     const menu = dropdown.querySelector('.dropdown-menu');
                     const toggle = dropdown.querySelector('.dropdown-toggle');
@@ -268,6 +269,7 @@
                 });
                 
                 dropdown.addEventListener('mouseleave', function() {
+                    if (window.innerWidth < 992) return; // Disable hover logic on mobile
                     const self = this;
                     timeout = setTimeout(function() {
                         const menu = self.querySelector('.dropdown-menu');
@@ -287,8 +289,25 @@
             // Submenus
             submenus.forEach(function(submenu) {
                 let timeout;
+                const toggle = submenu.querySelector('.dropdown-toggle');
+                
+                // Add click handling for mobile submenus
+                if (toggle) {
+                    toggle.addEventListener('click', function(e) {
+                        if (window.innerWidth < 992) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            const menu = submenu.querySelector('.dropdown-menu');
+                            if (menu) {
+                                menu.classList.toggle('show');
+                                submenu.classList.toggle('show');
+                            }
+                        }
+                    });
+                }
                 
                 submenu.addEventListener('mouseenter', function() {
+                    if (window.innerWidth < 992) return; // Disable hover logic on mobile
                     clearTimeout(timeout);
                     const menu = submenu.querySelector('.dropdown-menu');
                     if (menu) {
@@ -298,6 +317,7 @@
                 });
                 
                 submenu.addEventListener('mouseleave', function() {
+                    if (window.innerWidth < 992) return; // Disable hover logic on mobile
                     const self = this;
                     timeout = setTimeout(function() {
                         const menu = self.querySelector('.dropdown-menu');
