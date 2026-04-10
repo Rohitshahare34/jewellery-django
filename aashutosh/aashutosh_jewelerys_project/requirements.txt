@@ -1,7 +1,7 @@
 # === CORE DEPENDENCIES ===
-pip install django pillow
 Django==5.0.2
 Pillow==10.2.0
+python-decouple==3.8
 
 # === DATABASE SUPPORT ===
 psycopg2-binary==2.9.9          # PostgreSQL connector

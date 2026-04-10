@@ -1,0 +1,96 @@
+{% load static %}
+<!-- ======== METAL PRICE TICKER ======== -->
+<div class="price-ticker">
+    <div class="ticker-wrapper">
+        <div class="ticker-content" id="ticker-content">
+            <!-- Gold 24K Price -->
+            <div class="ticker-item">
+                <i class="fas fa-coins text-warning"></i>
+                <span class="metal-name">Gold 24K</span>
+                <span class="metal-price">₹<span id="gold-price">{{ gold_price.price_per_gram|default:"7250.00" }}</span>/g</span>
+                <span id="gold-change" class="change-indicator {% if gold_price.is_up %}text-success{% else %}text-danger{% endif %}">
+                    <i class="fas fa-arrow-{% if gold_price.is_up %}up{% else %}down{% endif %}"></i>
+                    <span id="gold-change-value">{{ gold_price.change_percent|default:"0.00" }}%</span>
+                </span>
+            </div>
+
+            <!-- Divider -->
+            <div class="ticker-divider"></div>
+
+            <!-- Gold 22K Price -->
+            <div class="ticker-item">
+                <i class="fas fa-coins text-warning"></i>
+                <span class="metal-name">Gold 22K</span>
+                <span class="metal-price">₹<span id="gold-22k-price">{{ gold_price.price_22k|default:"6646.00" }}</span>/g</span>
+            </div>
+
+            <!-- Divider -->
+            <div class="ticker-divider"></div>
+
+            <!-- Silver Price -->
+            <div class="ticker-item">
+                <i class="fas fa-coins" style="color: #C0C0C0;"></i>
+                <span class="metal-name">Silver</span>
+                <span class="metal-price">₹<span id="silver-price">{{ silver_price.price_per_gram|default:"85.50" }}</span>/g</span>
+                <span id="silver-change" class="change-indicator {% if silver_price.is_up %}text-success{% else %}text-danger{% endif %}">
+                    <i class="fas fa-arrow-{% if silver_price.is_up %}up{% else %}down{% endif %}"></i>
+                    <span id="silver-change-value">{{ silver_price.change_percent|default:"0.00" }}%</span>
+                </span>
+            </div>
+
+            <!-- Divider -->
+            <div class="ticker-divider"></div>
+
+            <!-- Last Updated -->
+            <div class="ticker-item update-time">
+                <i class="fas fa-clock"></i>
+                <span>Updated: <span id="last-updated">{{ gold_price.last_updated_formatted|default:"Just now" }}</span></span>
+            </div>
+
+            <!-- Extra spacing for seamless loop -->
+            <div class="ticker-spacer"></div>
+
+            <!-- Duplicate content for seamless infinite scroll -->
+            <div class="ticker-item">
+                <i class="fas fa-coins text-warning"></i>
+                <span class="metal-name">Gold 24K</span>
+                <span class="metal-price">₹<span id="gold-price-2">{{ gold_price.price_per_gram|default:"7250.00" }}</span>/g</span>
+                <span class="change-indicator {% if gold_price.is_up %}text-success{% else %}text-danger{% endif %}">
+                    <i class="fas fa-arrow-{% if gold_price.is_up %}up{% else %}down{% endif %}"></i>
+                    <span>{{ gold_price.change_percent|default:"0.00" }}%</span>
+                </span>
+            </div>
+
+            <div class="ticker-divider"></div>
+
+            <div class="ticker-item">
+                <i class="fas fa-coins text-warning"></i>
+                <span class="metal-name">Gold 22K</span>
+                <span class="metal-price">₹<span>{{ gold_price.price_22k|default:"6646.00" }}</span>/g</span>
+            </div>
+
+            <div class="ticker-divider"></div>
+
+            <div class="ticker-item">
+                <i class="fas fa-coins" style="color: #C0C0C0;"></i>
+                <span class="metal-name">Silver</span>
+                <span class="metal-price">₹<span id="silver-price-2">{{ silver_price.price_per_gram|default:"85.50" }}</span>/g</span>
+                <span class="change-indicator {% if silver_price.is_up %}text-success{% else %}text-danger{% endif %}">
+                    <i class="fas fa-arrow-{% if silver_price.is_up %}up{% else %}down{% endif %}"></i>
+                    <span>{{ silver_price.change_percent|default:"0.00" }}%</span>
+                </span>
+            </div>
+
+            <div class="ticker-divider"></div>
+
+            <div class="ticker-item update-time">
+                <i class="fas fa-clock"></i>
+                <span>Updated: <span>{{ gold_price.last_updated_formatted|default:"Just now" }}</span></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Link CSS and JS -->
+<link rel="stylesheet" href="{% static 'shop/css/price_ticker.css' %}">
+<script src="{% static 'shop/js/price_ticker.js' %}"></script>

@@ -9,7 +9,8 @@ from .models import (
     Product,
     ProductImage,
     Jewellery,
-    JewelleryImage
+    JewelleryImage,
+    MetalPrice
 )
 
 # -----------------------------
@@ -224,3 +225,27 @@ class JewelleryAdmin(admin.ModelAdmin):
     class Media:
         # JS for live total price calculation
         js = ('shop/js/admin_jewellery.js',)
+
+
+# -----------------------------
+# METAL PRICE ADMIN
+# -----------------------------
+@admin.register(MetalPrice)
+class MetalPriceAdmin(admin.ModelAdmin):
+    list_display = ('metal_type', 'price_per_gram', 'currency', 'change_percent', 'is_up_indicator', 'last_updated')
+    list_filter = ('metal_type',)
+    readonly_fields = ('last_updated',)
+    search_fields = ('metal_type',)
+    
+    def is_up_indicator(self, obj):
+        """Show arrow indicator for price direction."""
+        if obj.is_up:
+            return format_html('<span style="color: green;">▲ UP</span>')
+        else:
+            return format_html('<span style="color: red;">▼ DOWN</span>')
+    
+    is_up_indicator.short_description = "Trend"
+    
+    class Meta:
+        verbose_name = "Metal Price"
+        verbose_name_plural = "Metal Prices"

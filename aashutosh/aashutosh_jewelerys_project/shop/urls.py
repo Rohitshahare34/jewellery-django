@@ -45,4 +45,8 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
+
+    # === Metal Price API ===
+    path('api/metal-prices/', views.get_metal_prices, name='get_metal_prices'),
+    path('api/refresh-prices/', views.refresh_metal_prices, name='refresh_metal_prices'),
 ]

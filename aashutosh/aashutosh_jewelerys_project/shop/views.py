@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 
-from .models import Jewellery, Product, Category, SubCategory, Wishlist
+from .models import Jewellery, Product, Category, SubCategory, Wishlist, MetalPrice
 
 # ======================================================
 # HOME PAGE VIEW
@@ -338,3 +338,79 @@ def wishlist_view(request):
     """Display all wishlist items for the logged-in user."""
     wishlist_items = Wishlist.objects.filter(user=request.user).select_related("product")
     return render(request, "shop/wishlist.html", {"wishlist_items": wishlist_items})
+
+
+# ======================================================
+# METAL PRICE API ENDPOINTS
+# ======================================================
+def get_metal_prices(request):
+    """
+    AJAX endpoint to fetch latest metal prices from database.
+    Returns JSON response with gold and silver prices.
+    """
+    try:
+        gold_price = MetalPrice.objects.filter(metal_type='GOLD').first()
+        silver_price = MetalPrice.objects.filter(metal_type='SILVER').first()
+        
+        response_data = {
+            'success': True,
+            'gold': {
+                'price': str(gold_price.price_per_gram) if gold_price else '0',
+                'price_24k': str(gold_price.price_per_gram) if gold_price else '0',
+                'price_22k': str(gold_price.price_22k) if hasattr(gold_price, 'price_22k') and gold_price.price_22k else '0',
+                'change_percent': str(gold_price.change_percent) if gold_price else '0',
+                'is_up': gold_price.is_up if gold_price else True,
+            },
+            'silver': {
+                'price': str(silver_price.price_per_gram) if silver_price else '0',
+                'change_percent': str(silver_price.change_percent) if silver_price else '0',
+                'is_up': silver_price.is_up if silver_price else True,
+            },
+        }
+        
+        if gold_price:
+            response_data['gold']['last_updated'] = gold_price.last_updated_formatted()
+        if silver_price:
+            response_data['silver']['last_updated'] = silver_price.last_updated_formatted()
+            
+        return JsonResponse(response_data)
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'message': str(e)
+        }, status=500)
+
+
+@require_POST
+def refresh_metal_prices(request):
+    """
+    Manual trigger to refresh metal prices from API.
+    Can be called from admin panel or button click.
+    """
+    try:
+        from .price_api import update_metal_prices
+        
+        result = update_metal_prices()
+        
+        if result['success']:
+            messages.success(request, 'Metal prices updated successfully!')
+            return JsonResponse({
+                'success': True,
+                'message': result['message'],
+                'gold': str(result['gold']['price_per_gram']),
+                'silver': str(result['silver']['price_per_gram']),
+            })
+        else:
+            messages.error(request, result['message'])
+            return JsonResponse({
+                'success': False,
+                'message': result['message']
+            }, status=400)
+            
+    except Exception as e:
+        messages.error(request, f'Error updating prices: {str(e)}')
+        return JsonResponse({
+            'success': False,
+            'message': str(e)
+        }, status=500)

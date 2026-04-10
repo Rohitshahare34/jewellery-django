@@ -1,0 +1,231 @@
+/* ========================================
+   METAL PRICE TICKER STYLES
+   Premium jewellery design with gold theme
+   ======================================== */
+
+/* Main Ticker Container */
+.price-ticker {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+    border-bottom: 2px solid #FFD700;
+    border-top: 1px solid rgba(255, 215, 0, 0.3);
+    overflow: hidden;
+    position: fixed;  /* Fixed position to stay below navbar */
+    top: 70px;  /* Position below navbar (adjust based on navbar height) */
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 12px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    z-index: 999;  /* Just below navbar (navbar is 1000) */
+}
+
+/* Ticker Wrapper */
+.ticker-wrapper {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Ticker Content - Animation */
+.ticker-content {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    animation: ticker-scroll 30s linear infinite;
+    width: max-content;
+}
+
+/* Pause on hover */
+.ticker-content:hover {
+    animation-play-state: paused;
+}
+
+/* Smooth Scroll Animation */
+@keyframes ticker-scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Ticker Item */
+.ticker-item {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 20px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    gap: 8px;
+}
+
+.ticker-item i {
+    font-size: 16px;
+}
+
+/* Metal Name */
+.metal-name {
+    font-weight: 600;
+    color: #FFD700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 13px;
+}
+
+/* Metal Price */
+.metal-price {
+    font-weight: 700;
+    font-size: 16px;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+}
+
+/* Change Indicator */
+.change-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.change-indicator.text-success {
+    color: #00FF00;
+}
+
+.change-indicator.text-danger {
+    color: #FF4444;
+}
+
+.change-indicator i {
+    font-size: 10px;
+}
+
+/* Divider */
+.ticker-divider {
+    width: 1px;
+    height: 30px;
+    background: linear-gradient(to bottom, transparent, #FFD700, transparent);
+    margin: 0 15px;
+}
+
+/* Update Time */
+.update-time {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.update-time i {
+    color: #FFD700;
+}
+
+/* Spacer for seamless loop */
+.ticker-spacer {
+    width: 50px;
+}
+
+/* Premium Shine Effect */
+.price-ticker::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 215, 0, 0.1),
+        transparent
+    );
+    animation: ticker-shine 5s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes ticker-shine {
+    0%, 100% {
+        left: -100%;
+    }
+    50% {
+        left: 150%;
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .price-ticker {
+        padding: 10px 0;
+        top: 60px;  /* Adjust for mobile navbar height */
+    }
+
+    .ticker-item {
+        padding: 6px 15px;
+        font-size: 12px;
+    }
+
+    .metal-name {
+        font-size: 11px;
+    }
+
+    .metal-price {
+        font-size: 14px;
+    }
+
+    .change-indicator {
+        font-size: 10px;
+        padding: 2px 6px;
+    }
+
+    .ticker-divider {
+        margin: 0 10px;
+    }
+
+    /* Slower animation on mobile for better readability */
+    .ticker-content {
+        animation-duration: 40s;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    .ticker-item {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+
+    .metal-price {
+        font-size: 13px;
+    }
+
+    .ticker-content {
+        animation-duration: 45s;
+    }
+}
+
+/* Loading State */
+.ticker-loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Error State */
+.ticker-error {
+    background: linear-gradient(135deg, #2d1a1a 0%, #1a1a1a 100%);
+    border-bottom-color: #FF4444;
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .ticker-content {
+        animation: none;
+    }
+    
+    .price-ticker::before {
+        animation: none;
+    }
+}

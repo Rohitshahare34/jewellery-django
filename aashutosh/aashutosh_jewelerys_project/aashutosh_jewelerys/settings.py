@@ -1,13 +1,18 @@
 import os
 from pathlib import Path
+from decouple import config
 
 # --- Base directory setup ---
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --- Security settings ---
-SECRET_KEY = 'django-insecure-your-secret-key-here'
-DEBUG = True
+SECRET_KEY = config('DJANGO_SECRET_KEY', default='django-insecure-your-secret-key-here')
+DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = []
+
+# --- Metal Price API Configuration ---
+GOLD_API_KEY = config('GOLD_API_KEY', default='')
+API_UPDATE_INTERVAL = config('API_UPDATE_INTERVAL', default=300, cast=int)
 
 # --- Installed apps ---
 INSTALLED_APPS = [
@@ -48,6 +53,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'shop.context_processors.cart_context',
+                'shop.context_processors.metal_prices_context',
             ],
         },
     },

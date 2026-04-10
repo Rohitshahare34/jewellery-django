@@ -319,3 +319,34 @@ class Wishlist(models.Model):
     def added_time(self):
         return self.created_at.strftime("%b %d, %Y")
 
+
+# -----------------------------
+# METAL PRICE MODEL (Live Gold/Silver Rates)
+# -----------------------------
+class MetalPrice(models.Model):
+    metal_type = models.CharField(max_length=20, choices=[
+        ('GOLD', 'Gold'),
+        ('SILVER', 'Silver'),
+    ])
+    price_per_gram = models.DecimalField(max_digits=10, decimal_places=2)  # 24K for gold
+    price_22k = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, help_text="22K gold price (auto-calculated)")
+    currency = models.CharField(max_length=10, default='INR')
+    change_percent = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    is_up = models.BooleanField(default=True)
+    last_updated = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name_plural = "Metal Prices"
+        ordering = ['metal_type']
+
+    def __str__(self):
+        return f"{self.metal_type} - ₹{self.price_per_gram}/g"
+
+    def formatted_price(self):
+        """Return formatted price string."""
+        return f"₹{self.price_per_gram:,.2f}"
+
+    def last_updated_formatted(self):
+        """Return formatted last updated time."""
+        return self.last_updated.strftime("%b %d, %Y %I:%M %p")
+
