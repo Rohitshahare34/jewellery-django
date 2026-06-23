@@ -42,12 +42,12 @@ def metal_prices_context(request):
 def popup_context(request):
     """
     Add active popup message to template context.
-    Only shows popup on home page when status is True.
+    Shows popup on home page and rate page when status is True.
     """
     from .models import PopupMessage
     
-    # Only show popup on home page
-    if request.path == '/':
+    # Show popup on home page and rate page
+    if request.path == '/' or request.path == '/live-rates/' or request.path == '/rate-calculator/':
         popup = PopupMessage.objects.filter(status=True).first()
         return {'popup': popup}
     

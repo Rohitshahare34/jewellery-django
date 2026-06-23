@@ -1737,10 +1737,10 @@
 {% endif %}
 
 <!-- ===== Reels Section ===== -->
-{% if reels %}
+{% if reels|length > 1 %}
 <section class="reels-section">
   <div class="container">
-    <h3 class="reels-title">Our Jewellery Reels</h3>
+    <h3 class="reels-title">Jewellery Showcase</h3>
     <div class="reels-container">
       {% for reel in reels %}
       <div class="reel-card">
