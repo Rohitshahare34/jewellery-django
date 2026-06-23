@@ -9,7 +9,90 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 
-from .models import Jewellery, Product, Category, SubCategory, Wishlist, MetalPrice
+from .models import Jewellery, Product, Category, SubCategory, Wishlist, MetalPrice, MetalRate, PopupMessage, JewelryProduct
+
+# ======================================================
+# LIVE RATES VIEW
+# ======================================================
+def live_rates(request):
+    """Today's Rates Page"""
+    rates = MetalRate.objects.filter(status=True)
+    
+    rates_with_breakdown = []
+    for rate in rates:
+        base_price = rate.rate_per_gram
+        
+        # Calculate making amount
+        if rate.making_type == 'FIXED':
+            making_amount = rate.making_charge
+        else:
+            making_amount = (base_price * rate.making_charge) / 100
+        
+        subtotal = base_price + making_amount
+        gst_amount = (subtotal * rate.gst_percentage) / 100
+        total_amount = subtotal + gst_amount
+        
+        rates_with_breakdown.append({
+            'rate': rate,
+            'breakdown': {
+                'base_price': base_price,
+                'making_amount': making_amount,
+                'subtotal': subtotal,
+                'gst_amount': gst_amount,
+                'total_amount': total_amount
+            }
+        })
+    
+    return render(request, 'shop/live_rates.html', {
+        'rates_with_breakdown': rates_with_breakdown
+    })
+
+# ======================================================
+# RATE CALCULATOR VIEW
+# ======================================================
+def rate_calculator(request):
+    """Rate Calculator Page"""
+    metal_rates = MetalRate.objects.filter(status=True)
+    
+    selected_metal = request.GET.get('metal', None)
+    weight = request.GET.get('weight', None)
+    
+    breakdown = None
+    selected_rate = None
+    
+    if selected_metal and weight:
+        try:
+            weight = float(weight)
+            selected_rate = MetalRate.objects.get(metal_type=selected_metal)
+            
+            base_price = selected_rate.rate_per_gram * weight
+            
+            if selected_rate.making_type == 'FIXED':
+                making_amount = selected_rate.making_charge * weight
+            else:
+                making_amount = (base_price * selected_rate.making_charge) / 100
+            
+            subtotal = base_price + making_amount
+            gst_amount = (subtotal * selected_rate.gst_percentage) / 100
+            total_amount = subtotal + gst_amount
+            
+            breakdown = {
+                'base_price': base_price,
+                'making_amount': making_amount,
+                'subtotal': subtotal,
+                'gst_amount': gst_amount,
+                'total_amount': total_amount
+            }
+        except:
+            pass
+    
+    return render(request, 'shop/rate_calculator.html', {
+        'metal_rates': metal_rates,
+        'selected_metal': selected_metal,
+        'weight': weight,
+        'breakdown': breakdown,
+        'selected_rate': selected_rate
+    })
 
 # ======================================================
 # HOME PAGE VIEW

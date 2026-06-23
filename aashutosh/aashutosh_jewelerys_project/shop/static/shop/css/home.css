@@ -244,7 +244,7 @@ body {
 
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
-  .hero-section h1 { font-size: 2.5rem; }
+  .hero-section h1 { font-size: clamp(2rem, 10vw, 3rem); }
   .btn-gold, .btn-outline-dark { padding: 10px 20px; font-size: 0.9rem; }
   .hero-section { padding: 1.5rem 0 2rem 0; min-height: auto; }
   
@@ -549,6 +549,15 @@ body {
     width: 50% !important;
     flex: 0 0 50% !important;
     max-width: 50% !important;
+  }
+  
+  /* Necklace Section Mobile Styles */
+  .necklace-section h2 {
+    font-size: 1.8rem !important;
+  }
+  
+  .necklace-section .lead {
+    font-size: 1rem !important;
   }
 }
 

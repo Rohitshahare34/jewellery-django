@@ -350,3 +350,141 @@ class MetalPrice(models.Model):
         """Return formatted last updated time."""
         return self.last_updated.strftime("%b %d, %Y %I:%M %p")
 
+
+# -----------------------------
+# METAL RATE MODEL (Today's Rates)
+# -----------------------------
+class MetalRate(models.Model):
+    METAL_CHOICES = [
+        ("GOLD_24K", "24K Gold"),
+        ("GOLD_22K", "22K Gold"),
+        ("GOLD_18K", "18K Gold"),
+        ("SILVER", "Silver"),
+    ]
+    MAKING_CHOICES = [
+        ("FIXED", "Fixed (₹/g)"),
+        ("PERCENTAGE", "Percentage (%)"),
+    ]
+    
+    metal_type = models.CharField(
+        max_length=20, 
+        choices=METAL_CHOICES, 
+        unique=True
+    )
+    purity = models.DecimalField(
+        max_digits=5, 
+        decimal_places=2, 
+        default=0.0
+    )
+    rate_per_gram = models.DecimalField(
+        max_digits=12, 
+        decimal_places=2, 
+        default=0.0
+    )
+    making_charge = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=0.0
+    )
+    making_type = models.CharField(
+        max_length=20, 
+        choices=MAKING_CHOICES, 
+        default="FIXED"
+    )
+    gst_percentage = models.DecimalField(
+        max_digits=5, 
+        decimal_places=2, 
+        default=3.0
+    )
+    status = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name_plural = "Metal Rates"
+        ordering = ["metal_type"]
+
+    def __str__(self):
+        return f"{self.get_metal_type_display()} - ₹{self.rate_per_gram}/g"
+    
+    def get_metal_type_display(self):
+        # Return the display name from choices
+        for choice in self.METAL_CHOICES:
+            if choice[0] == self.metal_type:
+                return choice[1]
+        return self.metal_type
+
+
+# -----------------------------
+# JEWELRY PRODUCT MODEL
+# -----------------------------
+class JewelryProduct(models.Model):
+    METAL_CHOICES = [
+        ("GOLD_24K", "24K Gold"),
+        ("GOLD_22K", "22K Gold"),
+        ("GOLD_18K", "18K Gold"),
+        ("SILVER", "Silver"),
+    ]
+    MAKING_CHOICES = [
+        ("FIXED", "Fixed (₹/g)"),
+        ("PERCENTAGE", "Percentage (%)"),
+        ("USE_RATE", "Use from Metal Rate"),
+    ]
+    
+    name = models.CharField(max_length=200)
+    metal_type = models.CharField(max_length=20, choices=METAL_CHOICES)
+    weight = models.DecimalField(max_digits=10, decimal_places=3, default=0.0)
+    description = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to="jewelry_products/", blank=True, null=True)
+    status = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    making_type = models.CharField(
+        max_length=20, 
+        choices=MAKING_CHOICES, 
+        default="USE_RATE"
+    )
+    making_charge = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        blank=True, 
+        null=True
+    )
+    category = models.ForeignKey(
+        Category, 
+        on_delete=models.CASCADE, 
+        related_name="jewelry_products"
+    )
+    subcategory = models.ForeignKey(
+        SubCategory, 
+        on_delete=models.CASCADE, 
+        related_name="jewelry_products", 
+        blank=True, 
+        null=True
+    )
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.name
+
+
+# -----------------------------
+# POPUP MESSAGE MODEL
+# -----------------------------
+class PopupMessage(models.Model):
+    title = models.CharField(max_length=255)
+    message = models.TextField()
+    status = models.BooleanField(default=True)
+    show_on_refresh = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name_plural = "Popup Messages"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.title
+

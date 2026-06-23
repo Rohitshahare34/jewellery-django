@@ -49,4 +49,8 @@ urlpatterns = [
     # === Metal Price API ===
     path('api/metal-prices/', views.get_metal_prices, name='get_metal_prices'),
     path('api/refresh-prices/', views.refresh_metal_prices, name='refresh_metal_prices'),
+    
+    # === Live Rates Page ===
+    path('live-rates/', views.live_rates, name='live_rates'),
+    path('rate-calculator/', views.rate_calculator, name='rate_calculator'),
 ]

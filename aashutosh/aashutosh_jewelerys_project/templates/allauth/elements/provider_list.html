@@ -1,0 +1,13 @@
+<ul style="
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+">
+    {% for slot in slots.default %}
+        {{ slot }}
+    {% endfor %}
+</ul>
