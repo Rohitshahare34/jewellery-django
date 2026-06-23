@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 
-from .models import Jewellery, Product, Category, SubCategory, Wishlist, MetalPrice, MetalRate, PopupMessage, JewelryProduct
+from .models import Jewellery, Product, Category, SubCategory, Wishlist, MetalPrice, MetalRate, PopupMessage, JewelryProduct, Testimonial, Reel
 
 # ======================================================
 # LIVE RATES VIEW
@@ -101,12 +101,20 @@ def home(request):
     featured_products = Jewellery.objects.filter(is_featured=True, in_stock=True)[:8]
     new_arrivals = Jewellery.objects.filter(badge='NEW', in_stock=True)[:6]
     categories = Category.objects.all()[:4]
+    metal_rates = MetalRate.objects.filter(status=True)
+    testimonials = Testimonial.objects.filter(is_approved=True)
+    featured_subcategories = SubCategory.objects.filter(is_featured=True)
+    reels = Reel.objects.filter(is_active=True)
 
     context = {
         'featured_products': featured_products,
         'new_arrivals': new_arrivals,
         'categories': categories,
+        'metal_rates': metal_rates,
         'hero_videos': [1, 2, 3],  # pass the number of hero videos
+        'testimonials': testimonials,
+        'featured_subcategories': featured_subcategories,
+        'reels': reels,
     }
     return render(request, 'shop/home.html', context)
 
@@ -497,3 +505,44 @@ def refresh_metal_prices(request):
             'success': False,
             'message': str(e)
         }, status=500)
+
+
+@require_POST
+def submit_testimonial(request):
+    """Saves submitted customer feedback to database and returns JSON."""
+    name = request.POST.get('name', '').strip()
+    rating = request.POST.get('rating', '5')
+    message = request.POST.get('message', '').strip()
+    designation = request.POST.get('designation', '').strip()
+
+    if not designation:
+        designation = 'Verified Buyer'
+
+    if not name or not message:
+        return JsonResponse({'success': False, 'error': 'Name and feedback message are required.'}, status=400)
+
+    try:
+        rating = int(rating)
+        if rating < 1 or rating > 5:
+            rating = 5
+    except ValueError:
+        rating = 5
+
+    testimonial = Testimonial.objects.create(
+        name=name,
+        rating=rating,
+        message=message,
+        designation=designation,
+        is_approved=True  # Auto-approve so it shows on front page instantly
+    )
+
+    return JsonResponse({
+        'success': True,
+        'testimonial': {
+            'name': testimonial.name,
+            'rating': testimonial.rating,
+            'message': testimonial.message,
+            'designation': testimonial.designation,
+            'created_at': testimonial.created_at.strftime('%Y-%m-%d')
+        }
+    })
