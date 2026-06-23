@@ -191,7 +191,7 @@ def subcategory_products(request, subcategory_id):
     subcategory = get_object_or_404(SubCategory, id=subcategory_id)
     
     # Get all products under this subcategory
-    products = Product.objects.filter(subcategory=subcategory, is_available=True)
+    products = Jewellery.objects.filter(subcategory=subcategory, in_stock=True)
     
     context = {
         'subcategory': subcategory,
@@ -237,7 +237,7 @@ def search(request):
     query = request.GET.get('q', '')
     results = []
     if query:
-        results = Product.objects.filter(name__icontains=query)
+        results = Jewellery.objects.filter(name__icontains=query, in_stock=True)
     return render(request, 'shop/search_results.html', {'query': query, 'results': results})
 
 
@@ -267,16 +267,15 @@ def profile_view(request):
 
 @require_POST
 def toggle_wishlist(request, product_id):
-    product = Product.objects.get(id=product_id)
-    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
-    
-    if product in wishlist.products.all():
-        wishlist.products.remove(product)
+    product = get_object_or_404(Jewellery, id=product_id)
+    wishlist_item, created = Wishlist.objects.get_or_create(
+        user=request.user, product=product
+    )
+    if not created:
+        wishlist_item.delete()
         in_wishlist = False
     else:
-        wishlist.products.add(product)
         in_wishlist = True
-    
     return JsonResponse({'in_wishlist': in_wishlist})
 
 
@@ -327,7 +326,7 @@ def contact(request):
 
 def category_products(request, id):
     category = get_object_or_404(Category, id=id)
-    products = Jewellery.objects.filter(category=category)
+    products = Jewellery.objects.filter(subcategory__category=category)
     return render(request, 'shop/category_products.html', {
         'category': category,
         'products': products,
@@ -335,7 +334,7 @@ def category_products(request, id):
 
 def all_products(request):
     """Display all available products across all categories and subcategories."""
-    products = Product.objects.filter(in_stock=True).order_by('-created_at')
+    products = Jewellery.objects.filter(in_stock=True).order_by('-created_at')
     categories = Category.objects.all()
 
     context = {
@@ -412,16 +411,25 @@ def change_password_view(request):
 
 def wishlist_toggle(request, product_id):
     if request.method == "POST":
-        product = get_object_or_404(Product, id=product_id)
+        if not request.user.is_authenticated:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.headers.get('Content-Type') == 'application/json' or 'application/json' in request.META.get('HTTP_ACCEPT', ''):
+                return JsonResponse({"success": False, "message": "Authentication required"}, status=401)
+            return redirect('login')
+
+        product = get_object_or_404(Jewellery, id=product_id)
         wishlist_item, created = Wishlist.objects.get_or_create(
             user=request.user, product=product
         )
 
         if not created:
             wishlist_item.delete()
-            return JsonResponse({"success": True, "added": False})
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.headers.get('Content-Type') == 'application/json' or 'application/json' in request.META.get('HTTP_ACCEPT', ''):
+                return JsonResponse({"success": True, "added": False, "status": "removed"})
+            return redirect('wishlist')
         else:
-            return JsonResponse({"success": True, "added": True})
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.headers.get('Content-Type') == 'application/json' or 'application/json' in request.META.get('HTTP_ACCEPT', ''):
+                return JsonResponse({"success": True, "added": True, "status": "added"})
+            return redirect('wishlist')
 
     return JsonResponse({"success": False, "message": "Invalid request"})
 

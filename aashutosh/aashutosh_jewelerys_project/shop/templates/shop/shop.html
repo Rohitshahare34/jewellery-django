@@ -110,7 +110,7 @@
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 d-flex">
                     <div class="card product-card h-100 shadow-sm rounded-4 overflow-hidden transition-hover d-flex flex-column">
                         <div class="position-relative product-image-wrapper">
-                            <img src="{{ product.image.url }}" class="card-img-top product-image" alt="{{ product.name }}">
+                            <img src="{{ product.image_url }}" class="card-img-top product-image" alt="{{ product.name }}">
                             {% if product.badge != 'NONE' %}
                             <span class="position-absolute top-0 start-0 m-2 badge badge-{{ product.get_badge_color }}">
                                 {{ product.get_badge_display }}
@@ -140,7 +140,7 @@
                             <div class="modal-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <img src="{{ product.image.url }}" class="img-fluid rounded-4" alt="{{ product.name }}">
+                                        <img src="{{ product.image_url }}" class="img-fluid rounded-4" alt="{{ product.name }}">
                                     </div>
                                     <div class="col-md-6 d-flex flex-column justify-content-between">
                                         <p class="text-muted">{{ product.stone_type }} • {{ product.color }}</p>

@@ -9,7 +9,7 @@
   <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8">
     {% for product in results %}
     <div class="bg-white rounded-2xl shadow hover:shadow-xl overflow-hidden transition-all duration-300">
-      <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-64 object-cover">
+      <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-64 object-cover">
       <div class="p-4 text-center">
         <h3 class="font-semibold text-lg">{{ product.name }}</h3>
         <p class="text-yellow-600 font-bold mt-2">₹{{ product.price }}</p>

@@ -1,0 +1,650 @@
+[
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$uq93i7loDIf9YJjC5qeiEF$YFetBM6s/yeoFj4Yj3PwPE8VZ7h6ntQXA5qmmrbu31A=",
+        "last_login": "2026-03-30T08:12:40.010Z",
+        "is_superuser": true,
+        "username": "amrish",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-10-28T09:46:27.875Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$b71CgVtrd0Q6Tj3l46AZUr$tsRBOVqsuhDxOq1VmzcuH+1YM5G7GWZ8lDL62QDGXXY=",
+        "last_login": "2026-06-23T18:14:22.623Z",
+        "is_superuser": true,
+        "username": "aashutosh",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-10-28T11:29:46.063Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$dUEKq1KvWAW7T717mJZjs0$8OswKQY+hdDfSeUoBaUpZl75HzxLDMvu2o3Z8d9J5JM=",
+        "last_login": "2025-10-29T11:08:43.975Z",
+        "is_superuser": false,
+        "username": "lavdu",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-10-29T09:43:05.335Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$aJ8Ess4LV222QiJXVDlZEn$LzAm/lsU3BEFnovdDsYwVjmGEmeumLCixbv+iQkx0YI=",
+        "last_login": "2025-12-09T09:52:09.414Z",
+        "is_superuser": false,
+        "username": "vrushabh",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-12-09T09:52:08.595Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$W7NyQQJlGIAFcErGil4wQS$m1mupnfPl9mRc3g+rXWS6MNwFWFC+kxXigf5YavxLmw=",
+        "last_login": "2025-12-18T05:40:34.541Z",
+        "is_superuser": false,
+        "username": "VrushabhGillarkar",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-12-18T05:40:33.995Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$Lw3rtq6yzD4eUKguZBIC90$FsG1dukzvswuoQJ5UPv978qe8HbwmwpxO0hjuQJgkFA=",
+        "last_login": "2026-03-30T07:24:59.146Z",
+        "is_superuser": false,
+        "username": "devansh",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-03-30T07:24:58.787Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$iL8yg93vlgZT56powaB59c$5NavmL6Pl3Hq2Sx8jxUeHHYKpuwJV3LJG3P/11EPzas=",
+        "last_login": null,
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "email": "admin@example.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2026-06-23T08:29:15.280Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "!VuH23IW7iv6SjC4XCXSHURVdkK6jBCYqS79y7Tul",
+        "last_login": "2026-06-23T16:53:00.467Z",
+        "is_superuser": false,
+        "username": "rohit",
+        "first_name": "Rohit",
+        "last_name": "Shahare",
+        "email": "shaharerohit47@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-06-23T08:51:51.999Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "!8t7RpNkYo9E5YwKBp6ZSiGIsYN7N5pqbhZL4kJfD",
+        "last_login": "2026-06-23T18:11:20.553Z",
+        "is_superuser": false,
+        "username": "solar_care_365",
+        "first_name": "Solar Care 365",
+        "last_name": "",
+        "email": "solarcare366@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-06-23T18:11:20.464Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "shop.category",
+    "pk": 1,
+    "fields": {
+        "name": "Gold for Mens",
+        "image": "categories/chain_Jxmtcam.jpg"
+    }
+},
+{
+    "model": "shop.category",
+    "pk": 2,
+    "fields": {
+        "name": "Silver For Mens",
+        "image": "categories/Silver_men_3CA3BZB.jpeg"
+    }
+},
+{
+    "model": "shop.subcategory",
+    "pk": 1,
+    "fields": {
+        "category": 1,
+        "name": "Chain",
+        "image": "subcategory_images/chain.jpg",
+        "is_featured": false,
+        "sort_order": 0
+    }
+},
+{
+    "model": "shop.subcategory",
+    "pk": 2,
+    "fields": {
+        "category": 1,
+        "name": "Rings",
+        "image": "subcategory_images/mens_ring.jpg",
+        "is_featured": false,
+        "sort_order": 0
+    }
+},
+{
+    "model": "shop.subcategory",
+    "pk": 3,
+    "fields": {
+        "category": 2,
+        "name": "Rings",
+        "image": "subcategory_images/silver_ring_men.jpeg",
+        "is_featured": false,
+        "sort_order": 0
+    }
+},
+{
+    "model": "shop.subcategory",
+    "pk": 4,
+    "fields": {
+        "category": 1,
+        "name": "pendant",
+        "image": "subcategory_images/Pandants.jpg",
+        "is_featured": false,
+        "sort_order": 0
+    }
+},
+{
+    "model": "shop.jewellery",
+    "pk": 5,
+    "fields": {
+        "name": "pendant 1",
+        "subcategory": 4,
+        "price": "52000.00",
+        "description": "good",
+        "image": "jewellery/Pandants_mlNYpyo.jpg",
+        "created_at": "2025-10-30T08:43:49.253Z",
+        "updated_at": "2025-10-30T08:43:49.253Z",
+        "is_featured": true,
+        "badge": "TRENDING",
+        "stone_type": "OTHER",
+        "color": "GOLD",
+        "in_stock": true,
+        "metal_type": "GOLD",
+        "gold_purity": "18K",
+        "gold_weight": "20.00",
+        "silver_purity": "STERLING",
+        "silver_weight": "0.00",
+        "platinum_purity": "950",
+        "platinum_weight": "0.00",
+        "diamond_weight": "0.00",
+        "diamond_clarity": "pure",
+        "diamond_color": "white",
+        "gold_value": "50000.00",
+        "silver_value": "0.00",
+        "platinum_value": "0.00",
+        "stone_value": "500.00",
+        "making_charges": "500.00",
+        "gst": "1000.00",
+        "total_price": "52000.00"
+    }
+},
+{
+    "model": "shop.jewellery",
+    "pk": 4,
+    "fields": {
+        "name": "Rings 1",
+        "subcategory": 3,
+        "price": "650.00",
+        "description": "good",
+        "image": "jewellery/silver_ring_men_2f6p8vf.jpeg",
+        "created_at": "2025-10-28T12:43:50.647Z",
+        "updated_at": "2025-10-29T09:35:48.685Z",
+        "is_featured": true,
+        "badge": "BEST",
+        "stone_type": "EMERALD",
+        "color": "SILVER",
+        "in_stock": true,
+        "metal_type": "SILVER",
+        "gold_purity": "OTHER",
+        "gold_weight": "10.00",
+        "silver_purity": "STERLING",
+        "silver_weight": "0.00",
+        "platinum_purity": "950",
+        "platinum_weight": "0.00",
+        "diamond_weight": "0.80",
+        "diamond_clarity": "VVS1",
+        "diamond_color": "F",
+        "gold_value": "500.00",
+        "silver_value": "0.00",
+        "platinum_value": "0.00",
+        "stone_value": "0.00",
+        "making_charges": "50.00",
+        "gst": "100.00",
+        "total_price": "650.00"
+    }
+},
+{
+    "model": "shop.jewellery",
+    "pk": 3,
+    "fields": {
+        "name": "Rings 1",
+        "subcategory": 2,
+        "price": "6000.00",
+        "description": "good",
+        "image": "jewellery/mens_ring_MEAJKtn.jpg",
+        "created_at": "2025-10-28T12:31:37.066Z",
+        "updated_at": "2025-10-28T12:31:37.066Z",
+        "is_featured": true,
+        "badge": "NEW",
+        "stone_type": "DIAMOND",
+        "color": "GOLD",
+        "in_stock": true,
+        "metal_type": "GOLD",
+        "gold_purity": "18K",
+        "gold_weight": "10.00",
+        "silver_purity": "OTHER",
+        "silver_weight": "0.00",
+        "platinum_purity": "950",
+        "platinum_weight": "0.00",
+        "diamond_weight": "0.00",
+        "diamond_clarity": "VVS1",
+        "diamond_color": "F",
+        "gold_value": "4000.00",
+        "silver_value": "0.00",
+        "platinum_value": "0.00",
+        "stone_value": "0.00",
+        "making_charges": "1000.00",
+        "gst": "1000.00",
+        "total_price": "6000.00"
+    }
+},
+{
+    "model": "shop.jewellery",
+    "pk": 2,
+    "fields": {
+        "name": "chain",
+        "subcategory": 1,
+        "price": "53000.00",
+        "description": "good",
+        "image": "jewellery/homedisplay.jpg",
+        "created_at": "2025-10-28T12:03:06.159Z",
+        "updated_at": "2025-10-28T12:03:06.159Z",
+        "is_featured": true,
+        "badge": "NEW",
+        "stone_type": "OTHER",
+        "color": "GOLD",
+        "in_stock": true,
+        "metal_type": "GOLD",
+        "gold_purity": "18K",
+        "gold_weight": "20.00",
+        "silver_purity": "STERLING",
+        "silver_weight": "0.00",
+        "platinum_purity": "950",
+        "platinum_weight": "0.00",
+        "diamond_weight": "0.00",
+        "diamond_clarity": "VVS1",
+        "diamond_color": "F",
+        "gold_value": "50000.00",
+        "silver_value": "0.00",
+        "platinum_value": "0.00",
+        "stone_value": "0.00",
+        "making_charges": "1500.00",
+        "gst": "1500.00",
+        "total_price": "53000.00"
+    }
+},
+{
+    "model": "shop.jewellery",
+    "pk": 1,
+    "fields": {
+        "name": "Chain for boys",
+        "subcategory": null,
+        "price": "7500.80",
+        "description": "good",
+        "image": "jewellery/mens.jpg",
+        "created_at": "2025-10-28T09:51:49.385Z",
+        "updated_at": "2025-10-28T09:51:49.385Z",
+        "is_featured": true,
+        "badge": "NEW",
+        "stone_type": "OTHER",
+        "color": "GOLD",
+        "in_stock": true,
+        "metal_type": "GOLD",
+        "gold_purity": "22K",
+        "gold_weight": "0.00",
+        "silver_purity": "STERLING",
+        "silver_weight": "0.00",
+        "platinum_purity": "950",
+        "platinum_weight": "0.00",
+        "diamond_weight": "0.00",
+        "diamond_clarity": "VVS1",
+        "diamond_color": "F",
+        "gold_value": "5000.00",
+        "silver_value": "0.00",
+        "platinum_value": "0.00",
+        "stone_value": "0.80",
+        "making_charges": "1000.00",
+        "gst": "1500.00",
+        "total_price": "7500.80"
+    }
+},
+{
+    "model": "shop.jewelleryimage",
+    "pk": 1,
+    "fields": {
+        "jewellery": 1,
+        "image": "jewellery/gallery/homedisplay.jpg",
+        "alt_text": null
+    }
+},
+{
+    "model": "shop.jewelleryimage",
+    "pk": 2,
+    "fields": {
+        "jewellery": 2,
+        "image": "jewellery/gallery/Pandants.jpg",
+        "alt_text": null
+    }
+},
+{
+    "model": "shop.jewelleryimage",
+    "pk": 3,
+    "fields": {
+        "jewellery": 3,
+        "image": "jewellery/gallery/Bracelet_PoKQF4Y.jpg",
+        "alt_text": null
+    }
+},
+{
+    "model": "shop.jewelleryimage",
+    "pk": 4,
+    "fields": {
+        "jewellery": 4,
+        "image": "jewellery/gallery/silver_women.jpeg",
+        "alt_text": null
+    }
+},
+{
+    "model": "shop.metalprice",
+    "pk": 1,
+    "fields": {
+        "metal_type": "GOLD",
+        "price_per_gram": "13937.75",
+        "price_22k": "12776.73",
+        "currency": "INR",
+        "change_percent": "0.34",
+        "is_up": false,
+        "last_updated": "2026-04-10T09:52:44.923Z"
+    }
+},
+{
+    "model": "shop.metalprice",
+    "pk": 2,
+    "fields": {
+        "metal_type": "SILVER",
+        "price_per_gram": "220.83",
+        "price_22k": null,
+        "currency": "INR",
+        "change_percent": "0.09",
+        "is_up": false,
+        "last_updated": "2026-04-10T09:52:45.655Z"
+    }
+},
+{
+    "model": "shop.metalrate",
+    "pk": 11,
+    "fields": {
+        "metal_type": "18K Gold",
+        "purity": "75.00",
+        "rate_per_gram": "11140.00",
+        "making_charge": "17.00",
+        "making_type": "PERCENTAGE",
+        "gst_percentage": "3.00",
+        "status": true,
+        "created_at": "2026-06-20T13:27:36.335Z",
+        "updated_at": "2026-06-20T13:27:36.335Z"
+    }
+},
+{
+    "model": "shop.metalrate",
+    "pk": 10,
+    "fields": {
+        "metal_type": "22K Gold",
+        "purity": "91.60",
+        "rate_per_gram": "13660.00",
+        "making_charge": "12.00",
+        "making_type": "PERCENTAGE",
+        "gst_percentage": "3.00",
+        "status": true,
+        "created_at": "2026-06-20T13:27:36.284Z",
+        "updated_at": "2026-06-20T13:27:36.284Z"
+    }
+},
+{
+    "model": "shop.metalrate",
+    "pk": 9,
+    "fields": {
+        "metal_type": "24K Gold",
+        "purity": "99.50",
+        "rate_per_gram": "14840.00",
+        "making_charge": "200.00",
+        "making_type": "FIXED",
+        "gst_percentage": "3.00",
+        "status": true,
+        "created_at": "2026-06-20T13:27:36.222Z",
+        "updated_at": "2026-06-20T13:27:36.222Z"
+    }
+},
+{
+    "model": "shop.metalrate",
+    "pk": 12,
+    "fields": {
+        "metal_type": "Silver",
+        "purity": "99.50",
+        "rate_per_gram": "245.00",
+        "making_charge": "0.00",
+        "making_type": "FIXED",
+        "gst_percentage": "3.00",
+        "status": true,
+        "created_at": "2026-06-20T13:27:36.398Z",
+        "updated_at": "2026-06-20T13:27:36.398Z"
+    }
+},
+{
+    "model": "shop.jewelryproduct",
+    "pk": 1,
+    "fields": {
+        "name": "Ring",
+        "metal_type": "gold",
+        "weight": "0.000",
+        "description": "mzdfm",
+        "image": "jewelry_products/ChatGPT_Image_Jun_19_2026_10_02_27_PM.png",
+        "status": true,
+        "created_at": "2026-06-20T13:25:35.830Z",
+        "updated_at": "2026-06-20T13:25:35.830Z",
+        "making_type": "USE_RATE",
+        "making_charge": null,
+        "category": 1,
+        "subcategory": 2
+    }
+},
+{
+    "model": "shop.testimonial",
+    "pk": 6,
+    "fields": {
+        "name": "Amit Singh",
+        "rating": 4,
+        "message": "Great collection! The making charges are reasonable.",
+        "designation": "Verified Buyer",
+        "created_at": "2026-06-23T17:58:29.830Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "shop.testimonial",
+    "pk": 5,
+    "fields": {
+        "name": "Priya Patel",
+        "rating": 5,
+        "message": "Excellent service and fast delivery! Highly recommend!",
+        "designation": "Verified Buyer",
+        "created_at": "2026-06-23T17:58:29.470Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "shop.testimonial",
+    "pk": 4,
+    "fields": {
+        "name": "Rahul Sharma",
+        "rating": 5,
+        "message": "Amazing jewellery! Loved the designs and quality!",
+        "designation": "Verified Buyer",
+        "created_at": "2026-06-23T17:58:28.969Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "shop.testimonial",
+    "pk": 3,
+    "fields": {
+        "name": "Priya Patel",
+        "rating": 5,
+        "message": "Excellent quality and fast delivery!",
+        "designation": "Verified Buyer",
+        "created_at": "2026-06-23T17:57:41.663Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "shop.testimonial",
+    "pk": 2,
+    "fields": {
+        "name": "Rahul Sharma",
+        "rating": 5,
+        "message": "Amazing jewellery! Loved the designs!",
+        "designation": "Verified Buyer",
+        "created_at": "2026-06-23T17:57:41.233Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "shop.testimonial",
+    "pk": 1,
+    "fields": {
+        "name": "Rohit shahare",
+        "rating": 5,
+        "message": "nice",
+        "designation": "Software engineer",
+        "created_at": "2026-06-23T17:48:46.277Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "shop.reel",
+    "pk": 3,
+    "fields": {
+        "title": "",
+        "video": "reels/Screenshot_2026-03-10_174618.png",
+        "cover_image": "",
+        "created_at": "2026-06-23T18:18:41.289Z",
+        "is_active": true
+    }
+},
+{
+    "model": "shop.reel",
+    "pk": 1,
+    "fields": {
+        "title": "reel one",
+        "video": "reels/Screenshot_2026-03-10_173951.png",
+        "cover_image": "",
+        "created_at": "2026-06-23T18:15:15.649Z",
+        "is_active": true
+    }
+},
+{
+    "model": "shop.popupmessage",
+    "pk": 4,
+    "fields": {
+        "title": "Special Offer!",
+        "message": "Get 20% off on all gold jewellery items! Limited time offer.",
+        "poster_image": "",
+        "status": true,
+        "show_on_refresh": true,
+        "created_at": "2026-06-23T18:12:33.588Z",
+        "updated_at": "2026-06-23T18:12:33.588Z"
+    }
+},
+{
+    "model": "shop.popupmessage",
+    "pk": 3,
+    "fields": {
+        "title": "Today's Gold Rate",
+        "message": "Check out today's live gold and silver prices!",
+        "poster_image": "",
+        "status": true,
+        "show_on_refresh": true,
+        "created_at": "2026-06-20T13:27:36.453Z",
+        "updated_at": "2026-06-20T13:27:36.453Z"
+    }
+}
+]

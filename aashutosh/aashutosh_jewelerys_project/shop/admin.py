@@ -12,6 +12,8 @@ from .models import (
     JewelleryImage,
     MetalPrice,
     MetalRate,
+    JewelryProduct,
+    Wishlist,
     Testimonial,
     Reel,
     PopupMessage
@@ -354,3 +356,29 @@ class PopupMessageAdmin(admin.ModelAdmin):
             )
         return "No Poster"
     poster_preview.short_description = "Poster Preview"
+
+
+# -----------------------------
+# JEWELRY PRODUCT ADMIN
+# -----------------------------
+@admin.register(JewelryProduct)
+class JewelryProductAdmin(admin.ModelAdmin):
+    list_display = ('name', 'metal_type_display', 'weight', 'category', 'subcategory', 'status', 'created_at')
+    list_filter = ('metal_type', 'category', 'subcategory', 'status', 'created_at')
+    search_fields = ('name', 'category__name', 'subcategory__name')
+
+    def metal_type_display(self, obj):
+        """Show display name for metal type"""
+        return obj.get_metal_type_display()
+    metal_type_display.short_description = "Metal Type"
+
+
+# -----------------------------
+# WISHLIST ADMIN
+# -----------------------------
+@admin.register(Wishlist)
+class WishlistAdmin(admin.ModelAdmin):
+    list_display = ('user', 'product', 'created_at', 'added_time')
+    list_filter = ('created_at', 'user')
+    search_fields = ('user__username', 'product__name')
+    readonly_fields = ('created_at',)

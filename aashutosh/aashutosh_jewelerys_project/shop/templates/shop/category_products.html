@@ -6,7 +6,7 @@
     {% for product in products %}
       <div class="col-md-3">
         <div class="card h-100 shadow-sm border-0">
-          <img src="{{ product.image.url }}" class="card-img-top" style="height:250px; object-fit:cover;">
+          <img src="{{ product.image_url }}" class="card-img-top" style="height:250px; object-fit:cover;">
           <div class="card-body text-center">
             <h6 class="fw-bold">{{ product.name }}</h6>
             <p class="text-muted">₹{{ product.price }}</p>

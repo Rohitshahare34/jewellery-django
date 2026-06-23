@@ -26,7 +26,7 @@
       <div class="product-image-main mb-4 text-center position-relative">
         <!-- Main Product Image -->
         <img id="mainProductImage"
-             src="{{ product.image.url }}"
+             src="{{ product.image_url }}"
              alt="{{ product.name }}"
              class="img-fluid rounded shadow w-100 product-zoom"
              style="max-height: 500px; object-fit: contain; transition: 0.3s ease;">
@@ -42,7 +42,7 @@
       <!-- Thumbnail Gallery -->
       <div class="d-flex justify-content-center flex-wrap gap-3">
         <!-- Main Image Thumbnail -->
-        <img src="{{ product.image.url }}"
+        <img src="{{ product.image_url }}"
              class="img-thumbnail product-thumb active-thumb"
              style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
              onclick="changeImage(this)">
