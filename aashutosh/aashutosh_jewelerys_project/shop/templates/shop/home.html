@@ -2,101 +2,1764 @@
 {% load static %}
 
 {% block content %}
+<!-- ======== DISCOUNT POPUP MODAL ======== -->
+{% include 'shop/popup_modal.html' %}
+
+<!-- ======== LIVE METAL PRICE TICKER ======== -->
+{% include 'shop/price_ticker.html' %}
+
+<!-- ===== Mobile-only Recommended Section ===== -->
+{% if featured_subcategories %}
+<section class="mobile-recommended-section d-md-none" style="background: #fff; padding: 1rem 0; border-bottom: 1px solid #eee;">
+  <div class="container">
+    <div class="subcategory-scroll" style="gap: 1rem;">
+      <a href="{% url 'shop' %}" class="subcategory-item">
+        <div class="subcategory-circle" style="width: 50px; height: 50px; background: linear-gradient(135deg, #d4af37 0%, #f4e4bc 100%);">
+          <i class="fas fa-th text-white" style="font-size: 1.2rem;"></i>
+        </div>
+        <span class="subcategory-name" style="font-size: 0.7rem;">All</span>
+      </a>
+      {% for subcat in featured_subcategories %}
+      <a href="{{ subcat.get_absolute_url }}" class="subcategory-item">
+        <div class="subcategory-circle" style="width: 50px; height: 50px;">
+          {% if subcat.image %}
+          <img src="{{ subcat.image.url }}" alt="{{ subcat.name }}">
+          {% else %}
+          <i class="fas fa-gem" style="color: #d4af37; font-size: 1.2rem;"></i>
+          {% endif %}
+        </div>
+        <span class="subcategory-name" style="font-size: 0.7rem;">{{ subcat.name }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
 <link rel="stylesheet" href="{% static 'shop/css/home.css' %}?v={% now 'U' %}">
+<style>
+  /* Let the main content container fill from 0px on the home page */
+  main {
+    padding-top: 0 !important;
+  }
+  
+  /* Make navbar transparent at the top */
+  .navbar {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: none !important;
+    transition: all 0.4s ease !important;
+  }
+  
+  /* Revert to solid on scroll */
+  .navbar.navbar-scrolled {
+    background: rgba(255, 255, 255, 0.98) !important;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.15) !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* Nav Link colors when transparent */
+  .navbar:not(.navbar-scrolled) .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+  
+  .navbar:not(.navbar-scrolled) .nav-link:hover {
+    color: #d4af37 !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+  }
+  
+  .navbar:not(.navbar-scrolled) .nav-link.active {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: #d4af37 !important;
+  }
+  
+  /* White logo and icons when transparent */
+  .navbar:not(.navbar-scrolled) .navbar-logo {
+    filter: brightness(0) invert(1) !important;
+  }
+  
+  .navbar:not(.navbar-scrolled) .fa-shopping-cart {
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+  
+  /* Mobile toggler icon */
+  .navbar:not(.navbar-scrolled) .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.3) !important;
+  }
+  .navbar:not(.navbar-scrolled) .navbar-toggler-icon {
+    filter: invert(1) !important;
+  }
+  
+  /* Transparent price ticker over the hero section */
+  .price-ticker {
+    background: rgba(15, 15, 15, 0.45) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: none !important;
+    box-shadow: none !important;
+    transition: transform 0.4s ease, opacity 0.4s ease !important;
+  }
 
-<!-- ===== Hero Section ===== -->
+  /* Sleek search bar when transparent */
+  .navbar:not(.navbar-scrolled) .search-form .form-control {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    color: white !important;
+  }
+  
+  .navbar:not(.navbar-scrolled) .search-form .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.65) !important;
+  }
+  
+  .navbar:not(.navbar-scrolled) .search-form .input-group-text {
+    color: rgba(255, 255, 255, 0.75) !important;
+  }
+
+  .hero-section {
+    padding: 0 !important;
+    margin: 0 !important;
+    margin-top: -80px !important; /* Pull up behind navbar */
+    min-height: calc(100vh + 80px) !important;
+    height: calc(100vh + 80px) !important;
+    background: #000 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block !important;
+  }
+
+  @media (min-width: 992px) {
+    .hero-section {
+      min-height: calc(111.11vh + 80px) !important;
+      height: calc(111.11vh + 80px) !important;
+    }
+  }
+  
+  .hero-section::before,
+  .hero-section::after {
+    display: none !important;
+    content: none !important;
+  }
+  
+  #heroCarousel {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  #heroCarousel .carousel-inner,
+  #heroCarousel .carousel-item {
+    height: 100% !important;
+    width: 100% !important;
+    background-color: #000 !important; /* Black background to fill gaps */
+  }
+  
+  /* Reset all rotations, perspective, animations, border-radius, and shadows on the background images */
+  #heroCarousel .carousel-item img {
+    object-fit: cover !important; /* Cover entire area without cutting important parts */
+    object-position: center 20% !important; /* Shift the image down slightly to show more of the top */
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    filter: none !important;
+  }
+
+  /* Specific premium zoom/movement animation for active slide images */
+  #heroCarousel .carousel-item.active img {
+    animation: kenBurnsZoom 3.2s ease-out forwards !important;
+  }
+
+  @keyframes kenBurnsZoom {
+    0% {
+      transform: scale(1.0);
+    }
+    100% {
+      transform: scale(1.06);
+    }
+  }
+  
+  /* Semi-transparent dark overlay for background readability */
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45) !important;
+    z-index: 1;
+  }
+  
+  /* Slower, extremely smooth slide transitions (1.2s fade) */
+  #heroCarousel .carousel-item,
+  .carousel-fade .carousel-item {
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  /* Offset hero content from left */
+  .hero-glass-card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding-left: 0.5rem !important; /* Shifted left */
+  }
+
+  /* Override main headings gradient to remove the dark effect on the left side */
+  .hero-section h1, .hero-title {
+    background: linear-gradient(135deg, #FFE082 0%, #d4af37 60%, #F5C443 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: #FFE082 !important;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2) !important;
+    font-weight: 800 !important;
+    font-size: clamp(2.5rem, 6vw, 4rem) !important; /* Increased size */
+  }
+
+  /* Hero subtitle to white/gold for dark background */
+  .hero-subtitle {
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.6) !important;
+    font-size: 1.2rem !important;
+    line-height: 1.6 !important;
+  }
+
+  /* Mobile-specific LARGER font sizes for hero section */
+  @media (max-width: 768px) {
+    .hero-section h1, .hero-title {
+      font-size: clamp(2rem, 10vw, 3rem) !important;
+    }
+    .hero-subtitle {
+      font-size: 1.1rem !important;
+    }
+  }
+
+  /* Luxury gold button styles for dark background */
+  .btn-luxury-gold {
+    background: linear-gradient(135deg, #d4af37 0%, #b8952b 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 50px !important;
+    padding: 12px 30px !important;
+    font-weight: 600 !important;
+    transition: transform 0.3s ease !important;
+  }
+
+  .btn-luxury-gold:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 20px rgba(212,175,55,0.4) !important;
+  }
+
+  /* Luxury outline button styles for dark background */
+  .btn-luxury-outline {
+    background: transparent !important;
+    color: #ffffff !important;
+    border: 2px solid #d4af37 !important;
+    border-radius: 50px !important;
+    padding: 12px 30px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .btn-luxury-outline:hover {
+    background: #d4af37 !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) !important;
+  }
+
+  /* ===== TESTIMONIALS SECTION ===== */
+  .testimonials-section {
+    background: linear-gradient(135deg, #1e190f 0%, #0d0d0d 100%) !important;
+    padding: 45px 0 !important;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .testimonials-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 10% 20%, rgba(212,175,55,0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(212,175,55,0.05) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  .testimonial-card-wrapper {
+    position: relative;
+    padding: 20px 10px;
+    height: 100%;
+  }
+
+  .testimonial-card-shadow {
+    position: absolute;
+    top: 25px;
+    left: 15px;
+    width: calc(100% - 20px);
+    height: calc(100% - 30px);
+    background: rgba(212, 175, 55, 0.15) !important;
+    border-radius: 18px;
+    z-index: 1;
+    transition: all 0.4s ease;
+  }
+
+  .testimonial-card-bg-circles {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 70px;
+    height: 70px;
+    background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .testimonial-bubble-card {
+    position: relative;
+    background: #ffffff !important;
+    border: 1px solid rgba(212, 175, 55, 0.25) !important;
+    border-radius: 18px !important;
+    padding: 30px 24px 24px 24px !important;
+    z-index: 2;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04) !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .testimonial-card-wrapper:hover .testimonial-bubble-card {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 15px 35px rgba(212, 175, 55, 0.15) !important;
+    border-color: rgba(212, 175, 55, 0.5) !important;
+  }
+
+  .testimonial-card-wrapper:hover .testimonial-card-shadow {
+    transform: translate(6px, 6px) !important;
+    background: rgba(212, 175, 55, 0.25) !important;
+  }
+
+  .testimonial-quote-box {
+    position: absolute;
+    top: -15px;
+    left: 24px;
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #d4af37 0%, #b8952b 100%) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: white !important;
+    font-size: 0.9rem !important;
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3) !important;
+  }
+
+  .testimonial-text {
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 0.92rem !important;
+    line-height: 1.7 !important;
+    color: #555555 !important;
+    font-style: italic !important;
+  }
+
+  .testimonial-author {
+    font-family: 'Cinzel', serif !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    color: #b8952b !important;
+    letter-spacing: 0.5px !important;
+    border-top: 1px solid #f2f2f2 !important;
+    padding-top: 12px !important;
+  }
+
+  /* Rates Popup Card styling to clear linter errors */
+  .rate-card-border-gold {
+    border: 1px solid rgba(212, 175, 55, 0.25) !important;
+  }
+  .rate-card-border-silver {
+    border: 1px solid rgba(192, 192, 192, 0.3) !important;
+  }
+  .rate-icon-bg-gold {
+    background: linear-gradient(145deg, #FFD700, #daa520) !important;
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3) !important;
+  }
+  .rate-icon-bg-silver {
+    background: linear-gradient(145deg, #E8E8E8, #A8A8A8) !important;
+    box-shadow: 0 4px 12px rgba(120, 120, 120, 0.25) !important;
+  }
+  .rate-item-row.rate-gold {
+    border: 1px solid rgba(212, 175, 55, 0.15) !important;
+  }
+  .rate-item-row.rate-silver {
+    border: 1px solid rgba(120, 120, 120, 0.12) !important;
+  }
+  .rate-icon-container.rate-gold {
+    background: linear-gradient(145deg, #FFD700, #daa520) !important;
+    box-shadow: 0 3px 8px rgba(212, 175, 55, 0.2) !important;
+  }
+  .rate-icon-container.rate-silver {
+    background: linear-gradient(145deg, #E8E8E8, #A8A8A8) !important;
+    box-shadow: 0 3px 8px rgba(120, 120, 120, 0.15) !important;
+  }
+  .rate-price-gold {
+    color: #d4af37 !important;
+  }
+  .rate-price-silver {
+    color: #666 !important;
+  }
+
+  /* Testimonial Styles - Horizontal Scroll & Card Alignment for Mobile & Desktop */
+  .testimonials-section .row.g-4 {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 1.5rem;
+    padding: 1rem 0;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+  }
+
+  /* Centering testimonials if there are few items (max 4 on desktop) */
+  @media (min-width: 992px) {
+    .testimonials-section .row.g-4.has-few-items {
+      justify-content: center;
+    }
+  }
+
+  /* Set card sizes */
+  .testimonials-section .row.g-4 > div {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: 992px) {
+    .testimonials-section .row.g-4 > div {
+      width: 25%;
+      max-width: 320px;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .testimonials-section .row.g-4 {
+      gap: 1rem;
+      padding: 0.5rem 0;
+      scrollbar-width: none !important; /* Firefox */
+      -ms-overflow-style: none !important; /* IE/Edge */
+    }
+    .testimonials-section .row.g-4::-webkit-scrollbar {
+      display: none !important;
+    }
+    .testimonials-section .row.g-4 > div {
+      width: 80%;
+      max-width: 300px;
+      scroll-snap-align: center;
+    }
+    .testimonial-card-wrapper {
+      padding: 15px 5px;
+    }
+    .testimonial-bubble-card {
+      padding: 20px 18px 18px 18px !important;
+    }
+    .testimonial-text {
+      font-size: 0.85rem !important;
+    }
+    .testimonial-author {
+      font-size: 0.9rem !important;
+    }
+  }
+
+  /* Custom scrollbar for desktop testimonials */
+  @media (min-width: 992px) {
+    .testimonials-section .row.g-4::-webkit-scrollbar {
+      height: 6px;
+    }
+    .testimonials-section .row.g-4::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+    .testimonials-section .row.g-4::-webkit-scrollbar-thumb {
+      background: rgba(212, 175, 55, 0.4);
+      border-radius: 10px;
+    }
+    .testimonials-section .row.g-4::-webkit-scrollbar-thumb:hover {
+      background: rgba(212, 175, 55, 0.8);
+    }
+  }
+
+
+  /* Extremely smooth slide image switch and text fade/slide-up animations */
+  .carousel-fade .carousel-item {
+    opacity: 0 !important;
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    z-index: 1;
+  }
+
+  .carousel-fade .carousel-item.active {
+    opacity: 1 !important;
+    z-index: 2;
+  }
+
+  /* Smooth text elements state on non-active slide */
+  .carousel-item .hero-title,
+  .carousel-item .hero-subtitle,
+  .carousel-item .btn {
+    opacity: 0 !important;
+    transform: translateY(20px) !important;
+    transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  }
+
+  /* Smooth stagger transition when the slide gets active */
+  .carousel-item.active .hero-title {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition-delay: 0.1s !important;
+  }
+
+  .carousel-item.active .hero-subtitle {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition-delay: 0.25s !important;
+  }
+
+  .carousel-item.active .btn {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition-delay: 0.4s !important;
+  }
+
+  /* Base styling for container overlay (moved from inline) */
+  .hero-container-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    padding-top: 150px;
+  }
+
+  /* Mobile Responsive styling for Hero Section (Landscape Aspect Ratio) */
+  @media (max-width: 768px) {
+    /* Revert navbar transparency on mobile to keep it solid white */
+    .navbar:not(.navbar-scrolled) {
+      background: linear-gradient(135deg, #ffffff 0%, #fdfdfd 100%) !important;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05) !important;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.15) !important;
+    }
+    
+    .navbar:not(.navbar-scrolled) .navbar-logo {
+      filter: none !important; /* Restore normal logo color */
+    }
+
+    .navbar:not(.navbar-scrolled) .nav-link,
+    .navbar:not(.navbar-scrolled) .fa-shopping-cart {
+      color: var(--dark-charcoal) !important; /* Restore normal text and icon colors */
+    }
+
+    .navbar:not(.navbar-scrolled) .navbar-toggler-icon {
+      filter: none !important;
+    }
+    
+    /* Revert price ticker transparency to solid dark */
+    .price-ticker {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%) !important;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    /* Hide slider line indicators (-----) on mobile */
+    .carousel-indicators {
+      display: none !important;
+    }
+
+    .hero-section {
+      margin-top: 105px !important; /* Push below mobile navbar and ticker (60px + 45px) */
+      min-height: 32vh !important; /* Decreased height */
+      height: 32vh !important;
+    }
+
+    #heroCarousel .carousel-item.active img {
+      animation: none !important;
+      transform: none !important;
+    }
+    
+    .hero-container-overlay {
+      padding-top: 10px !important;
+    }
+
+    .hero-glass-card {
+      padding-left: 1.5rem !important; /* Margin from left edge */
+      text-align: left !important; /* Left-aligned text */
+      margin: 0 !important;
+      max-width: 65% !important; /* Stay inside the left dark space of the full image */
+    }
+
+    .hero-section h1, .hero-title {
+      font-size: clamp(0.75rem, 2.5vw, 0.92rem) !important; /* Shrunk size */
+      line-height: 1.2 !important;
+      margin-bottom: 4px !important;
+    }
+
+    .hero-subtitle {
+      font-size: 0.58rem !important; /* Shrunk size */
+      line-height: 1.3 !important;
+      margin-bottom: 8px !important;
+      display: -webkit-box !important;
+      -webkit-line-clamp: 2 !important; /* Limit lines to prevent vertical overflow */
+      line-clamp: 2 !important;
+      -webkit-box-orient: vertical !important;
+      overflow: hidden !important;
+    }
+
+    /* Left-align buttons on mobile */
+    .hero-glass-card .d-flex {
+      justify-content: flex-start !important;
+      gap: 6px !important;
+    }
+
+    .btn-luxury-gold, .btn-luxury-outline {
+      padding: 4px 10px !important;
+      font-size: 0.58rem !important;
+      width: auto !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-section {
+      margin-top: 105px !important; /* Push below mobile navbar and ticker */
+      min-height: 25vh !important; /* Decreased height */
+      height: 25vh !important;
+    }
+
+    .hero-container-overlay {
+      padding-top: 8px !important;
+    }
+
+    .hero-glass-card {
+      padding-left: 1.0rem !important;
+      max-width: 70% !important;
+    }
+
+    .hero-section h1, .hero-title {
+      font-size: clamp(0.68rem, 3.2vw, 0.8rem) !important; /* Shrunk size */
+      margin-bottom: 3px !important;
+    }
+    
+    .hero-subtitle {
+      display: none !important; /* Hide subtitle completely on small screen to save space */
+    }
+
+    .btn-luxury-gold, .btn-luxury-outline {
+      padding: 2px 6px !important;
+      font-size: 0.50rem !important;
+    }
+  }
+
+  /* Scrolling Collections Section */
+  .scrolling-collections-section {
+    background: #0d0d0d !important; /* Premium dark background */
+    overflow: hidden;
+    width: 100% !important;
+    position: relative;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.15) !important;
+  }
+
+  .scrolling-collections-title {
+    margin-bottom: 15px !important;
+  }
+
+  .font-cinzel {
+    font-family: 'Cinzel', serif !important;
+  }
+
+  .tracking-wider {
+    letter-spacing: 2px !important;
+  }
+
+  .collections-marquee-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 10px 0;
+  }
+
+  /* Fade gradient edges to look super premium */
+  .collections-marquee-wrapper::before,
+  .collections-marquee-wrapper::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 12%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .collections-marquee-wrapper::before {
+    left: 0;
+    background: linear-gradient(to right, #0d0d0d, transparent);
+  }
+
+  .collections-marquee-wrapper::after {
+    right: 0;
+    background: linear-gradient(to left, #0d0d0d, transparent);
+  }
+
+  .collections-marquee-track {
+    display: flex;
+    width: max-content;
+    /* Translate from -50% to 0 for Left-to-Right scrolling */
+    animation: scroll-left-to-right 35s linear infinite;
+  }
+
+  @keyframes scroll-left-to-right {
+    0% {
+      transform: translateX(-50%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  /* Pause scroll when user hovers */
+  .collections-marquee-track:hover {
+    animation-play-state: paused;
+  }
+
+  .collections-marquee-group {
+    display: flex;
+    gap: 20px;
+    padding-right: 20px; /* match the gap */
+  }
+
+  /* Rectangular cards styling */
+  .collection-marquee-card {
+    display: block;
+    position: relative;
+    width: 280px;
+    height: 170px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(212, 175, 55, 0.25) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+    transition: all 0.4s ease !important;
+    flex-shrink: 0;
+  }
+
+  .collection-marquee-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover !important;
+    object-position: center !important;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  }
+
+  .collection-marquee-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.2) 70%, transparent 100%) !important;
+    z-index: 1;
+    transition: background 0.4s ease !important;
+  }
+
+  .collection-marquee-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 16px;
+    z-index: 2;
+    text-align: left;
+  }
+
+  .collection-marquee-content h3 {
+    font-family: 'Cinzel', serif !important;
+    color: #ffffff !important;
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    margin: 0 0 4px 0 !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8) !important;
+    transition: color 0.3s ease !important;
+  }
+
+  .shop-now-text {
+    font-family: 'Montserrat', sans-serif !important;
+    color: #d4af37 !important;
+    font-size: 0.72rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    opacity: 0.85;
+    transition: all 0.3s ease !important;
+    display: inline-block;
+  }
+
+  /* Hover effects */
+  .collection-marquee-card:hover {
+    border-color: #d4af37 !important;
+    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3) !important;
+    transform: translateY(-4px) !important;
+  }
+
+  .collection-marquee-card:hover img {
+    transform: scale(1.08) !important;
+  }
+
+  .collection-marquee-card:hover .collection-marquee-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.1) 100%) !important;
+  }
+
+  .collection-marquee-card:hover .collection-marquee-content h3 {
+    color: #ffe082 !important;
+  }
+
+  .collection-marquee-card:hover .shop-now-text {
+    opacity: 1;
+    transform: translateX(4px) !important;
+  }
+
+  /* Responsive for Mobile */
+  @media (max-width: 768px) {
+    .scrolling-collections-section {
+      padding: 15px 0 !important;
+    }
+
+    .collections-marquee-group {
+      gap: 12px;
+      padding-right: 12px;
+    }
+
+    .collection-marquee-card {
+      width: 190px;
+      height: 120px;
+      border-radius: 12px;
+    }
+
+    .collection-marquee-content {
+      padding: 10px;
+    }
+
+    .collection-marquee-content h3 {
+      font-size: 0.9rem !important;
+      margin-bottom: 2px !important;
+    }
+
+    .shop-now-text {
+      font-size: 0.62rem !important;
+    }
+
+    .collections-marquee-track {
+      animation: scroll-left-to-right 28s linear infinite; /* Slightly faster scroll for smaller screen width */
+    }
+  }
+
+  @media (max-width: 480px) {
+    .collection-marquee-card {
+      width: 160px;
+      height: 100px;
+      border-radius: 10px;
+    }
+
+    .collection-marquee-content h3 {
+      font-size: 0.8rem !important;
+    }
+
+    .shop-now-text {
+      font-size: 0.58rem !important;
+    }
+  }
+</style>
+
+<!-- ===== Hero Section Slider ===== -->
 <section class="hero-section">
-  <div class="container">
-    <div class="row align-items-center justify-content-between">
-
-      <!-- ===== Left Text Section ===== -->
-      <div class="col-lg-6 col-12 order-lg-1 order-2">
-        <div class="hero-content">
-          <h1 class="display-4 fw-bold mb-4">
-            Exquisite Handcrafted Jewellery
-          </h1>
-          <p class="lead mb-4">
-            Discover our stunning collection of fine jewellery, crafted with precision and passion.
-            Each piece tells a unique story of elegance and timeless beauty.
-          </p>
-          <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
-            <a href="{% url 'shop' %}" class="btn btn-gold btn-lg">Explore Collection</a>
-            <a href="#featured" class="btn btn-outline-dark btn-lg">Featured Items</a>
+  <div id="heroCarousel" class="carousel slide carousel-fade h-100" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="false">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+    </div>
+    <div class="carousel-inner h-100">
+      <!-- Slide 1: Modern Custom Jewellery -->
+      <div class="carousel-item active h-100">
+        <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 21, 2026, 07_50_50 PM.png' %}" class="d-block w-100 h-100" alt="Modern Custom Jewellery">
+        <!-- Luxury overlay -->
+        <div class="hero-overlay"></div>
+        <div class="container h-100 d-flex align-items-center hero-container-overlay">
+          <div class="row align-items-center justify-content-start w-100">
+            <div class="col-lg-6 col-md-8 col-12">
+              <div class="hero-glass-card">
+                <!-- Decorative Sparkles -->
+                <div class="gold-sparkle" style="top: 15%; left: 10%; animation-delay: 0s;"></div>
+                <div class="gold-sparkle" style="top: 75%; left: 20%; animation-delay: 1.5s;"></div>
+                <div class="gold-sparkle" style="top: 30%; right: 15%; animation-delay: 3s;"></div>
+                <div class="gold-sparkle" style="top: 80%; right: 25%; animation-delay: 4.5s;"></div>
+                
+                <h1 class="hero-title">
+                  Modern Custom Jewellery
+                </h1>
+                <p class="hero-subtitle">
+                  Personalize your perfect piece with our custom jewellery designs. Crafted with love and precision just for you.
+                </p>
+                <div class="d-flex flex-wrap gap-3 justify-content-start">
+                  <a href="{% url 'shop' %}" class="btn btn-luxury-gold">
+                    Explore Collection <i class="fas fa-arrow-right ms-2"></i>
+                  </a>
+                  <a href="#featured" class="btn btn-luxury-outline">
+                    Featured Items
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Slide 2: Handcrafted Artistry (hero1.png) -->
+      <div class="carousel-item h-100">
+        <img src="{% static 'hero-section-imgs/hero1.png' %}" class="d-block w-100 h-100" alt="Exquisite Handcrafted Masterpieces">
+        <!-- Luxury overlay -->
+        <div class="hero-overlay"></div>
+        <div class="container h-100 d-flex align-items-center hero-container-overlay">
+          <div class="row align-items-center justify-content-start w-100">
+            <div class="col-lg-6 col-md-8 col-12">
+              <div class="hero-glass-card">
+                <!-- Decorative Sparkles -->
+                <div class="gold-sparkle" style="top: 15%; left: 15%; animation-delay: 0.3s;"></div>
+                <div class="gold-sparkle" style="top: 75%; left: 25%; animation-delay: 1.8s;"></div>
+                <div class="gold-sparkle" style="top: 35%; right: 12%; animation-delay: 3.3s;"></div>
+                <div class="gold-sparkle" style="top: 80%; right: 22%; animation-delay: 4.8s;"></div>
+                
+                <h1 class="hero-title">
+                  Bespoke Jewellery Artistry
+                </h1>
+                <p class="hero-subtitle">
+                  Experience timeless luxury with ornaments designed to highlight your natural grace and charm.
+                </p>
+                <div class="d-flex flex-wrap gap-3 justify-content-start">
+                  <a href="{% url 'shop' %}" class="btn btn-luxury-gold">
+                    Explore Collection <i class="fas fa-arrow-right ms-2"></i>
+                  </a>
+                  <a href="#featured" class="btn btn-luxury-outline">
+                    Featured Items
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- ===== Right Video Carousel Section ===== -->
-      <div class="col-lg-6 col-12 order-lg-2 order-1 mb-4 mb-lg-0">
-        <div id="heroCarousel" class="carousel slide carousel-fade rounded-4 shadow-lg overflow-hidden"
-             data-bs-ride="carousel" data-bs-interval="3000">
+      <!-- Slide 4: Gold Jewellery -->
+      <div class="carousel-item h-100">
+        <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_07_35 PM.png' %}" class="d-block w-100 h-100" alt="Exquisite Gold Collection">
+        <!-- Luxury overlay -->
+        <div class="hero-overlay"></div>
+        <div class="container h-100 d-flex align-items-center hero-container-overlay">
+          <div class="row align-items-center justify-content-start w-100">
+            <div class="col-lg-6 col-md-8 col-12">
+              <div class="hero-glass-card">
+                <!-- Decorative Sparkles -->
+                <div class="gold-sparkle" style="top: 15%; left: 20%; animation-delay: 1s;"></div>
+                <div class="gold-sparkle" style="top: 75%; left: 10%; animation-delay: 2.5s;"></div>
+                <div class="gold-sparkle" style="top: 25%; right: 20%; animation-delay: 4s;"></div>
+                <div class="gold-sparkle" style="top: 80%; right: 15%; animation-delay: 5.5s;"></div>
 
-          <div class="carousel-inner">
-
-            <!-- Video 1 -->
-            <div class="carousel-item active">
-              <div class="video-wrapper">
-                <video autoplay loop muted playsinline class="carousel-video">
-                  <source src="{% static 'shop/videos/aashuvedio.mp4' %}" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video>
+                <h1 class="hero-title">
+                  Exquisite Gold Collection
+                </h1>
+                <p class="hero-subtitle">
+                  Discover our premium gold ornaments, hand-selected for timeless elegance and lasting beauty.
+                </p>
+                <div class="d-flex flex-wrap gap-3 justify-content-start">
+                  <a href="{% url 'shop' %}" class="btn btn-luxury-gold">
+                    Explore Collection <i class="fas fa-arrow-right ms-2"></i>
+                  </a>
+                  <a href="#featured" class="btn btn-luxury-outline">
+                    Featured Items
+                  </a>
+                </div>
               </div>
             </div>
-
-            <!-- Video 2 -->
-            <div class="carousel-item">
-              <div class="video-wrapper">
-                <video autoplay loop muted playsinline class="carousel-video">
-                  <source src="{% static 'shop/videos/aashuvedio2.mp4' %}" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            </div>
-
-            <!-- Video 3 -->
-            <div class="carousel-item">
-              <div class="video-wrapper">
-                <video autoplay loop muted playsinline class="carousel-video">
-                  <source src="{% static 'shop/videos/aashuvedio3.mp4' %}" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            </div>
-
           </div>
         </div>
       </div>
 
+      <!-- Slide 5: Maharashtrian Collection -->
+      <div class="carousel-item h-100">
+        <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 21, 2026, 07_50_25 PM.png' %}" class="d-block w-100 h-100" alt="Royal Maharashtrian Collection">
+        <!-- Luxury overlay -->
+        <div class="hero-overlay"></div>
+        <div class="container h-100 d-flex align-items-center hero-container-overlay">
+          <div class="row align-items-center justify-content-start w-100">
+            <div class="col-lg-6 col-md-8 col-12">
+              <div class="hero-glass-card">
+                <!-- Decorative Sparkles -->
+                <div class="gold-sparkle" style="top: 10%; left: 15%; animation-delay: 0.2s;"></div>
+                <div class="gold-sparkle" style="top: 80%; left: 25%; animation-delay: 1.8s;"></div>
+                <div class="gold-sparkle" style="top: 30%; right: 12%; animation-delay: 3.2s;"></div>
+                <div class="gold-sparkle" style="top: 75%; right: 22%; animation-delay: 4.8s;"></div>
+
+                <h1 class="hero-title" style="background: linear-gradient(135deg, #FFE082 0%, #FFB300 50%, #FF8F00 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 10px rgba(255, 179, 0, 0.15);">
+                  Traditional Maharashtrian Jewellery
+                </h1>
+                <p class="hero-subtitle">
+                  Celebrate heritage with our traditional Maharashtrian designs. Exquisite ornaments made for your special moments.
+                </p>
+                <div class="d-flex flex-wrap gap-3 justify-content-start">
+                  <a href="{% url 'shop' %}" class="btn btn-luxury-gold">
+                    Explore Collection <i class="fas fa-arrow-right ms-2"></i>
+                  </a>
+                  <a href="#featured" class="btn btn-luxury-outline">
+                    Featured Items
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 6: Exquisite Diamond Collection -->
+      <div class="carousel-item h-100">
+        <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_19_00 PM.png' %}" class="d-block w-100 h-100" alt="Exclusive Diamond Collection">
+        <!-- Luxury overlay -->
+        <div class="hero-overlay"></div>
+        <div class="container h-100 d-flex align-items-center hero-container-overlay">
+          <div class="row align-items-center justify-content-start w-100">
+            <div class="col-lg-6 col-md-8 col-12">
+              <div class="hero-glass-card">
+                <!-- Decorative Sparkles -->
+                <div class="gold-sparkle" style="top: 15%; left: 20%; animation-delay: 0.8s;"></div>
+                <div class="gold-sparkle" style="top: 80%; left: 10%; animation-delay: 2.2s;"></div>
+                <div class="gold-sparkle" style="top: 25%; right: 15%; animation-delay: 3.8s;"></div>
+                <div class="gold-sparkle" style="top: 75%; right: 25%; animation-delay: 5.2s;"></div>
+
+                <h1 class="hero-title" style="background: linear-gradient(135deg, #ffffff 0%, #d4e5f7 50%, #ffffff 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 10px rgba(212, 175, 55, 0.15);">
+                  Exclusive Diamond Collection
+                </h1>
+                <p class="hero-subtitle">
+                  Brilliance in every cut. Discover our luxury diamonds designed for lifetime celebrations.
+                </p>
+                <div class="d-flex flex-wrap gap-3 justify-content-start">
+                  <a href="{% url 'shop' %}" class="btn btn-luxury-gold">
+                    Explore Collection <i class="fas fa-arrow-right ms-2"></i>
+                  </a>
+                  <a href="#featured" class="btn btn-luxury-outline">
+                    Featured Items
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Custom Circular Controls -->
+    <button class="carousel-control-prev luxury-control" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+      <i class="fas fa-chevron-left luxury-control-icon" aria-hidden="true"></i>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next luxury-control" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+      <i class="fas fa-chevron-right luxury-control-icon" aria-hidden="true"></i>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</section>
+
+<!-- ===== Scrolling Collection Banner (Left to Right) ===== -->
+<section class="scrolling-collections-section py-4">
+  <div class="scrolling-collections-title text-center mb-3">
+    <span class="text-gold font-cinzel text-uppercase tracking-wider small">Our Signature Collections</span>
+  </div>
+  <div class="collections-marquee-wrapper">
+    <div class="collections-marquee-track">
+      {% if signature_collections %}
+        <!-- Group 1 (Dynamic from DB) -->
+        <div class="collections-marquee-group">
+          {% for col in signature_collections %}
+            <a href="{{ col.link }}" class="collection-marquee-card">
+              <img src="{{ col.image_url }}" alt="{{ col.title }}">
+              <div class="collection-marquee-overlay"></div>
+              <div class="collection-marquee-content">
+                <h3>{{ col.title }}</h3>
+                <span class="shop-now-text">{{ col.subtitle }} <i class="fas fa-chevron-right ms-1"></i></span>
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+        
+        <!-- Duplicate Group 1 (Dynamic from DB) for seamless loop -->
+        <div class="collections-marquee-group" aria-hidden="true">
+          {% for col in signature_collections %}
+            <a href="{{ col.link }}" class="collection-marquee-card">
+              <img src="{{ col.image_url }}" alt="{{ col.title }}">
+              <div class="collection-marquee-overlay"></div>
+              <div class="collection-marquee-content">
+                <h3>{{ col.title }}</h3>
+                <span class="shop-now-text">{{ col.subtitle }} <i class="fas fa-chevron-right ms-1"></i></span>
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+      {% else %}
+        <!-- Fallback Group 1 (If DB is empty) -->
+        <div class="collections-marquee-group">
+          <a href="{% url 'shop' %}" class="collection-marquee-card">
+            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_07_35 PM.png' %}" alt="Gold Ornaments">
+            <div class="collection-marquee-overlay"></div>
+            <div class="collection-marquee-content">
+              <h3>Gold Ornaments</h3>
+              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
+            </div>
+          </a>
+          <a href="{% url 'shop' %}" class="collection-marquee-card">
+            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_19_00 PM.png' %}" alt="Diamond Rings">
+            <div class="collection-marquee-overlay"></div>
+            <div class="collection-marquee-content">
+              <h3>Diamond Rings</h3>
+              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
+            </div>
+          </a>
+          <a href="{% url 'shop' %}" class="collection-marquee-card">
+            <img src="{% static 'hero-section-imgs/hero1.png' %}" alt="Traditional Necklace">
+            <div class="collection-marquee-overlay"></div>
+            <div class="collection-marquee-content">
+              <h3>Traditional Designs</h3>
+              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
+            </div>
+          </a>
+          <a href="{% url 'shop' %}" class="collection-marquee-card">
+            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_25_40 PM.png' %}" alt="Antique Necklaces">
+            <div class="collection-marquee-overlay"></div>
+            <div class="collection-marquee-content">
+              <h3>Antique Masterpieces</h3>
+              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
+            </div>
+          </a>
+          <a href="{% url 'shop' %}" class="collection-marquee-card">
+            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_26_05 PM.png' %}" alt="Royal Chokers">
+            <div class="collection-marquee-overlay"></div>
+            <div class="collection-marquee-content">
+              <h3>Royal Chokers</h3>
+              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
+            </div>
+          </a>
+          <a href="{% url 'shop' %}" class="collection-marquee-card">
+            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_36_19 PM.png' %}" alt="Bespoke Rings">
+            <div class="collection-marquee-overlay"></div>
+            <div class="collection-marquee-content">
+              <h3>Bespoke Rings</h3>
+              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
+            </div>
+          </a>
+          <a href="{% url 'shop' %}" class="collection-marquee-card">
+            <img src="{% static 'hero-section-imgs/hero2.png' %}" alt="Bridal Special">
+            <div class="collection-marquee-overlay"></div>
+            <div class="collection-marquee-content">
+              <h3>Bridal Special</h3>
+              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
+            </div>
+          </a>
+        </div>
+        
+        <!-- Fallback Duplicate Group 1 for seamless infinite looping -->
+        <div class="collections-marquee-group" aria-hidden="true">
+          <a href="{% url 'shop' %}" class="collection-marquee-card">
+            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_07_35 PM.png' %}" alt="Gold Ornaments">
+            <div class="collection-marquee-overlay"></div>
+            <div class="collection-marquee-content">
+              <h3>Gold Ornaments</h3>
+              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
+            </div>
+          </a>
+          <a href="{% url 'shop' %}" class="collection-marquee-card">
+            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_19_00 PM.png' %}" alt="Diamond Rings">
+            <div class="collection-marquee-overlay"></div>
+            <div class="collection-marquee-content">
+              <h3>Diamond Rings</h3>
+              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
+            </div>
+          </a>
+          <a href="{% url 'shop' %}" class="collection-marquee-card">
+            <img src="{% static 'hero-section-imgs/hero1.png' %}" alt="Traditional Necklace">
+            <div class="collection-marquee-overlay"></div>
+            <div class="collection-marquee-content">
+              <h3>Traditional Designs</h3>
+              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
+            </div>
+          </a>
+          <a href="{% url 'shop' %}" class="collection-marquee-card">
+            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_25_40 PM.png' %}" alt="Antique Necklaces">
+            <div class="collection-marquee-overlay"></div>
+            <div class="collection-marquee-content">
+              <h3>Antique Masterpieces</h3>
+              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
+            </div>
+          </a>
+          <a href="{% url 'shop' %}" class="collection-marquee-card">
+            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_26_05 PM.png' %}" alt="Royal Chokers">
+            <div class="collection-marquee-overlay"></div>
+            <div class="collection-marquee-content">
+              <h3>Royal Chokers</h3>
+              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
+            </div>
+          </a>
+          <a href="{% url 'shop' %}" class="collection-marquee-card">
+            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_36_19 PM.png' %}" alt="Bespoke Rings">
+            <div class="collection-marquee-overlay"></div>
+            <div class="collection-marquee-content">
+              <h3>Bespoke Rings</h3>
+              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
+            </div>
+          </a>
+          <a href="{% url 'shop' %}" class="collection-marquee-card">
+            <img src="{% static 'hero-section-imgs/hero2.png' %}" alt="Bridal Special">
+            <div class="collection-marquee-overlay"></div>
+            <div class="collection-marquee-content">
+              <h3>Bridal Special</h3>
+              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
+            </div>
+          </a>
+        </div>
+      {% endif %}
     </div>
   </div>
 </section>
 
-<!-- ===== Necklace Section ===== -->
-<section class="py-5 necklace-section" style="background: linear-gradient(180deg, #fff 0%, #fdf8ec 100%);">
+<!-- ===== Today's Rates & Calculator Section ===== -->
+<section class="py-5 bg-white border-bottom">
   <div class="container">
-    <div class="row align-items-center">
-      <!-- Left Text -->
-      <div class="col-lg-6 col-12 mb-4 mb-lg-0">
-        <div class="text-center text-lg-start">
-          <h2 class="display-5 fw-bold mb-3" style="font-family: 'Cinzel', serif; color: #b89025;">Necklace Collection</h2>
-          <p class="lead mb-4" style="color: #4a3629;">Bridal Sets & Everyday Styles<br>— Explore in Gold & Diamond.</p>
-          <div class="d-flex justify-content-center justify-content-lg-start gap-3">
-            <a href="{% url 'shop' %}" class="btn btn-gold btn-lg">Browse Collection</a>
-            <a href="#" class="btn btn-outline-dark btn-lg">View Catalog</a>
-          </div>
-        </div>
-      </div>
-      <!-- Right Image -->
+    <div class="row g-4">
+      <!-- Left Column: Today's Rates -->
       <div class="col-lg-6 col-12">
-        <div class="position-relative text-center">
-          <div style="display: inline-block; padding: 20px; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(212, 175, 55, 0.2);">
-            <img src="{% static 'hero-section-imgs/hero2.png' %}" alt="Necklace Collection" style="width: 100%; max-width: 400px; border-radius: 12px;">
+        <div class="card h-100 border-0 shadow-sm p-4" style="border-radius: 20px; background: linear-gradient(145deg, #ffffff 0%, #fffdf6 100%); border: 1px solid rgba(212,175,55,0.2);">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background: radial-gradient(circle at 30% 30%, #FFD700 0%, #d4af37 50%, #8B6914 100%); box-shadow: 0 4px 10px rgba(212,175,55,0.25);">
+              <i class="fas fa-chart-line text-white"></i>
+            </div>
+            <div>
+              <h3 class="fw-bold mb-0" style="font-size: 1.4rem; font-family: 'Cinzel', serif;">Today's Rates</h3>
+              <p class="text-muted small mb-0">Today's gold and silver prices in Akola</p>
+            </div>
+          </div>
+          
+          <div class="d-flex flex-column gap-3">
+            {% for rate in metal_rates %}
+            <a href="{% url 'live_rates' %}" class="text-decoration-none text-dark">
+              <div class="d-flex align-items-center justify-content-between p-3 rounded-4 rate-item-row {% if 'GOLD' in rate.metal_type or 'Gold' in rate.metal_type %}rate-gold{% else %}rate-silver{% endif %}" style="background: white; transition: all 0.3s ease;">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="rounded-circle d-flex align-items-center justify-content-center rate-icon-container {% if 'GOLD' in rate.metal_type or 'Gold' in rate.metal_type %}rate-gold{% else %}rate-silver{% endif %}" style="width: 44px; height: 44px;">
+                    {% if 'GOLD' in rate.metal_type or 'Gold' in rate.metal_type %}
+                    <!-- Gold Icon (Ring) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4a3607" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M8 12a4 4 0 0 1 8 0"/>
+                    </svg>
+                    {% else %}
+                    <!-- Silver Icon (Ring) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M8 12a4 4 0 0 1 8 0"/>
+                    </svg>
+                    {% endif %}
+                  </div>
+                  <div>
+                    <h6 class="fw-bold mb-0" style="font-size: 0.95rem;">{{ rate.get_metal_type_display }}</h6>
+                    <span class="text-muted small" style="font-size: 0.8rem;">{{ rate.purity }}% Purity</span>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <span class="fw-bold text-gold" style="font-size: 1.25rem;">₹{{ rate.rate_per_gram|floatformat:2 }}</span>
+                  <span class="text-muted small d-block" style="font-size: 0.75rem;">per gram</span>
+                </div>
+              </div>
+            </a>
+            {% endfor %}
+          </div>
+          <div class="mt-4 text-center">
+            <a href="{% url 'live_rates' %}" class="btn btn-outline-dark btn-sm rounded-pill px-4 py-2" style="font-size: 0.85rem; font-family: 'Montserrat', sans-serif;">
+              <i class="fas fa-chart-line me-2"></i> View Full Rate Chart
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Column: Rate Calculator -->
+      <div class="col-lg-6 col-12">
+        <div class="card h-100 border-0 shadow-sm p-4" style="border-radius: 20px; background: linear-gradient(145deg, #ffffff 0%, #f7f9fc 100%); border: 1px solid rgba(59,130,246,0.18);">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); box-shadow: 0 4px 10px rgba(59,130,246,0.25);">
+              <i class="fas fa-calculator text-white"></i>
+            </div>
+            <div>
+              <h3 class="fw-bold mb-0" style="font-size: 1.4rem; font-family: 'Cinzel', serif;">Price Calculator</h3>
+              <p class="text-muted small mb-0">Estimate cost including making charges and GST</p>
+            </div>
+          </div>
+          
+          <form id="homeCalculatorForm" class="mb-3">
+            <div class="row g-3">
+              <div class="col-sm-6 col-12">
+                <label class="form-label fw-semibold small mb-1">Select Metal</label>
+                <select class="form-select" id="homeMetalSelect" name="metal">
+                  {% for rate in metal_rates %}
+                  <option value="{{ rate.metal_type }}" {% if forloop.first %}selected{% endif %}>
+                    {{ rate.get_metal_type_display }} ({{ rate.purity }}%)
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-sm-6 col-12">
+                <label class="form-label fw-semibold small mb-1">Weight (in grams)</label>
+                <input type="number" class="form-control" id="homeWeightInput" step="0.001" min="0.001" value="1">
+              </div>
+            </div>
+          </form>
+
+          <div id="homeCalcResult" class="p-3 rounded-4 mb-3" style="background: #fdfbf7; border: 1px solid rgba(212,175,55,0.2);">
+            <div class="row g-2 text-center">
+              <div class="col-4">
+                <span class="text-muted small d-block" style="font-size: 0.75rem;">Base Price</span>
+                <span class="fw-bold text-dark" id="homeBasePrice" style="font-size: 0.95rem;">₹0.00</span>
+              </div>
+              <div class="col-4 border-start border-end">
+                <span class="text-muted small d-block" style="font-size: 0.75rem;">Making Charges</span>
+                <span class="fw-bold text-dark" id="homeMakingAmount" style="font-size: 0.95rem;">₹0.00</span>
+              </div>
+              <div class="col-4">
+                <span class="text-muted small d-block" style="font-size: 0.75rem;">GST</span>
+                <span class="fw-bold text-dark" id="homeGSTAmount" style="font-size: 0.95rem;">₹0.00</span>
+              </div>
+            </div>
+            <hr class="my-2 opacity-10">
+            <div class="d-flex align-items-center justify-content-between pt-1">
+              <span class="fw-bold text-dark mb-0" style="font-size: 0.95rem;">Total Estimated Price:</span>
+              <span class="text-gold fw-bold mb-0" id="homeTotalPrice" style="font-size: 1.45rem;">₹0.00</span>
+            </div>
+          </div>
+
+          <!-- Selected Metal Parameters Grid (Fills empty space beautifully) -->
+          <div class="p-3 rounded-4 mt-auto" id="homeMetalInfoCard" style="background: rgba(212, 175, 55, 0.04); border: 1px solid rgba(212, 175, 55, 0.12); margin-top: 10px;">
+            <span class="text-muted small fw-semibold text-uppercase tracking-wider d-block mb-2" style="font-size: 0.72rem; letter-spacing: 0.5px;">Current Rate Parameters</span>
+            <div class="row g-2 text-center">
+              <div class="col-6">
+                <div class="p-2 rounded-3 bg-white border border-light shadow-sm">
+                  <span class="text-muted d-block mb-1" style="font-size: 0.7rem;">Today's Rate / Gram</span>
+                  <span class="fw-bold text-dark" id="calcMetalRate" style="font-size: 0.95rem;">₹0.00</span>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="p-2 rounded-3 bg-white border border-light shadow-sm">
+                  <span class="text-muted d-block mb-1" style="font-size: 0.7rem;">Making Charge</span>
+                  <span class="fw-bold text-dark" id="calcMakingCharge" style="font-size: 0.95rem;">₹0.00</span>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="p-2 rounded-3 bg-white border border-light shadow-sm">
+                  <span class="text-muted d-block mb-1" style="font-size: 0.7rem;">GST Rate</span>
+                  <span class="fw-bold text-dark" id="calcGSTRate" style="font-size: 0.95rem;">3%</span>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="p-2 rounded-3 bg-white border border-light shadow-sm">
+                  <span class="text-muted d-block mb-1" style="font-size: 0.7rem;">Standard Purity</span>
+                  <span class="fw-bold text-dark" id="calcPurity" style="font-size: 0.95rem;">75%</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<style>
+  .rate-item-row:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.1);
+    border-color: rgba(212, 175, 55, 0.4) !important;
+  }
+
+  /* Necklace Section Styles */
+  .necklace-banner-strip {
+    background: linear-gradient(135deg, #d4af37 0%, #b8941f 50%, #d4af37 100%);
+    color: white;
+    padding: 12px 0;
+    text-align: center;
+    font-weight: 500;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+  }
+
+  .necklace-text-box {
+    padding: 2rem;
+  }
+
+  .necklace-title {
+    font-family: 'Playfair Display', 'Cinzel', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .necklace-subtitle {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.7;
+    font-weight: 400;
+  }
+
+  .jewellery-composite-card {
+    display: flex;
+    gap: 1rem;
+    height: 450px;
+    margin-left: 20px;
+  }
+
+  .composite-left-pane {
+    flex: 2;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .composite-left-pane img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .composite-right-pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .composite-sub-img-wrapper {
+    flex: 1;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  .composite-sub-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Mobile Responsive for Necklace Section */
+  @media (max-width: 992px) {
+    .jewellery-composite-card {
+      flex-direction: column;
+      height: auto;
+      margin-left: 0;
+    }
+
+    .composite-left-pane {
+      height: 250px;
+    }
+
+    .composite-right-pane {
+      flex-direction: row;
+    }
+
+    .necklace-title {
+      font-size: 1.0rem;
+    }
+
+    .necklace-subtitle {
+      font-size: 0.7rem;
+    }
+
+    .necklace-text-box {
+      max-width: 62% !important;
+      padding: 0.8rem;
+    }
+
+    .necklace-flourish {
+      width: 90px !important;
+      height: 15px !important;
+    }
+
+    /* Make the background image smaller and position it properly in mobile */
+    .necklace-text-box ~ img {
+      max-height: 200px !important;
+      right: -18% !important;
+    }
+
+    /* Also adjust the column's min-height in mobile */
+    .py-5.bg-white.border-bottom .col-lg-5.col-12 {
+      min-height: 240px !important;
+    }
+  }
+
+  /* Recommended for You Section */
+  .recommended-section {
+    padding: 2rem 0;
+    background: #fff;
+  }
+
+  .recommended-title {
+    font-family: 'Cinzel', serif;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+  }
+
+  .subcategory-scroll {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .subcategory-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .subcategory-item {
+    flex: 0 0 auto;
+    text-align: center;
+  }
+
+  .subcategory-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #d4af37;
+    margin: 0 auto 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .subcategory-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .subcategory-name {
+    font-size: 0.85rem;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  /* Reels Section */
+  .reels-section {
+    padding: 3rem 0;
+    background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+  }
+
+  .reels-title {
+    font-family: 'Cinzel', serif;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    color: #333;
+  }
+
+  .reels-container {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding: 1rem 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #d4af37 #f0f0f0;
+  }
+
+  .reels-container::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .reels-container::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 4px;
+  }
+
+  .reels-container::-webkit-scrollbar-thumb {
+    background: #d4af37;
+    border-radius: 4px;
+  }
+
+  .reel-card {
+    flex: 0 0 auto;
+    width: 280px;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  .reel-video-container {
+    width: 100%;
+    aspect-ratio: 9/16;
+    background: #000;
+    overflow: hidden;
+  }
+
+  .reel-video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .reel-info {
+    padding: 1rem;
+  }
+
+  .reel-info h5 {
+    font-size: 1rem;
+    color: #333;
+    margin: 0;
+  }
+
+  /* Mobile adjustments for Recommended and Reels */
+  @media (max-width: 768px) {
+    .recommended-section {
+      padding: 1.5rem 0;
+    }
+
+    .subcategory-circle {
+      width: 60px;
+      height: 60px;
+    }
+
+    .subcategory-name {
+      font-size: 0.75rem;
+    }
+
+    .reels-section {
+      padding: 2rem 0;
+    }
+
+    .reel-card {
+      width: 220px;
+    }
+  }
+</style>
+
+<!-- ===== Luxury Ribbon Banner & Necklace Collection Section ===== -->
+<section class="necklace-banner-strip">
+  <div class="container">
+    <p class="mb-0">Undeniable, glamorous and exclusively ours, until it's yours forever.</p>
+  </div>
+</section>
+
+<section class="py-5 bg-white border-bottom">
+  <div class="container">
+    <div class="row g-4 align-items-center">
+      <div class="col-lg-5 col-12 d-flex flex-column align-items-start justify-content-center text-start p-4 ps-0 position-relative overflow-hidden" style="min-height: 400px;">
+        <!-- Background Image -->
+        <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 21, 2026, 08_13_55 PM-Photoroom.png' %}" alt="Necklace Collection" style="position: absolute; right: -10%; top: 50%; transform: translateY(-50%); height: 100%; max-height: 400px; width: auto; object-fit: contain; z-index: 0; pointer-events: none;">
+        <!-- Very Minimal Overlay for Text Readability -->
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.15); z-index: 1;"></div>
+        
+        <div class="necklace-text-box position-relative" style="z-index: 2; max-width: 60%;">
+          <!-- Top Flourish -->
+          <svg class="necklace-flourish mb-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 30" width="120" height="20">
+            <path d="M10,15 L90,15 C95,15 98,12 100,10 C102,12 105,15 110,15 L190,15 M100,5 C95,5 95,15 100,15 C105,15 105,5 100,5 Z M90,15 C85,15 85,25 90,25 C95,25 95,15 90,15 Z M110,15 C105,15 105,25 110,25 C115,25 115,15 110,15 Z" stroke="#d4af37" stroke-width="1.2" fill="none"/>
+          </svg>
+          
+          <h2 class="necklace-title">Premium Jewellery Collection</h2>
+          
+          <p class="necklace-subtitle">Timeless Elegance & Contemporary Designs <br>– Crafted with Pure Gold & Sparkling Diamonds.</p>
+          
+          <!-- Bottom Flourish -->
+          <svg class="necklace-flourish mt-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 30" width="120" height="20">
+            <path d="M10,15 L90,15 C95,15 98,12 100,10 C102,12 105,15 110,15 L190,15 M100,5 C95,5 95,15 100,15 C105,15 105,5 100,5 Z M90,15 C85,15 85,25 90,25 C95,25 95,15 90,15 Z M110,15 C105,15 105,25 110,25 C115,25 115,15 110,15 Z" stroke="#d4af37" stroke-width="1.2" fill="none"/>
+          </svg>
+        </div>
+      </div>
+      
+      <!-- Right Column: Premium Composite Jewellery Card -->
+      <div class="col-lg-7 col-12">
+        <div class="jewellery-composite-card">
+          <!-- Left Main Image -->
+          <div class="composite-left-pane">
+            <img src="{% static 'hero-section-imgs/Elegant and classy 💞_.jpg' %}" alt="Bridal Gold Necklace Set">
+          </div>
+          <!-- Right Stacked Sub-Images -->
+          <div class="composite-right-pane">
+            <div class="composite-sub-img-wrapper">
+              <img src="{% static 'hero-section-imgs/butterfly anklet.jpg' %}" alt="Classic Gold Necklace design">
+            </div>
+            <div class="composite-sub-img-wrapper">
+              <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 22, 2026, 12_11_03 PM.png' %}" alt="Exquisite Diamond Necklace Details">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Recommended for You (Featured Subcategories) ===== -->
+{% if featured_subcategories %}
+<section class="recommended-section">
+  <div class="container">
+    <h3 class="recommended-title">Recommended for you</h3>
+    <div class="subcategory-scroll">
+      <!-- "All" option -->
+      <a href="{% url 'shop' %}" class="subcategory-item">
+        <div class="subcategory-circle" style="background: linear-gradient(135deg, #d4af37 0%, #f4e4bc 100%);">
+          <i class="fas fa-th text-white" style="font-size: 1.5rem;"></i>
+        </div>
+        <span class="subcategory-name">All</span>
+      </a>
+      {% for subcat in featured_subcategories %}
+      <a href="{{ subcat.get_absolute_url }}" class="subcategory-item">
+        <div class="subcategory-circle">
+          {% if subcat.image %}
+          <img src="{{ subcat.image.url }}" alt="{{ subcat.name }}">
+          {% else %}
+          <i class="fas fa-gem" style="color: #d4af37; font-size: 1.5rem;"></i>
+          {% endif %}
+        </div>
+        <span class="subcategory-name">{{ subcat.name }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ===== Reels Section ===== -->
+{% if reels %}
+<section class="reels-section">
+  <div class="container">
+    <h3 class="reels-title">Our Jewellery Reels</h3>
+    <div class="reels-container">
+      {% for reel in reels %}
+      <div class="reel-card">
+        <div class="reel-video-container">
+          <video loop muted playsinline {% if forloop.first %}autoplay{% endif %}>
+            <source src="{{ reel.video.url }}" type="video/mp4">
+          </video>
+        </div>
+        {% if reel.title %}
+        <div class="reel-info">
+          <h5>{{ reel.title }}</h5>
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
 
 <!-- ===== Featured Categories ===== -->
 <section class="py-5 bg-light">
@@ -308,7 +1971,340 @@
   </div>
 </section>
 
+<!-- ===== Testimonial Section ===== -->
+<section class="testimonials-section">
+  <div class="container">
+    <div class="section-header text-center mb-5">
+      <h2 class="display-5 fw-bold text-white mb-0" style="font-family: 'Cinzel', serif;">Testimonials</h2>
+    </div>
+    
+    <div class="row g-4 {% if testimonials|length <= 4 %}has-few-items{% endif %}">
+      {% for testimonial in testimonials %}
+      <!-- Dynamic Testimonial -->
+      <div class="col-lg-3 col-md-6 col-12 d-flex">
+        <div class="testimonial-card-wrapper w-100 d-flex flex-column">
+          <div class="testimonial-card-bg-circles"></div>
+          <div class="testimonial-card-shadow"></div>
+          <div class="testimonial-bubble-card d-flex flex-column flex-grow-1">
+            <!-- Quote Icon -->
+            <div class="testimonial-quote-box">
+              <i class="fas fa-quote-left"></i>
+            </div>
+            <!-- Star Rating -->
+            <div class="text-end text-warning mb-3">
+              {% for i in "12345"|make_list %}
+                {% if forloop.counter <= testimonial.rating %}
+                  <i class="fas fa-star"></i>
+                {% else %}
+                  <i class="far fa-star text-muted"></i>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <!-- Feedback -->
+            <p class="testimonial-text flex-grow-1">{{ testimonial.message }}</p>
+            <!-- Author -->
+            <h6 class="testimonial-author mt-3 mb-0">{{ testimonial.name }}</h6>
+            <small class="text-muted text-end block mt-1" style="font-size: 0.8rem;">{{ testimonial.designation }}</small>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <!-- Testimonial 1 (Fallback) -->
+      <div class="col-lg-3 col-md-6 col-12 d-flex">
+        <div class="testimonial-card-wrapper w-100 d-flex flex-column">
+          <div class="testimonial-card-bg-circles"></div>
+          <div class="testimonial-card-shadow"></div>
+          <div class="testimonial-bubble-card d-flex flex-column flex-grow-1">
+            <!-- Quote Icon -->
+            <div class="testimonial-quote-box">
+              <i class="fas fa-quote-left"></i>
+            </div>
+            <!-- Star Rating -->
+            <div class="text-end text-warning mb-3">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="far fa-star text-muted"></i>
+            </div>
+            <!-- Feedback -->
+            <p class="testimonial-text flex-grow-1">Had a wonderful experience at Aashutosh Jewellers! The staff was warm and helpful, the designs were stunning, and the entire process was smooth and trustworthy. Truly a perfect blend of tradition, elegance, and excellent service!</p>
+            <!-- Author -->
+            <h6 class="testimonial-author mt-3 mb-0">Sheryil Nikhil Jolly</h6>
+            <small class="text-muted text-end block mt-1" style="font-size: 0.8rem;">Verified Buyer</small>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Testimonial 2 (Fallback) -->
+      <div class="col-lg-3 col-md-6 col-12 d-flex">
+        <div class="testimonial-card-wrapper w-100 d-flex flex-column">
+          <div class="testimonial-card-bg-circles"></div>
+          <div class="testimonial-card-shadow"></div>
+          <div class="testimonial-bubble-card d-flex flex-column flex-grow-1">
+            <div class="testimonial-quote-box">
+              <i class="fas fa-quote-left"></i>
+            </div>
+            <div class="text-end text-warning mb-3">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <p class="testimonial-text flex-grow-1">I'm extremely satisfied with the service provided by Aashutosh Jewellers! The silver anklet I purchased is stunning, and the quality is exceptional. The staff was knowledgeable, friendly, and helped me find the perfect piece.</p>
+            <h6 class="testimonial-author mt-3 mb-0">vishwani bhaisare</h6>
+            <small class="text-muted text-end block mt-1" style="font-size: 0.8rem;">Verified Buyer</small>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Testimonial 3 (Fallback) -->
+      <div class="col-lg-3 col-md-6 col-12 d-flex">
+        <div class="testimonial-card-wrapper w-100 d-flex flex-column">
+          <div class="testimonial-card-bg-circles"></div>
+          <div class="testimonial-card-shadow"></div>
+          <div class="testimonial-bubble-card d-flex flex-column flex-grow-1">
+            <div class="testimonial-quote-box">
+              <i class="fas fa-quote-left"></i>
+            </div>
+            <div class="text-end text-warning mb-3">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="far fa-star text-muted"></i>
+            </div>
+            <p class="testimonial-text flex-grow-1">Had a wonderful experience at Aashutosh Jewellers! Loved their stunning earring collection - from elegant danglers to delicate studs. Found my perfect pair with top-notch quality and craftsmanship.</p>
+            <h6 class="testimonial-author mt-3 mb-0">Sapna Ashtankar</h6>
+            <small class="text-muted text-end block mt-1" style="font-size: 0.8rem;">Verified Buyer</small>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Testimonial 4 (Fallback) -->
+      <div class="col-lg-3 col-md-6 col-12 d-flex">
+        <div class="testimonial-card-wrapper w-100 d-flex flex-column">
+          <div class="testimonial-card-bg-circles"></div>
+          <div class="testimonial-card-shadow"></div>
+          <div class="testimonial-bubble-card d-flex flex-column flex-grow-1">
+            <div class="testimonial-quote-box">
+              <i class="fas fa-quote-left"></i>
+            </div>
+            <div class="text-end text-warning mb-3">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <p class="testimonial-text flex-grow-1">Had a great experience at Aashutosh Jewellers! Found everything from imitation to diamond and gold jewellery. Thanks to the staff for their helpful and patient service. Highly recommended for quality at fair prices!</p>
+            <h6 class="testimonial-author mt-3 mb-0">Ankur Khare</h6>
+            <small class="text-muted text-end block mt-1" style="font-size: 0.8rem;">Verified Buyer</small>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
 
+    <!-- Action Button for Submitting Feedback -->
+    <div class="text-center mt-5">
+      <button class="btn btn-luxury-outline" data-bs-toggle="modal" data-bs-target="#feedbackModal" style="border: 2px solid #FFD700; border-radius: 50px; padding: 10px 30px; font-weight: 600; color: #fff; background: transparent; transition: all 0.3s ease;">
+        <i class="fas fa-edit me-2"></i>Give Feedback
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Feedback Submission Popup Modal -->
+<div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 20px; overflow: hidden; border: 2px solid rgba(212,175,55,0.4); box-shadow: 0 15px 40px rgba(0,0,0,0.6); background: #1a1a1a; color: white;">
+            <!-- Header -->
+            <div class="modal-header py-3 px-4" style="background: linear-gradient(135deg, #0f0f0f 0%, #2d2512 100%); border-bottom: 2px solid #FFD700;">
+                <h5 class="modal-title fw-bold text-gold" id="feedbackModalLabel" style="font-family: 'Cinzel', serif; color: #FFD700; margin: 0;">Share Your Experience</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Body -->
+            <form id="feedbackForm" method="POST" action="{% url 'submit_testimonial' %}">
+                {% csrf_token %}
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label for="feedbackName" class="form-label text-gold fw-semibold">Your Name *</label>
+                        <input type="text" class="form-control bg-dark text-white border-secondary" id="feedbackName" name="name" required style="border-radius: 10px;">
+                    </div>
+                    <div class="mb-3">
+                        <label for="feedbackDesignation" class="form-label text-gold">Designation / Role (Optional)</label>
+                        <input type="text" class="form-control bg-dark text-white border-secondary" id="feedbackDesignation" name="designation" placeholder="e.g. Verified Buyer, Customer" style="border-radius: 10px;">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-gold fw-semibold">Rating *</label>
+                        <div class="rating-stars d-flex gap-2 fs-4" style="cursor: pointer;">
+                            <i class="far fa-star star-btn" data-value="1"></i>
+                            <i class="far fa-star star-btn" data-value="2"></i>
+                            <i class="far fa-star star-btn" data-value="3"></i>
+                            <i class="far fa-star star-btn" data-value="4"></i>
+                            <i class="far fa-star star-btn" data-value="5"></i>
+                        </div>
+                        <input type="hidden" name="rating" id="feedbackRating" value="5">
+                    </div>
+                    <div class="mb-3">
+                        <label for="feedbackMessage" class="form-label text-gold fw-semibold">Your Feedback *</label>
+                        <textarea class="form-control bg-dark text-white border-secondary" id="feedbackMessage" name="message" rows="4" required style="border-radius: 10px;" placeholder="Tell us about your experience..."></textarea>
+                    </div>
+                    <div id="feedbackAlert" class="alert d-none py-2 px-3 small" style="border-radius: 10px;"></div>
+                </div>
+                <!-- Footer -->
+                <div class="modal-footer p-3" style="border-top: 1px solid rgba(255, 215, 0, 0.1); background: #0f0f0f;">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-gold rounded-pill px-4" style="background: linear-gradient(135deg, #d4af37 0%, #b8952b 100%); border: none; color: white;">Submit Feedback</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts for Modal Star Rating and AJAX Submission -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Star Rating Button Click handler
+    const stars = document.querySelectorAll('.star-btn');
+    const ratingInput = document.getElementById('feedbackRating');
+    
+    // Set 5 stars highlight by default
+    function highlightStars(rating) {
+        stars.forEach(function(s, index) {
+            if (index < rating) {
+                s.classList.remove('far');
+                s.classList.add('fas', 'text-warning');
+            } else {
+                s.classList.remove('fas', 'text-warning');
+                s.classList.add('far');
+            }
+        });
+    }
+    highlightStars(5);
+    
+    stars.forEach(function(star) {
+        star.addEventListener('click', function() {
+            const rating = parseInt(this.getAttribute('data-value'));
+            ratingInput.value = rating;
+            highlightStars(rating);
+        });
+    });
+
+    // Handle AJAX form submission
+    const feedbackForm = document.getElementById('feedbackForm');
+    if (feedbackForm) {
+        feedbackForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const form = this;
+            const alertBox = document.getElementById('feedbackAlert');
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            // Disable button during submit
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Submitting...';
+            
+            const formData = new FormData(form);
+            
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                
+                if (data.success) {
+                    alertBox.className = 'alert alert-success py-2 px-3 small';
+                    alertBox.textContent = 'Thank you! Your feedback has been submitted successfully.';
+                    alertBox.classList.remove('d-none');
+                    
+                    // Prepend new card to the list
+                    const container = document.querySelector('.testimonials-section .row.g-4');
+                    
+                    // Build stars html dynamically
+                    let starsHtml = '';
+                    for (let j = 1; j <= 5; j++) {
+                        if (j <= data.testimonial.rating) {
+                            starsHtml += '<i class="fas fa-star"></i> ';
+                        } else {
+                            starsHtml += '<i class="far fa-star text-muted"></i> ';
+                        }
+                    }
+                    
+                    const newCard = `
+                      <div class="col-lg-3 col-md-6 col-12 d-flex">
+                        <div class="testimonial-card-wrapper w-100 d-flex flex-column">
+                          <div class="testimonial-card-bg-circles"></div>
+                          <div class="testimonial-card-shadow"></div>
+                          <div class="testimonial-bubble-card d-flex flex-column flex-grow-1">
+                            <div class="testimonial-quote-box">
+                              <i class="fas fa-quote-left"></i>
+                            </div>
+                            <div class="text-end text-warning mb-3">
+                              ${starsHtml}
+                            </div>
+                            <p class="testimonial-text flex-grow-1">${data.testimonial.message}</p>
+                            <h6 class="testimonial-author mt-3 mb-0">${data.testimonial.name}</h6>
+                            <small class="text-muted text-end block mt-1" style="font-size: 0.8rem;">${data.testimonial.designation}</small>
+                          </div>
+                        </div>
+                      </div>
+                    `;
+                    
+                    // Remove dynamic empty state msg if any
+                    const emptyState = container.querySelector('.empty-testimonials');
+                    if (emptyState) {
+                        emptyState.remove();
+                    }
+                    
+                    container.insertAdjacentHTML('afterbegin', newCard);
+                    
+                    // Reset form and stars
+                    form.reset();
+                    highlightStars(5);
+                    ratingInput.value = 5;
+                    
+                    // Hide modal after a brief delay
+                    setTimeout(function() {
+                        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('feedbackModal'));
+                        if (modalInstance) {
+                            modalInstance.hide();
+                        }
+                        alertBox.classList.add('d-none');
+                    }, 1500);
+                    
+                } else {
+                    alertBox.className = 'alert alert-danger py-2 px-3 small';
+                    alertBox.textContent = data.error || 'Something went wrong. Please check your inputs.';
+                    alertBox.classList.remove('d-none');
+                }
+            })
+            .catch(error => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                alertBox.className = 'alert alert-danger py-2 px-3 small';
+                alertBox.textContent = 'An error occurred. Please try again.';
+                alertBox.classList.remove('d-none');
+                console.error(error);
+            });
+        });
+    }
+});
+</script>
 
 <!-- ===== Contact Info Section ===== -->
 <section class="py-5 bg-light">
@@ -352,8 +2348,185 @@
 </section>
 
 
-<!-- Font Awesome for icons -->
-<script src="https://kit.fontawesome.com/2c36e9b7b1.js" crossorigin="anonymous"></script>
+<!-- Home Calculator JavaScript -->
+<script id="metal-rates-data" type="application/json">
+{
+    {% for rate in metal_rates %}
+    "{{ rate.metal_type }}": {
+        "rate_per_gram": {{ rate.rate_per_gram|stringformat:"f" }},
+        "making_charge": {{ rate.making_charge|stringformat:"f" }},
+        "making_type": "{{ rate.making_type }}",
+        "gst_percentage": {{ rate.gst_percentage|stringformat:"f" }},
+        "purity": "{{ rate.purity }}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+}
+</script>
 
+<script>
+// Metal rates data parsed from JSON script to avoid JS linter errors
+const metalRatesData = JSON.parse(document.getElementById('metal-rates-data').textContent);
+
+// Initialize calculator
+function initHomeCalculator() {
+    const metalSelect = document.getElementById('homeMetalSelect');
+    const weightInput = document.getElementById('homeWeightInput');
+    const basePriceEl = document.getElementById('homeBasePrice');
+    const makingAmountEl = document.getElementById('homeMakingAmount');
+    const gstAmountEl = document.getElementById('homeGSTAmount');
+    const totalPriceEl = document.getElementById('homeTotalPrice');
+    
+    // Parameter card elements
+    const calcMetalRateEl = document.getElementById('calcMetalRate');
+    const calcMakingChargeEl = document.getElementById('calcMakingCharge');
+    const calcGSTRateEl = document.getElementById('calcGSTRate');
+    const calcPurityEl = document.getElementById('calcPurity');
+
+    function calculate() {
+        const selectedMetal = metalSelect.value;
+        const weight = parseFloat(weightInput.value) || 0;
+
+        if (!metalRatesData[selectedMetal]) return;
+
+        const data = metalRatesData[selectedMetal];
+
+        // Base price
+        const basePrice = data.rate_per_gram * weight;
+
+        // Making amount
+        let makingAmount;
+        if (data.making_type === 'FIXED') {
+            makingAmount = data.making_charge * weight;
+        } else {
+            makingAmount = basePrice * (data.making_charge / 100);
+        }
+
+        // Subtotal
+        const subtotal = basePrice + makingAmount;
+
+        // GST
+        const gstAmount = subtotal * (data.gst_percentage / 100);
+
+        // Total
+        const totalPrice = subtotal + gstAmount;
+
+        // Update UI
+        basePriceEl.textContent = '₹' + basePrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        makingAmountEl.textContent = '₹' + makingAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        gstAmountEl.textContent = '₹' + gstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        totalPriceEl.textContent = '₹' + totalPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        // Update Rate Parameters display
+        calcMetalRateEl.textContent = '₹' + data.rate_per_gram.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        if (data.making_type === 'FIXED') {
+            calcMakingChargeEl.textContent = '₹' + data.making_charge.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '/g';
+        } else {
+            calcMakingChargeEl.textContent = data.making_charge + '%';
+        }
+        calcGSTRateEl.textContent = data.gst_percentage + '%';
+        calcPurityEl.textContent = data.purity + '%';
+    }
+
+    // Event listeners
+    metalSelect.addEventListener('change', calculate);
+    weightInput.addEventListener('input', calculate);
+
+    // Initial calculation
+    calculate();
+}
+
+// Run when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('homeCalculatorForm')) {
+        initHomeCalculator();
+    }
+    
+    // Initialize hero carousel with EXACTLY 3-second interval for ALL slides
+    const heroCarouselElement = document.getElementById('heroCarousel');
+    if (heroCarouselElement) {
+        const heroCarousel = new bootstrap.Carousel(heroCarouselElement, {
+            interval: 3000, // 3 seconds
+            pause: false,  // Don't pause on hover
+            ride: 'carousel'
+        });
+    }
+    
+    // Show rates popup automatically on every visit to homepage if the modal element is present
+    const ratesPopupElement = document.getElementById('ratesPopup');
+    if (ratesPopupElement) {
+        setTimeout(function() {
+            const ratesModal = new bootstrap.Modal(ratesPopupElement);
+            ratesModal.show();
+        }, 1000); // 1-second delay for smoother UX
+    }
+});
+</script>
+
+<!-- Popup Modal for Live Rates -->
+{% if active_popup %}
+<div class="modal fade" id="ratesPopup" tabindex="-1" aria-labelledby="ratesPopupLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content" style="border-radius: 20px; overflow: hidden; border: 2px solid rgba(212,175,55,0.4); box-shadow: 0 15px 40px rgba(212,175,55,0.2);">
+            <!-- Header -->
+            <div class="modal-header text-white py-3 px-4" style="background: linear-gradient(135deg, #0f0f0f 0%, #2d2512 40%, #0f0f0f 100%); border-bottom: 2px solid #FFD700;">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: radial-gradient(circle at 30% 30%, #FFD700 0%, #d4af37 50%, #8B6914 100%); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">
+                        <i class="fas fa-gem fa-2x" style="color: #fff;"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title mb-0" id="ratesPopupLabel" style="font-weight: 700; font-size: 1.3rem; text-transform: uppercase;">{{ active_popup.title }}</h5>
+                        <p class="mb-0" style="color: #ccc; font-size: 0.9rem;">{{ active_popup.updated_at|date:"d M Y" }}</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Body -->
+            <div class="modal-body p-4" style="background: linear-gradient(180deg, #fffaf0 0%, #ffffff 40%, #fffaf0 100%);">
+                <div class="row g-3">
+                    {% for rate in metal_rates %}
+                    <div class="col-6 col-lg-3">
+                        <div class="card border-0 shadow-sm h-100 rate-card-border-{% if 'GOLD' in rate.metal_type or 'Gold' in rate.metal_type %}gold{% else %}silver{% endif %}" style="border-radius: 15px; background: linear-gradient(145deg, #ffffff 0%, #fffdf3 100%);">
+                            <div class="card-body p-3 text-center">
+                                <div class="mx-auto mb-2 rounded-circle d-flex align-items-center justify-content-center rate-icon-bg-{% if 'GOLD' in rate.metal_type or 'Gold' in rate.metal_type %}gold{% else %}silver{% endif %}" style="width: 50px; height: 50px;">
+                                    {% if 'GOLD' in rate.metal_type or 'Gold' in rate.metal_type %}
+                                    <!-- Gold Icon (Ring) -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4a3607" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                      <circle cx="12" cy="12" r="10"/>
+                                      <path d="M8 12a4 4 0 0 1 8 0"/>
+                                    </svg>
+                                    {% else %}
+                                    <!-- Silver Icon (Ring) -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                      <circle cx="12" cy="12" r="10"/>
+                                      <path d="M8 12a4 4 0 0 1 8 0"/>
+                                    </svg>
+                                    {% endif %}
+                                </div>
+                                <h6 class="fw-bold mb-1" style="color: #333; font-size: 1rem;">{{ rate.metal_type }}</h6>
+                                <p class="text-muted small mb-2" style="font-size: 0.8rem;">{{ rate.purity }}% Pure</p>
+                                <h4 class="fw-bold mb-0 {% if 'GOLD' in rate.metal_type %}rate-price-gold{% else %}rate-price-silver{% endif %}" style="font-size: 1.4rem;">₹{{ rate.rate_per_gram|floatformat:2 }}</h4>
+                                <p class="text-muted small mb-0" style="font-size: 0.8rem;">per gram</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- Footer -->
+            <div class="modal-footer justify-content-center gap-2 p-3" style="background: linear-gradient(180deg, #fafafa 0%, #f5f5f5 100%); border-top: 1px solid rgba(212,175,55,0.2);">
+                <a href="{% url 'live_rates' %}" class="btn" style="background: linear-gradient(135deg, #d4af37 0%, #daa520 100%); color: white; font-weight: 600; border-radius: 50px; padding: 8px 24px; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3); border: none;">
+                    <i class="fas fa-chart-line me-1"></i> View Rates
+                </a>
+                <a href="{% url 'live_rates' %}#live-calculator" class="btn" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; font-weight: 600; border-radius: 50px; padding: 8px 24px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2); border: none;">
+                    <i class="fas fa-calculator me-1"></i> Calculator
+                </a>
+                <button type="button" class="btn btn-outline-secondary" style="border-radius: 50px; padding: 8px 24px; font-weight: 500;" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 
 {% endblock %}

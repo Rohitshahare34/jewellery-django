@@ -10,7 +10,10 @@ from .models import (
     ProductImage,
     Jewellery,
     JewelleryImage,
-    MetalPrice
+    MetalPrice,
+    Testimonial,
+    Reel,
+    PopupMessage
 )
 
 # -----------------------------
@@ -52,9 +55,10 @@ class CategoryAdmin(admin.ModelAdmin):
 # -----------------------------
 @admin.register(SubCategory)
 class SubCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'image_preview')
+    list_display = ('name', 'category', 'is_featured', 'sort_order', 'image_preview')
     search_fields = ('name', 'category__name')
-    list_filter = ('category',)
+    list_filter = ('category', 'is_featured')
+    list_editable = ('is_featured', 'sort_order')
 
     def image_preview(self, obj):
         if obj.image:
@@ -249,3 +253,82 @@ class MetalPriceAdmin(admin.ModelAdmin):
     class Meta:
         verbose_name = "Metal Price"
         verbose_name_plural = "Metal Prices"
+
+
+# -----------------------------
+# TESTIMONIAL ADMIN
+# -----------------------------
+@admin.register(Testimonial)
+class TestimonialAdmin(admin.ModelAdmin):
+    list_display = ('name', 'rating', 'designation', 'is_approved', 'created_at')
+    list_filter = ('rating', 'is_approved', 'created_at')
+    search_fields = ('name', 'message', 'designation')
+    actions = ['approve_testimonials', 'disapprove_testimonials']
+
+    def approve_testimonials(self, request, queryset):
+        queryset.update(is_approved=True)
+    approve_testimonials.short_description = "Approve selected testimonials"
+
+    def disapprove_testimonials(self, request, queryset):
+        queryset.update(is_approved=False)
+    disapprove_testimonials.short_description = "Disapprove selected testimonials"
+
+
+# -----------------------------
+# REEL ADMIN
+# -----------------------------
+@admin.register(Reel)
+class ReelAdmin(admin.ModelAdmin):
+    list_display = ('title', 'is_active', 'created_at', 'video_preview')
+    search_fields = ('title',)
+    list_filter = ('is_active', 'created_at')
+
+    def video_preview(self, obj):
+        if obj.video:
+            return format_html(
+                '<video width="100" height="100" controls><source src="{}" type="video/mp4"></video>',
+                obj.video.url
+            )
+        return "No Video"
+    video_preview.short_description = "Video Preview"
+
+
+# -----------------------------
+# POPUP MESSAGE ADMIN
+# -----------------------------
+@admin.register(PopupMessage)
+class PopupMessageAdmin(admin.ModelAdmin):
+    list_display = ('title', 'status', 'show_on_refresh', 'has_poster', 'created_at')
+    list_filter = ('status', 'show_on_refresh', 'created_at')
+    search_fields = ('title', 'message')
+    readonly_fields = ('created_at', 'updated_at')
+
+    fieldsets = (
+        ('Popup Information', {
+            'fields': ('title', 'message', 'poster_image')
+        }),
+        ('Display Settings', {
+            'fields': ('status', 'show_on_refresh')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def has_poster(self, obj):
+        """Check if popup has a poster image"""
+        if obj.poster_image:
+            return format_html('<span style="color: green;">✓ Has Poster</span>')
+        return format_html('<span style="color: orange;">No Poster</span>')
+    has_poster.short_description = "Poster"
+
+    def poster_preview(self, obj):
+        """Show poster thumbnail in admin"""
+        if obj.poster_image:
+            return format_html(
+                '<img src="{}" width="200" style="border-radius: 5px; object-fit: cover;" />',
+                obj.poster_image.url
+            )
+        return "No Poster"
+    poster_preview.short_description = "Poster Preview"

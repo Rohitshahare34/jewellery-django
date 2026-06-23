@@ -22,8 +22,52 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
     'shop',  # Your app
 ]
+
+# --- Allauth settings ---
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# Redirect URLs
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+
+# Additional allauth settings for easier testing
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
+# Social account provider settings (Google)
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+        'APP': {
+            'client_id': '222058147156-4tkmq42mb6ij82tdkun9cvm5hb8o7cgm.apps.googleusercontent.com',
+            'secret': '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',
+            'key': '',
+        }
+    }
+}
 
 # --- Middleware ---
 MIDDLEWARE = [
@@ -34,6 +78,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 # --- URL and WSGI ---
@@ -54,6 +99,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'shop.context_processors.cart_context',
                 'shop.context_processors.metal_prices_context',
+                'shop.context_processors.popup_context',
             ],
         },
     },
@@ -83,9 +129,10 @@ USE_TZ = True
 
 # --- Static and media files ---
 STATIC_URL = '/static/'
-# Let Django automatically discover static files inside each app
+# Let Django automatically discover static files inside each app and root static folder
 STATICFILES_DIRS = [
-    BASE_DIR / 'shop' / 'static',  # add your app's static folder
+    BASE_DIR / 'shop' / 'static',  # app's static folder
+    BASE_DIR / 'static',  # root static folder
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # for production (collectstatic)
 

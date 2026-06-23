@@ -35,10 +35,12 @@ class SubCategory(models.Model):
     category = models.ForeignKey(Category, related_name='subcategories', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='subcategory_images/', blank=True, null=True)
+    is_featured = models.BooleanField(default=False, help_text="Show in 'Recommended for you' section")
+    sort_order = models.IntegerField(default=0, help_text="Order of display (lower numbers first)")
 
     class Meta:
         verbose_name_plural = "Subcategories"
-        ordering = ['name']
+        ordering = ['sort_order', 'name']
 
     def __str__(self):
         return f"{self.category.name} - {self.name}"
@@ -475,7 +477,8 @@ class JewelryProduct(models.Model):
 # -----------------------------
 class PopupMessage(models.Model):
     title = models.CharField(max_length=255)
-    message = models.TextField()
+    message = models.TextField(blank=True, null=True)
+    poster_image = models.ImageField(upload_to='popup_posters/', blank=True, null=True, help_text="Upload discount poster image")
     status = models.BooleanField(default=True)
     show_on_refresh = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -487,4 +490,40 @@ class PopupMessage(models.Model):
 
     def __str__(self):
         return self.title
+
+
+# -----------------------------
+# TESTIMONIAL MODEL
+# -----------------------------
+class Testimonial(models.Model):
+    name = models.CharField(max_length=100)
+    rating = models.PositiveIntegerField(default=5)
+    message = models.TextField()
+    designation = models.CharField(max_length=100, blank=True, default="Verified Buyer")
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_approved = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.name} - {self.rating} stars"
+
+
+# -----------------------------
+# REEL MODEL
+# -----------------------------
+class Reel(models.Model):
+    title = models.CharField(max_length=200, blank=True)
+    video = models.FileField(upload_to='reels/')
+    cover_image = models.ImageField(upload_to='reels/covers/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title or f"Reel {self.id}"
+
 

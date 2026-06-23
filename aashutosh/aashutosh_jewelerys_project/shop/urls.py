@@ -53,4 +53,7 @@ urlpatterns = [
     # === Live Rates Page ===
     path('live-rates/', views.live_rates, name='live_rates'),
     path('rate-calculator/', views.rate_calculator, name='rate_calculator'),
+    
+    # === Testimonial Feedback Submission ===
+    path('submit-testimonial/', views.submit_testimonial, name='submit_testimonial'),
 ]
