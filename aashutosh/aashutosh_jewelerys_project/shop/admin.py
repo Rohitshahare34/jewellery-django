@@ -11,6 +11,7 @@ from .models import (
     Jewellery,
     JewelleryImage,
     MetalPrice,
+    MetalRate,
     Testimonial,
     Reel,
     PopupMessage
@@ -253,6 +254,27 @@ class MetalPriceAdmin(admin.ModelAdmin):
     class Meta:
         verbose_name = "Metal Price"
         verbose_name_plural = "Metal Prices"
+
+
+# -----------------------------
+# METAL RATE ADMIN
+# -----------------------------
+@admin.register(MetalRate)
+class MetalRateAdmin(admin.ModelAdmin):
+    list_display = ('metal_type_display', 'purity', 'rate_per_gram', 'making_charge', 'making_type_display', 'gst_percentage', 'status')
+    list_filter = ('metal_type', 'making_type', 'status')
+    search_fields = ('metal_type',)
+    list_editable = ('status',)
+
+    def metal_type_display(self, obj):
+        """Show display name for metal type"""
+        return obj.get_metal_type_display()
+    metal_type_display.short_description = "Metal Type"
+
+    def making_type_display(self, obj):
+        """Show display name for making type"""
+        return obj.get_making_type_display()
+    making_type_display.short_description = "Making Type"
 
 
 # -----------------------------
