@@ -8,21 +8,21 @@ django.setup()
 
 from django.core import serializers
 from django.contrib.auth.models import User
-from shop.models import Category, SubCategory, Jewellery, JewelleryImage, MetalPrice, MetalRate, JewelryProduct, Testimonial, Reel, PopupMessage
+from shop.models import Category, SubCategory, Product, ProductImage, MetalRate, Testimonial, Reel, PopupMessage, SignatureCollection, SignatureCollectionItem
 
 # Dependency-ordered list of models to export
 MODELS_TO_EXPORT = [
     User,
     Category,
     SubCategory,
-    Jewellery,
-    JewelleryImage,
-    MetalPrice,
+    Product,
+    ProductImage,
     MetalRate,
-    JewelryProduct,
     Testimonial,
     Reel,
     PopupMessage,
+    SignatureCollection,
+    SignatureCollectionItem,
 ]
 
 def dump_data(filepath="db_transfer.json"):
