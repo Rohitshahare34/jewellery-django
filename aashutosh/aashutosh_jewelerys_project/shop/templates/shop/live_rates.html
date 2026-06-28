@@ -12,6 +12,28 @@
   main {
     padding-top: 0 !important;
   }
+  .rate-card-gold {
+    border-radius: 16px;
+    border-top: 4px solid #d4af37 !important;
+    background: #ffffff;
+  }
+  .rate-card-silver {
+    border-radius: 16px;
+    border-top: 4px solid #a8a8a8 !important;
+    background: #ffffff;
+  }
+  .rate-text-gold {
+    color: #b89025;
+  }
+  .rate-text-silver {
+    color: #555555;
+  }
+  .rate-dot-gold {
+    background-color: #d4af37;
+  }
+  .rate-dot-silver {
+    background-color: #a8a8a8;
+  }
 </style>
 <!-- Hero Section with Full-Cover Image and Right-Side Text -->
 <section class="hero-section" style="margin-top: 0; position: relative; height: 700px; background-color: #000; padding-top: 0;">
@@ -42,29 +64,33 @@
         <!-- Cards Row -->
         <div id="rate-cards" class="row g-4 mb-5">
             {% for item in rates_with_breakdown %}
-            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
-                <div class="card h-100 border-0 shadow-sm position-relative overflow-hidden" style="border-radius: 16px; border-top: 4px solid {% if 'GOLD' in item.rate.metal_type or 'Gold' in item.rate.metal_type %}#d4af37{% else %}#a8a8a8{% endif %} !important; background: #ffffff;">
-                    <div class="card-body p-4 text-center">
-                        <h5 class="fw-bold text-dark mb-1" style="font-family: 'Cinzel', serif;">{{ item.rate.get_metal_type_display }}</h5>
-                        <p class="text-muted small mb-3">{{ item.rate.purity }}% Purity</p>
-                        
-                        <div class="my-3">
-                            <span class="text-muted small">Today's Rate</span>
-                            <h2 class="fw-bold my-1" style="font-family: 'Montserrat', sans-serif; color: {% if 'GOLD' in item.rate.metal_type or 'Gold' in item.rate.metal_type %}#b89025{% else %}#555555{% endif %}; font-size: 1.3rem;">
-                                ₹{{ item.rate.rate_per_gram|floatformat:2 }}
-                            </h2>
-                            <span class="text-muted small">per gram</span>
-                        </div>
-                        
-                        <hr class="my-3" style="opacity: 0.08;">
-                        
-                        <div class="small text-muted">
-                            Making: <span class="fw-semibold text-dark">{{ item.rate.making_charge }}{% if item.rate.making_type == 'FIXED' %} ₹/g{% else %}%{% endif %}</span>
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-6">
+                        <div class="card h-100 border-0 shadow-sm position-relative overflow-hidden rate-card-{% if 'GOLD' in item.rate.metal_type or 'Gold' in item.rate.metal_type %}gold{% else %}silver{% endif %}">
+                            <div class="card-body p-4 text-center">
+                                <h5 class="fw-bold text-dark mb-1" style="font-family: 'Cinzel', serif;">{{ item.rate.get_metal_type_display }}</h5>
+                                <p class="text-muted small mb-3">{{ item.rate.purity }}% Purity</p>
+                                
+                                <div class="my-3">
+                                    <span class="text-muted small">Today's Rate</span>
+                                    <h2 class="fw-bold my-1 rate-text-{% if 'GOLD' in item.rate.metal_type or 'Gold' in item.rate.metal_type %}gold{% else %}silver{% endif %}" style="font-family: 'Montserrat', sans-serif; font-size: 1.3rem;">
+                                        ₹{{ item.rate.rate_per_gram|floatformat:2 }}
+                                    </h2>
+                                    {% if 'GOLD' in item.rate.metal_type or 'Gold' in item.rate.metal_type %}
+                                    <span class="text-muted small">per gram</span>
+                                    {% endif %}
+                                </div>
+                                
+                                <hr class="my-3" style="opacity: 0.08;">
+                                
+                                {% if item.rate.show_making_charge %}
+                                <div class="small text-muted">
+                                    Making: <span class="fw-semibold text-dark">{{ item.rate.making_charge }}{% if item.rate.making_type == 'FIXED' %} ₹/g{% else %}%{% endif %}</span>
+                                </div>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            {% endfor %}
+                    {% endfor %}
         </div>
 
         <!-- Live Price Calculator Section -->
@@ -87,7 +113,14 @@
                                 <label class="form-label fw-semibold small mb-1">Select Metal</label>
                                 <select class="form-select" id="liveMetalSelect" name="metal">
                                     {% for item in rates_with_breakdown %}
-                                    <option value="{{ item.rate.metal_type }}" {% if forloop.first %}selected{% endif %}>
+                                    <option value="{{ item.rate.metal_type }}" 
+                                            data-rate="{{ item.rate.rate_per_gram }}" 
+                                            data-making="{{ item.rate.making_charge }}" 
+                                            data-making-type="{{ item.rate.making_type }}" 
+                                            data-gst="{{ item.rate.gst_percentage }}"
+                                            data-show-making="{{ item.rate.show_making_charge|yesno:'true,false' }}"
+                                            data-show-gst="{{ item.rate.show_gst|yesno:'true,false' }}"
+                                            {% if forloop.first %}selected{% endif %}>
                                         {{ item.rate.get_metal_type_display }} ({{ item.rate.purity }}% Purity)
                                     </option>
                                     {% endfor %}
@@ -102,15 +135,15 @@
 
                     <div id="liveCalcResult" class="p-3 rounded-4" style="background: #fdfbf7; border: 1px solid rgba(212,175,55,0.2);">
                         <div class="row g-2 text-center">
-                            <div class="col-4">
+                            <div class="col-4" id="liveBasePriceContainer">
                                 <span class="text-muted small d-block" style="font-size: 0.75rem;">Base Price</span>
                                 <span class="fw-bold text-dark" id="liveBasePrice" style="font-size: 0.95rem;">₹0.00</span>
                             </div>
-                            <div class="col-4 border-start border-end">
+                            <div class="col-4 border-start border-end" id="liveMakingContainer">
                                 <span class="text-muted small d-block" style="font-size: 0.75rem;">Making Charges</span>
                                 <span class="fw-bold text-dark" id="liveMakingAmount" style="font-size: 0.95rem;">₹0.00</span>
                             </div>
-                            <div class="col-4">
+                            <div class="col-4" id="liveGSTContainer">
                                 <span class="text-muted small d-block" style="font-size: 0.75rem;">GST</span>
                                 <span class="fw-bold text-dark" id="liveGSTAmount" style="font-size: 0.95rem;">₹0.00</span>
                             </div>
@@ -135,7 +168,7 @@
                         <thead style="background-color: #f7f1eb; border-bottom: 2px solid rgba(212,175,55,0.2);">
                             <tr class="text-dark fw-bold">
                                 <th scope="col" class="py-3 px-4">Metal Type / Purity</th>
-                                <th scope="col" class="py-3">Base Price</th>
+                                <th scope="col" class="py-3">Current Price</th>
                                 <th scope="col" class="py-3">Making Charge</th>
                                 <th scope="col" class="py-3">Subtotal</th>
                                 <th scope="col" class="py-3">GST (3%)</th>
@@ -147,17 +180,34 @@
                             <tr>
                                 <td class="py-3 px-4 fw-bold text-dark">
                                     <div class="d-flex align-items-center gap-2">
-                                        <span class="rounded-circle d-inline-block" style="width: 8px; height: 8px; background-color: {% if 'GOLD' in item.rate.metal_type or 'Gold' in item.rate.metal_type %}#d4af37{% else %}#a8a8a8{% endif %};"></span>
+                                        <span class="rounded-circle d-inline-block rate-dot-{% if 'GOLD' in item.rate.metal_type or 'Gold' in item.rate.metal_type %}gold{% else %}silver{% endif %}" style="width: 8px; height: 8px;"></span>
                                         {{ item.rate.get_metal_type_display }} ({{ item.rate.purity }}% Pure)
                                     </div>
                                 </td>
-                                <td class="py-3 text-secondary">₹{{ item.breakdown.base_price|floatformat:2 }}</td>
                                 <td class="py-3 text-secondary">
-                                    ₹{{ item.breakdown.making_amount|floatformat:2 }}
-                                    <small class="text-muted">({{ item.rate.making_charge }}{% if item.rate.making_type == 'FIXED' %}₹/g{% else %}%{% endif %})</small>
+                                    {% if item.breakdown.base_price > 0 %}
+                                    ₹{{ item.breakdown.base_price|floatformat:2 }}
+                                    {% endif %}
                                 </td>
-                                <td class="py-3 text-secondary">₹{{ item.breakdown.subtotal|floatformat:2 }}</td>
-                                <td class="py-3 text-secondary">₹{{ item.breakdown.gst_amount|floatformat:2 }}</td>
+                                <td class="py-3 text-secondary">
+                                    {% if item.rate.show_making_charge and item.rate.making_charge > 0 %}
+                                        {% if item.rate.making_type == 'FIXED' %}
+                                        ₹{{ item.rate.making_charge|floatformat:2 }}/g
+                                        {% else %}
+                                        {{ item.rate.making_charge|floatformat:2 }}%
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                                <td class="py-3 text-secondary">
+                                    {% if item.breakdown.subtotal > 0 %}
+                                    ₹{{ item.breakdown.subtotal|floatformat:2 }}
+                                    {% endif %}
+                                </td>
+                                <td class="py-3 text-secondary">
+                                    {% if item.rate.show_gst and item.breakdown.gst_amount > 0 %}
+                                    ₹{{ item.breakdown.gst_amount|floatformat:2 }}
+                                    {% endif %}
+                                </td>
                                 <td class="py-3 px-4 text-end fw-bold text-dark fs-5">₹{{ item.breakdown.total_amount|floatformat:2 }}</td>
                             </tr>
                             {% endfor %}
@@ -170,17 +220,6 @@
 </section>
 
 <script>
-const metalRatesData = {
-    {% for item in rates_with_breakdown %}
-    "{{ item.rate.metal_type }}": {
-        "rate_per_gram": {{ item.rate.rate_per_gram }},
-        "making_charge": {{ item.rate.making_charge }},
-        "making_type": "{{ item.rate.making_type }}",
-        "gst_percentage": {{ item.rate.gst_percentage }}
-    }{% if not forloop.last %},{% endif %}
-    {% endfor %}
-};
-
 function initLiveCalculator() {
     const metalSelect = document.getElementById('liveMetalSelect');
     const weightInput = document.getElementById('liveWeightInput');
@@ -190,37 +229,68 @@ function initLiveCalculator() {
     const totalPriceEl = document.getElementById('liveTotalPrice');
 
     function calculate() {
-        const selectedMetal = metalSelect.value;
+        const selectedOption = metalSelect.options[metalSelect.selectedIndex];
+        if (!selectedOption) return;
+
         const weight = parseFloat(weightInput.value) || 0;
 
-        if (!metalRatesData[selectedMetal]) return;
-
-        const data = metalRatesData[selectedMetal];
+        const ratePerGram = parseFloat(selectedOption.getAttribute('data-rate')) || 0;
+        const makingCharge = parseFloat(selectedOption.getAttribute('data-making')) || 0;
+        const makingType = selectedOption.getAttribute('data-making-type');
+        const gstPercentage = parseFloat(selectedOption.getAttribute('data-gst')) || 0;
+        const showMaking = selectedOption.getAttribute('data-show-making') !== 'false';
+        const showGST = selectedOption.getAttribute('data-show-gst') !== 'false';
 
         // Base price
-        const basePrice = data.rate_per_gram * weight;
+        const basePrice = ratePerGram * weight;
 
         // Making amount
-        let makingAmount;
-        if (data.making_type === 'FIXED') {
-            makingAmount = data.making_charge * weight;
-        } else {
-            makingAmount = basePrice * (data.making_charge / 100);
+        let makingAmount = 0;
+        if (showMaking) {
+            if (makingType === 'FIXED') {
+                makingAmount = makingCharge * weight;
+            } else {
+                makingAmount = basePrice * (makingCharge / 100);
+            }
         }
 
         // Subtotal
         const subtotal = basePrice + makingAmount;
 
         // GST
-        const gstAmount = subtotal * (data.gst_percentage / 100);
+        const gstAmount = showGST ? (subtotal * (gstPercentage / 100)) : 0;
 
         // Total
         const totalPrice = subtotal + gstAmount;
 
-        // Update UI
+        // Update UI visibility and content
+        const baseContainer = document.getElementById('liveBasePriceContainer');
+        const makingContainer = document.getElementById('liveMakingContainer');
+        const gstContainer = document.getElementById('liveGSTContainer');
+
+        let visibleCount = 1; // base is always visible
+        if (showMaking) visibleCount++;
+        if (showGST) visibleCount++;
+
+        baseContainer.className = visibleCount === 3 ? 'col-4' : (visibleCount === 2 ? 'col-6' : 'col-12');
+
+        if (showMaking) {
+            makingContainer.style.display = '';
+            makingContainer.className = visibleCount === 3 ? 'col-4 border-start border-end' : 'col-6 border-start';
+            makingAmountEl.textContent = '₹' + makingAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        } else {
+            makingContainer.style.display = 'none';
+        }
+
+        if (showGST) {
+            gstContainer.style.display = '';
+            gstContainer.className = visibleCount === 3 ? 'col-4' : (visibleCount === 2 ? 'col-6 border-start' : 'col-12');
+            gstAmountEl.textContent = '₹' + gstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        } else {
+            gstContainer.style.display = 'none';
+        }
+
         basePriceEl.textContent = '₹' + basePrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        makingAmountEl.textContent = '₹' + makingAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        gstAmountEl.textContent = '₹' + gstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         totalPriceEl.textContent = '₹' + totalPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 

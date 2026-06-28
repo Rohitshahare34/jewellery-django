@@ -66,6 +66,7 @@
                                     <span class="fw-semibold fs-5">₹{{ breakdown.base_price|floatformat:2 }}</span>
                                 </div>
                             </div>
+                            {% if selected_rate.show_making_charge %}
                             <div class="col-12">
                                 <div class="d-flex justify-content-between align-items-center py-3 border-bottom">
                                     <span class="text-muted fs-5">
@@ -79,18 +80,23 @@
                                     <span class="fw-semibold fs-5">₹{{ breakdown.making_amount|floatformat:2 }}</span>
                                 </div>
                             </div>
+                            {% endif %}
+                            {% if selected_rate.show_making_charge and selected_rate.show_gst %}
                             <div class="col-12">
                                 <div class="d-flex justify-content-between align-items-center py-3 border-bottom">
                                     <span class="text-muted fs-5">Total Before GST</span>
                                     <span class="fw-semibold fs-5">₹{{ breakdown.subtotal|floatformat:2 }}</span>
                                 </div>
                             </div>
+                            {% endif %}
+                            {% if selected_rate.show_gst %}
                             <div class="col-12">
                                 <div class="d-flex justify-content-between align-items-center py-3 border-bottom">
                                     <span class="text-muted fs-5">GST ({{ selected_rate.gst_percentage|floatformat:2 }}%)</span>
                                     <span class="fw-semibold fs-5">₹{{ breakdown.gst_amount|floatformat:2 }}</span>
                                 </div>
                             </div>
+                            {% endif %}
                             <div class="col-12">
                                 <div class="d-flex justify-content-between align-items-center py-3 bg-light rounded-10 px-4">
                                     <span class="fw-bold fs-4">Total Price</span>

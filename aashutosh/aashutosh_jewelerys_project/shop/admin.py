@@ -1,6 +1,5 @@
 # shop/admin.py
 from django.contrib import admin
-from .models import Jewellery, JewelleryImage, SubCategory
 from django.contrib.admin.models import LogEntry
 from django.utils.html import format_html
 from .models import (
@@ -8,15 +7,13 @@ from .models import (
     SubCategory,
     Product,
     ProductImage,
-    Jewellery,
-    JewelleryImage,
-    MetalPrice,
     MetalRate,
-    JewelryProduct,
     Wishlist,
     Testimonial,
     Reel,
-    PopupMessage
+    PopupMessage,
+    SignatureCollection,
+    SignatureCollectionItem
 )
 
 # -----------------------------
@@ -98,42 +95,11 @@ class ProductImageInline(admin.TabularInline):
 # -----------------------------
 # PRODUCT ADMIN
 # -----------------------------
-@admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'subcategory', 'metal_type', 'gold_purity', 'is_available')
-    search_fields = ('name', 'subcategory__name')
-    list_filter = ('subcategory', 'metal_type', 'gold_purity', 'is_available')
-    inlines = [ProductImageInline]
-
-    fieldsets = (
-        ('Basic Info', {
-            'fields': ('name', 'price', 'subcategory', 'description', 'image', 'badge', 'is_available')
-        }),
-        ('Metal Details', {
-            'fields': ('metal_type', 'gold_purity', 'gold_weight'),
-            'classes': ('collapse',),
-        }),
-        ('Diamond Details', {
-            'fields': ('diamond_weight', 'diamond_clarity', 'diamond_color'),
-            'classes': ('collapse',),
-        }),
-        ('General Details', {
-            'fields': ('occasion', 'collection'),
-            'classes': ('collapse',),
-        }),
-        ('Price Breakdown', {
-            'fields': ('gold_value', 'stone_value', 'making_charges', 'gst'),
-            'classes': ('collapse',),
-        }),
-    )
-
-
+# PRODUCT IMAGE INLINE
 # -----------------------------
-# JEWELLERY IMAGE INLINE
-# -----------------------------
-class JewelleryImageInline(admin.TabularInline):
-    """Inline for adding multiple images to Jewellery."""
-    model = JewelleryImage
+class ProductImageInline(admin.TabularInline):
+    """Inline for adding multiple images to Product."""
+    model = ProductImage
     extra = 3
     fields = ('image', 'alt_text', 'image_preview')
     readonly_fields = ('image_preview',)
@@ -150,14 +116,10 @@ class JewelleryImageInline(admin.TabularInline):
 
 
 # -----------------------------
-# JEWELLERY ADMIN
+# PRODUCT ADMIN
 # -----------------------------
-class JewelleryImageInline(admin.TabularInline):
-    model = JewelleryImage
-    extra = 1
-
-@admin.register(Jewellery)
-class JewelleryAdmin(admin.ModelAdmin):
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
     list_display = (
         'name', 'subcategory', 'get_category', 'metal_type', 
         'display_purity', 'price', 'is_featured', 'badge', 
@@ -177,13 +139,13 @@ class JewelleryAdmin(admin.ModelAdmin):
         'color'
     )
     readonly_fields = ('total_price',)
-    inlines = [JewelleryImageInline]
+    inlines = [ProductImageInline]
 
     fieldsets = (
         ('Basic Information', {
             'fields': ('name', 'subcategory', 'description', 'badge', 'is_featured', 'in_stock', 'image')
         }),
-        ('Jewellery Details', {
+        ('Product Details', {
             'fields': (
                 'metal_type',
                 'gold_purity', 'silver_purity',
@@ -199,7 +161,7 @@ class JewelleryAdmin(admin.ModelAdmin):
         }),
     )
 
-    # ✅ Automatically assign category when saving Jewellery
+    # ✅ Automatically assign category when saving Product
     def save_model(self, request, obj, form, change):
         if obj.subcategory and hasattr(obj.subcategory, 'category'):
             obj.category = obj.subcategory.category
@@ -234,49 +196,7 @@ class JewelleryAdmin(admin.ModelAdmin):
         js = ('shop/js/admin_jewellery.js',)
 
 
-# -----------------------------
-# METAL PRICE ADMIN
-# -----------------------------
-@admin.register(MetalPrice)
-class MetalPriceAdmin(admin.ModelAdmin):
-    list_display = ('metal_type', 'price_per_gram', 'currency', 'change_percent', 'is_up_indicator', 'last_updated')
-    list_filter = ('metal_type',)
-    readonly_fields = ('last_updated',)
-    search_fields = ('metal_type',)
-    
-    def is_up_indicator(self, obj):
-        """Show arrow indicator for price direction."""
-        if obj.is_up:
-            return format_html('<span style="color: green;">▲ UP</span>')
-        else:
-            return format_html('<span style="color: red;">▼ DOWN</span>')
-    
-    is_up_indicator.short_description = "Trend"
-    
-    class Meta:
-        verbose_name = "Metal Price"
-        verbose_name_plural = "Metal Prices"
 
-
-# -----------------------------
-# METAL RATE ADMIN
-# -----------------------------
-@admin.register(MetalRate)
-class MetalRateAdmin(admin.ModelAdmin):
-    list_display = ('metal_type_display', 'purity', 'rate_per_gram', 'making_charge', 'making_type_display', 'gst_percentage', 'status')
-    list_filter = ('metal_type', 'making_type', 'status')
-    search_fields = ('metal_type',)
-    list_editable = ('status',)
-
-    def metal_type_display(self, obj):
-        """Show display name for metal type"""
-        return obj.get_metal_type_display()
-    metal_type_display.short_description = "Metal Type"
-
-    def making_type_display(self, obj):
-        """Show display name for making type"""
-        return obj.get_making_type_display()
-    making_type_display.short_description = "Making Type"
 
 
 # -----------------------------
@@ -334,6 +254,19 @@ class PopupMessageAdmin(admin.ModelAdmin):
         ('Display Settings', {
             'fields': ('status', 'show_on_refresh')
         }),
+        ('Layout Visibility Customizations', {
+            'fields': ('show_title', 'show_message', 'show_poster_image', 'show_rates_grid'),
+            'description': "Control which design elements are visible in the popup."
+        }),
+        ('Shop Button Customization', {
+            'fields': ('show_shop_button', 'shop_button_text', 'shop_button_url')
+        }),
+        ('Rates Button Customization', {
+            'fields': ('show_rates_button', 'rates_button_text', 'rates_button_url')
+        }),
+        ('Calculator Button Customization', {
+            'fields': ('show_calc_button', 'calc_button_text', 'calc_button_url')
+        }),
         ('Timestamps', {
             'fields': ('created_at', 'updated_at'),
             'classes': ('collapse',)
@@ -358,19 +291,7 @@ class PopupMessageAdmin(admin.ModelAdmin):
     poster_preview.short_description = "Poster Preview"
 
 
-# -----------------------------
-# JEWELRY PRODUCT ADMIN
-# -----------------------------
-@admin.register(JewelryProduct)
-class JewelryProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'metal_type_display', 'weight', 'category', 'subcategory', 'status', 'created_at')
-    list_filter = ('metal_type', 'category', 'subcategory', 'status', 'created_at')
-    search_fields = ('name', 'category__name', 'subcategory__name')
 
-    def metal_type_display(self, obj):
-        """Show display name for metal type"""
-        return obj.get_metal_type_display()
-    metal_type_display.short_description = "Metal Type"
 
 
 # -----------------------------
@@ -382,3 +303,63 @@ class WishlistAdmin(admin.ModelAdmin):
     list_filter = ('created_at', 'user')
     search_fields = ('user__username', 'product__name')
     readonly_fields = ('created_at',)
+
+
+# -----------------------------
+# SIGNATURE COLLECTION ITEM INLINE
+# -----------------------------
+class SignatureCollectionItemInline(admin.TabularInline):
+    model = SignatureCollectionItem
+    extra = 3
+    fields = ('title', 'description', 'image', 'image_preview', 'sort_order', 'is_active')
+    readonly_fields = ('image_preview',)
+
+    def image_preview(self, obj):
+        if obj and obj.image:
+            return format_html(
+                '<img src="{}" width="60" height="60" style="border-radius:5px; object-fit:cover;" />',
+                obj.image.url
+            )
+        return "No Image"
+    image_preview.short_description = "Preview"
+
+
+# -----------------------------
+# SIGNATURE COLLECTION ADMIN
+# -----------------------------
+@admin.register(SignatureCollection)
+class SignatureCollectionAdmin(admin.ModelAdmin):
+    list_display = ('title', 'is_active', 'created_at', 'updated_at')
+    list_filter = ('is_active', 'created_at')
+    search_fields = ('title', 'subtitle')
+    inlines = [SignatureCollectionItemInline]
+
+
+# -----------------------------
+# METAL RATE ADMIN (Today's Rates)
+# -----------------------------
+@admin.register(MetalRate)
+class MetalRateAdmin(admin.ModelAdmin):
+    list_display = (
+        'metal_type', 
+        'purity', 
+        'rate_per_gram', 
+        'making_charge', 
+        'making_type', 
+        'gst_percentage', 
+        'status', 
+        'show_making_charge', 
+        'show_gst'
+    )
+    list_editable = (
+        'purity', 
+        'rate_per_gram', 
+        'making_charge', 
+        'making_type', 
+        'gst_percentage', 
+        'status', 
+        'show_making_charge', 
+        'show_gst'
+    )
+    list_filter = ('metal_type', 'status')
+    search_fields = ('metal_type',)

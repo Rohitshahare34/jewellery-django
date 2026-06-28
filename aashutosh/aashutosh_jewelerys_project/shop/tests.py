@@ -1,9 +1,9 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
-from shop.models import Category, SubCategory, Product, Jewellery, Wishlist, MetalPrice, MetalRate
+from shop.models import Category, SubCategory, Product, Wishlist, MetalRate
 
-class JewelleryShopTests(TestCase):
+class ShopTests(TestCase):
     def setUp(self):
         # Create user
         self.user = User.objects.create_user(username='testuser', password='password123')
@@ -19,16 +19,8 @@ class JewelleryShopTests(TestCase):
             is_featured=True
         )
 
-        # Create Product (if it is used)
+        # Create Product (unified model)
         self.product = Product.objects.create(
-            subcategory=self.subcategory,
-            name="Sample Gold Ring",
-            price=15000.00,
-            is_available=True
-        )
-
-        # Create Jewellery
-        self.jewellery = Jewellery.objects.create(
             name="Royal Gold Necklace",
             subcategory=self.subcategory,
             price=50000.00,
@@ -83,7 +75,7 @@ class JewelleryShopTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_product_detail_page(self):
-        response = self.client.get(reverse('product_detail', args=[self.jewellery.id]))
+        response = self.client.get(reverse('product_detail', args=[self.product.id]))
         self.assertEqual(response.status_code, 200)
 
     def test_search_page(self):
@@ -142,14 +134,16 @@ class JewelleryShopTests(TestCase):
             'gold': {
                 'price': '0',
                 'price_24k': '0',
-                'price_22k': '0',
+                'price_22k': '6000.00',
                 'change_percent': '0',
                 'is_up': True,
+                'last_updated': 'Updated today',
             },
             'silver': {
                 'price': '0',
                 'change_percent': '0',
                 'is_up': True,
+                'last_updated': 'Updated today',
             }
         })
 

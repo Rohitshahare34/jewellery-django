@@ -2,184 +2,559 @@
 {% load static %}
 
 {% block content %}
-<div class="container-fluid py-4">
-    <div class="row">
-        <!-- Filters Sidebar -->
-        <div class="col-lg-3 col-md-4 mb-4">
-            <div class="filter-sidebar p-3 shadow rounded-4 bg-white position-sticky" style="top: 20px;">
-                <h5 class="mb-4">Filters</h5>
-
-                <!-- Collapsible for mobile -->
-                <button class="btn btn-gold w-100 mb-3 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#filter-collapse">
-                    Show Filters
-                </button>
-
-                <div class="collapse d-lg-block" id="filter-collapse">
-                    <form id="filter-form">
-                        <!-- Category Filter -->
-                        <div class="mb-4">
-                            <h6>Category</h6>
-                            {% for category in categories %}
-                            <div class="form-check">
-                                <input class="form-check-input filter-input" type="checkbox" name="category" value="{{ category.id }}" id="cat-{{ category.id }}">
-                                <label class="form-check-label" for="cat-{{ category.id }}">
-                                    <a href="{% url 'category_subcategories' category.id %}" class="text-decoration-none text-dark">
-                                        {{ category.name }}
-                                    </a>
-                                </label>
-                            </div>
-                            {% endfor %}
-                        </div>
-
-                        <!-- Price Range -->
-                        <div class="mb-4">
-                            <h6>Price Range</h6>
-                            <div class="row g-2">
-                                <div class="col-6">
-                                    <input type="number" class="form-control form-control-sm filter-input" placeholder="Min" name="price_min">
-                                </div>
-                                <div class="col-6">
-                                    <input type="number" class="form-control form-control-sm filter-input" placeholder="Max" name="price_max">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Filter Button -->
-                        <button type="button" id="apply-filters" class="btn btn-gold w-100 mt-3">Filter</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Products Section -->
-        <div class="col-lg-9 col-md-8">
-            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
-                <h2 class="mb-0">
-                    {% if current_category %}
-                        {{ current_category.name }}
-                    {% else %}
-                        All Jewellery
-                    {% endif %}
-                </h2>
-                <div class="d-flex align-items-center mt-2 mt-md-0">
-                    <span class="me-2">Sort by:</span>
-                    <select id="sort-select" class="form-select form-select-sm" style="width: auto;">
-                        <option value="newest">Newest First</option>
-                        <option value="price_low">Price: Low to High</option>
-                        <option value="price_high">Price: High to Low</option>
-                        <option value="name">Name A-Z</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Show Subcategories (if available) -->
-            {% if subcategories %}
-            <div class="row mb-4">
-                {% for sub in subcategories %}
-                <div class="col-md-3 mb-4">
-                    <a href="#" class="text-decoration-none text-dark">
-                        <div class="card shadow-sm border-0 rounded-4 overflow-hidden text-center">
-                            {% if sub.image %}
-                                <img src="{{ sub.image.url }}" class="card-img-top" alt="{{ sub.name }}" style="height: 180px; object-fit: cover;">
-                            {% else %}
-                                <img src="{% static 'images/no-image.png' %}" class="card-img-top" alt="{{ sub.name }}">
-                            {% endif %}
-                            <div class="card-body py-2">
-                                <h6 class="card-title mb-0">{{ sub.name }}</h6>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            <!-- Active Filters Chips -->
-            <div id="active-filters" class="mb-3 d-flex flex-wrap gap-2"></div>
-
-            <!-- Loader -->
-            <div id="loader" class="text-center py-5" style="display:none;">
-                <div class="spinner-border text-gold" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
-
-            <!-- Products Grid -->
-            <div class="row g-4" id="products-container">
-                {% for product in products %}
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 d-flex">
-                    <div class="card product-card h-100 shadow-sm rounded-4 overflow-hidden transition-hover d-flex flex-column">
-                        <div class="position-relative product-image-wrapper">
-                            <img src="{{ product.image_url }}" class="card-img-top product-image" alt="{{ product.name }}">
-                            {% if product.badge != 'NONE' %}
-                            <span class="position-absolute top-0 start-0 m-2 badge badge-{{ product.get_badge_color }}">
-                                {{ product.get_badge_display }}
-                            </span>
-                            {% endif %}
-                        </div>
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title mb-1">{{ product.name }}</h5>
-                            <p class="card-text text-muted small mb-1">{{ product.stone_type }} • {{ product.color }}</p>
-                            <p class="card-text fw-bold text-gold mb-2 mt-0" style="font-size: 1.1rem;">₹{{ product.price }}</p>
-                            <div class="mt-auto d-flex gap-2">
-                                <a href="{% url 'product_detail' product.pk %}" class="btn btn-gold btn-sm flex-grow-1">View</a>
-                                <button class="btn btn-outline-gold btn-sm flex-grow-1" data-bs-toggle="modal" data-bs-target="#quickViewModal-{{ product.pk }}">Quick View</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick View Modal -->
-                <div class="modal fade" id="quickViewModal-{{ product.pk }}" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content rounded-4">
-                            <div class="modal-header border-0">
-                                <h5 class="modal-title">{{ product.name }}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <img src="{{ product.image_url }}" class="img-fluid rounded-4" alt="{{ product.name }}">
-                                    </div>
-                                    <div class="col-md-6 d-flex flex-column justify-content-between">
-                                        <p class="text-muted">{{ product.stone_type }} • {{ product.color }}</p>
-                                        <p class="fw-bold text-gold h4">₹{{ product.price }}</p>
-                                        <a href="{% url 'product_detail' product.pk %}" class="btn btn-gold w-100 mb-2">View Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Google Fonts (for a modern premium look) -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-.product-card { display: flex; flex-direction: column; height: 100%; }
-.card-body { display: flex; flex-direction: column; flex: 1; }
-.mt-auto { margin-top: auto; }
-.product-image-wrapper { height: 220px; overflow: hidden; }
-.product-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
-.product-card:hover .product-image { transform: scale(1.05); }
-.transition-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-.transition-hover:hover { transform: translateY(-6px); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
-.btn-gold { background: linear-gradient(90deg, #D4AF37, #FFD700); color: #fff; border: none; }
-.btn-gold:hover { background: linear-gradient(90deg, #FFD700, #D4AF37); color: #fff; }
-.btn-outline-gold { border: 1px solid #D4AF37; color: #D4AF37; }
-.btn-outline-gold:hover { background: #FFD700; color: #000; }
-.badge { padding: 0.35em 0.65em; font-size: 0.75em; font-weight: 500; border-radius: 0.5rem; }
-.text-gold { color: #D4AF37; }
-.filter-chip { background: #FFD700; color: #000; padding: 0.25rem 0.6rem; border-radius: 15px; font-size: 0.875rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; }
-.filter-chip:hover { background: #D4AF37; }
-.filter-chip .remove-chip { font-weight: bold; cursor: pointer; }
-.fade-in { animation: fadeIn 0.5s ease forwards; opacity: 0; }
-@keyframes fadeIn { to { opacity: 1; } }
-@media (max-width: 575.98px) { .product-image-wrapper { height: 180px; } }
+  /* ====== SHOP LAYOUT DESIGN SYSTEM ====== */
+  .shop-page-wrapper {
+    font-family: 'Outfit', 'Inter', sans-serif;
+    padding: 100px 0 80px 0;
+    background: radial-gradient(circle at 50% 50%, rgba(254, 253, 249, 1) 0%, rgba(246, 243, 233, 1) 100%);
+    min-height: 95vh;
+  }
+
+  /* ====== LUXURY SIDEBAR FILTERS ====== */
+  .filter-sidebar-premium {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(212, 175, 55, 0.18);
+    border-radius: 24px;
+    box-shadow: 0 15px 35px rgba(184, 149, 43, 0.04);
+    padding: 28px 24px;
+    position: sticky;
+    top: 100px;
+    transition: all 0.3s ease;
+  }
+
+  .filter-sidebar-premium h5 {
+    font-weight: 800;
+    color: #111;
+    font-size: 1.25rem;
+    border-bottom: 2px solid rgba(212, 175, 55, 0.15);
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+  }
+
+  .filter-group-title {
+    font-weight: 700;
+    color: #222;
+    font-size: 0.95rem;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Custom styled checkboxes */
+  .form-check-premium {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  .form-check-input-premium {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid rgba(212, 175, 55, 0.4);
+    border-radius: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .form-check-input-premium:checked {
+    background-color: #d4af37;
+    border-color: #d4af37;
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+  }
+
+  .form-check-label-premium {
+    font-size: 0.95rem;
+    color: #444;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .form-check-label-premium:hover {
+    color: #b8952b;
+  }
+
+  /* Price inputs styling */
+  .price-input-wrapper {
+    display: flex;
+    gap: 10px;
+  }
+
+  .price-input-premium {
+    border: 1.5px solid rgba(212, 175, 55, 0.25);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    color: #333;
+    background: #fff;
+    width: 100%;
+    transition: all 0.3s ease;
+  }
+
+  .price-input-premium:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
+    outline: none;
+  }
+
+  /* ====== ACTIVE FILTER CHIPS ====== */
+  .filter-chip-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+  }
+
+  .filter-chip-premium {
+    background: rgba(212, 175, 55, 0.08);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    color: #b8952b;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .filter-chip-premium:hover {
+    background: rgba(212, 175, 55, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .filter-chip-premium .remove-chip-btn {
+    font-weight: bold;
+    font-size: 1.1rem;
+    line-height: 1;
+    color: #999;
+    transition: color 0.2s ease;
+  }
+
+  .filter-chip-premium:hover .remove-chip-btn {
+    color: #d4af37;
+  }
+
+  /* ====== LUXURY PRODUCT CARD ====== */
+  .product-grid-container {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
+
+  .product-card-premium {
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid rgba(212, 175, 55, 0.12);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .product-card-premium:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(184, 149, 43, 0.08);
+    border-color: rgba(212, 175, 55, 0.35);
+  }
+
+  .product-img-wrapper-premium {
+    position: relative;
+    padding-bottom: 100%;
+    overflow: hidden;
+    background: #faf9f5;
+  }
+
+  .product-img-wrapper-premium img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+
+  .product-card-premium:hover .product-img-wrapper-premium img {
+    transform: scale(1.06);
+  }
+
+  /* Wishlist Icon floating on image */
+  .wishlist-btn-premium {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    color: #777;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+  }
+
+  .wishlist-btn-premium:hover {
+    background: #fff;
+    color: #dc3545;
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(220, 53, 69, 0.15);
+  }
+
+  .wishlist-btn-premium.active {
+    color: #dc3545;
+  }
+
+  /* Badge styling */
+  .badge-premium {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 9;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  }
+
+  .product-body-premium {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .product-title-premium {
+    font-weight: 700;
+    color: #111;
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+    line-height: 1.4;
+    transition: color 0.3s ease;
+  }
+
+  .product-card-premium:hover .product-title-premium {
+    color: #b8952b;
+  }
+
+  .product-meta-premium {
+    color: #777;
+    font-size: 0.82rem;
+    margin-bottom: 10px;
+  }
+
+  .product-price-premium {
+    font-weight: 800;
+    color: #b8952b;
+    font-size: 1.15rem;
+    margin-bottom: 18px;
+  }
+
+  .product-actions-premium {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+  }
+
+  /* ====== PREMIUM BUTTONS ====== */
+  .btn-premium-gold {
+    background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+    border: none;
+    color: #111;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 9px 18px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-premium-gold:hover {
+    background: linear-gradient(135deg, #ffd700 30%, #ffd700 100%);
+    color: #000;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+  }
+
+  .btn-premium-outline {
+    background: transparent;
+    border: 1.5px solid #d4af37;
+    color: #d4af37;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 9px 18px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-premium-outline:hover {
+    background: rgba(212, 175, 55, 0.08);
+    color: #b8952b;
+    border-color: #b8952b;
+    transform: translateY(-1px);
+  }
+
+  .btn-premium-filter-apply {
+    background: #111;
+    color: #fff;
+    border: none;
+    font-weight: 700;
+    padding: 12px;
+    border-radius: 12px;
+    width: 100%;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-premium-filter-apply:hover {
+    background: #2c2c2c;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  /* ====== QUICK VIEW MODAL ====== */
+  .modal-content-premium {
+    border-radius: 24px;
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  }
+
+  .modal-header-premium {
+    border-bottom: 1.5px solid rgba(212, 175, 55, 0.12) !important;
+    padding: 24px 30px;
+  }
+
+  .modal-body-premium {
+    padding: 30px;
+  }
+
+  /* ====== MOBILE OPTIMIZATIONS ====== */
+  @media (max-width: 991.98px) {
+    .shop-page-wrapper {
+      padding: 80px 0 60px 0;
+    }
+    .filter-sidebar-premium {
+      position: static;
+      margin-bottom: 30px;
+      padding: 20px;
+    }
+  }
+
+  /* Grid Wrap (2 columns on mobile) */
+  @media (max-width: 767.98px) {
+    .product-grid-col {
+      width: 50% !important; /* Force 2-columns */
+    }
+    .product-body-premium {
+      padding: 12px;
+    }
+    .product-title-premium {
+      font-size: 0.92rem;
+      margin-bottom: 4px;
+    }
+    .product-price-premium {
+      font-size: 1rem;
+      margin-bottom: 12px;
+    }
+    .product-actions-premium {
+      flex-direction: column;
+      gap: 6px;
+    }
+    .product-actions-premium .btn {
+      width: 100%;
+      text-align: center;
+      padding: 7px 10px;
+      font-size: 0.78rem;
+    }
+    .wishlist-btn-premium {
+      width: 32px;
+      height: 32px;
+      top: 10px;
+      right: 10px;
+    }
+    .badge-premium {
+      top: 10px;
+      left: 10px;
+      padding: 4px 8px;
+      font-size: 0.65rem;
+    }
+  }
 </style>
+
+<div class="shop-page-wrapper">
+  <div class="container-fluid px-lg-5">
+    <div class="row">
+      
+      <!-- Filters Sidebar (4 columns) -->
+      <div class="col-lg-3 col-md-12 mb-4">
+        <div class="filter-sidebar-premium">
+          <h5 class="d-flex align-items-center">
+            <i class="fas fa-filter text-gold me-2"></i> Filters
+          </h5>
+
+          <!-- Collapsible for mobile -->
+          <button class="btn btn-premium-outline w-100 mb-3 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#filter-collapse">
+            <i class="fas fa-sliders-h me-1"></i> Show Filters
+          </button>
+
+          <div class="collapse d-lg-block" id="filter-collapse">
+            <form id="filter-form">
+              <!-- Category Filter -->
+              <div class="mb-4">
+                <div class="filter-group-title">Category</div>
+                {% for category in categories %}
+                <div class="form-check-premium">
+                  <input class="form-check-input-premium filter-input" type="checkbox" name="category" value="{{ category.id }}" id="cat-{{ category.id }}">
+                  <label class="form-check-label-premium" for="cat-{{ category.id }}">
+                    {{ category.name }}
+                  </label>
+                </div>
+                {% endfor %}
+              </div>
+
+              <!-- Price Range -->
+              <div class="mb-4">
+                <div class="filter-group-title">Price Range (₹)</div>
+                <div class="price-input-wrapper">
+                  <input type="number" class="price-input-premium filter-input" placeholder="Min" name="price_min">
+                  <input type="number" class="price-input-premium filter-input" placeholder="Max" name="price_max">
+                </div>
+              </div>
+
+              <!-- Filter Button -->
+              <button type="button" id="apply-filters" class="btn-premium-filter-apply">
+                Apply Filters
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Products Grid Section (8 columns) -->
+      <div class="col-lg-9 col-md-12">
+        
+        <!-- Grid Header Navigation -->
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+          <h2 class="section-title mb-0" style="font-size: 1.8rem; font-weight: 800;">
+            {% if current_category %}
+              {{ current_category.name }}
+            {% else %}
+              Exquisite Showcase
+            {% endif %}
+          </h2>
+          <div class="d-flex align-items-center mt-3 mt-sm-0">
+            <span class="me-2 text-muted fw-semibold">Sort by:</span>
+            <select id="sort-select" class="form-select form-select-sm" style="width: auto; border-color: rgba(212, 175, 55, 0.25); border-radius: 8px;">
+              <option value="newest">Newest First</option>
+              <option value="price_low">Price: Low to High</option>
+              <option value="price_high">Price: High to Low</option>
+              <option value="name">Name A-Z</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Active Filters Chips -->
+        <div id="active-filters" class="filter-chip-container"></div>
+
+        <!-- Dynamic Loader -->
+        <div id="loader" class="text-center py-5" style="display:none;">
+          <div class="spinner-border text-gold" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+
+        <!-- Products Grid Container -->
+        <div class="row g-4 product-grid-container" id="products-container">
+          {% for product in products %}
+          <!-- Responsive grid item: 2-cols on mobile, 4-cols on desktop -->
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 d-flex product-grid-col">
+            <div class="product-card-premium">
+              <!-- Image Wrapper -->
+              <div class="product-img-wrapper-premium">
+                <!-- Floating Wishlist Button -->
+                <button class="wishlist-btn-premium {% if product.id in user_wishlist_ids %}active{% endif %}" data-product-id="{{ product.id }}" aria-label="Add to Wishlist">
+                  <i class="{% if product.id in user_wishlist_ids %}fas fa-heart text-danger{% else %}far fa-heart{% endif %}"></i>
+                </button>
+                
+                <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                
+                <!-- Dynamic Tag Badge -->
+                {% if product.badge != 'NONE' %}
+                <span class="badge-premium badge bg-{{ product.get_badge_color }}">
+                  {{ product.get_badge_display }}
+                </span>
+                {% endif %}
+              </div>
+              
+              <!-- Content Body -->
+              <div class="product-body-premium">
+                <h5 class="product-title-premium">{{ product.name }}</h5>
+                <p class="product-meta-premium mb-1">{{ product.stone_type }} • {{ product.color }}</p>
+                <p class="product-price-premium">₹{{ product.price }}</p>
+                
+                <!-- Action Buttons -->
+                <div class="product-actions-premium">
+                  <a href="{% url 'product_detail' product.pk %}" class="btn btn-premium-gold flex-grow-1">View Details</a>
+                  <button class="btn btn-premium-outline flex-grow-1" data-bs-toggle="modal" data-bs-target="#quickViewModal-{{ product.pk }}">Quick View</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick View Modal Container -->
+          <div class="modal fade" id="quickViewModal-{{ product.pk }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+              <div class="modal-content-premium modal-content">
+                <div class="modal-header-premium modal-header border-0">
+                  <h4 class="modal-title fw-bold" style="color: #111;">{{ product.name }}</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body-premium modal-body">
+                  <div class="row g-4">
+                    <div class="col-md-6">
+                      <img src="{{ product.image_url }}" class="img-fluid rounded-4" alt="{{ product.name }}" style="box-shadow: 0 10px 25px rgba(0,0,0,0.08);">
+                    </div>
+                    <div class="col-md-6 d-flex flex-column justify-content-between">
+                      <div>
+                        <p class="text-muted fs-6 mb-2"><i class="fas fa-gem me-1"></i> {{ product.stone_type }} • {{ product.color }}</p>
+                        <p class="fw-bold text-gold h3 mb-4">₹{{ product.price }}</p>
+                        <p class="text-muted" style="font-size: 0.95rem; line-height: 1.6;">{{ product.description|default:"Experience details of this handcrafted masterpiece at our Akola showroom." }}</p>
+                      </div>
+                      <div class="mt-4">
+                        <a href="{% url 'product_detail' product.pk %}" class="btn btn-premium-gold w-100 py-3">View Full Masterpiece</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 function getSortLabel(value) {
@@ -195,35 +570,40 @@ function getSortLabel(value) {
 function updateActiveFiltersChips() {
     const container = document.getElementById('active-filters');
     container.innerHTML = '';
+    
     document.querySelectorAll('input[name="category"]:checked').forEach(cb => {
         const labelText = document.querySelector(`label[for="${cb.id}"]`).textContent.trim();
         const chip = document.createElement('div');
-        chip.className = 'filter-chip';
-        chip.innerHTML = `${labelText} <span class="remove-chip" data-type="category" data-value="${cb.value}">&times;</span>`;
+        chip.className = 'filter-chip-premium';
+        chip.innerHTML = `${labelText} <span class="remove-chip-btn" data-type="category" data-value="${cb.value}">&times;</span>`;
         container.appendChild(chip);
     });
+    
     const min = document.querySelector('input[name="price_min"]').value;
     const max = document.querySelector('input[name="price_max"]').value;
     if(min || max) {
         const chip = document.createElement('div');
-        chip.className = 'filter-chip';
-        chip.innerHTML = `Price: ${min || '0'} - ${max || '∞'} <span class="remove-chip" data-type="price">&times;</span>`;
+        chip.className = 'filter-chip-premium';
+        chip.innerHTML = `Price: ${min || '0'} - ${max || '∞'} <span class="remove-chip-btn" data-type="price">&times;</span>`;
         container.appendChild(chip);
     }
+    
     const sortValue = document.getElementById('sort-select').value;
     if(sortValue && sortValue !== 'newest') {
         const chip = document.createElement('div');
-        chip.className = 'filter-chip';
-        chip.innerHTML = `Sort: ${getSortLabel(sortValue)} <span class="remove-chip" data-type="sort">&times;</span>`;
+        chip.className = 'filter-chip-premium';
+        chip.innerHTML = `Sort: ${getSortLabel(sortValue)} <span class="remove-chip-btn" data-type="sort">&times;</span>`;
         container.appendChild(chip);
     }
+    
     if(container.children.length > 0) {
         const chip = document.createElement('div');
-        chip.className = 'filter-chip';
-        chip.innerHTML = `Clear All <span class="remove-chip" data-type="clear-all">&times;</span>`;
+        chip.className = 'filter-chip-premium';
+        chip.innerHTML = `Clear All <span class="remove-chip-btn" data-type="clear-all">&times;</span>`;
         container.appendChild(chip);
     }
-    container.querySelectorAll('.remove-chip').forEach(el => {
+    
+    container.querySelectorAll('.remove-chip-btn').forEach(el => {
         el.addEventListener('click', () => {
             const type = el.getAttribute('data-type');
             if(type === 'category') {
@@ -253,10 +633,13 @@ function fetchProducts(updateURL = true) {
     if(priceMin) formData.append('price_min', priceMin);
     if(priceMax) formData.append('price_max', priceMax);
     formData.append('sort', document.getElementById('sort-select').value);
+    
     const params = new URLSearchParams();
     formData.forEach((value, key) => params.append(key, value));
+    
     document.getElementById('loader').style.display = 'block';
     document.getElementById('products-container').style.opacity = 0.5;
+    
     fetch("{% url 'shop' %}?" + params.toString(), {
         headers: { 'X-Requested-With': 'XMLHttpRequest' }
     })
@@ -267,7 +650,7 @@ function fetchProducts(updateURL = true) {
         const newProducts = doc.getElementById('products-container').innerHTML;
         const container = document.getElementById('products-container');
         container.innerHTML = newProducts;
-        container.querySelectorAll('.col-xl-3, .col-lg-4, .col-md-6, .col-sm-6').forEach(el => el.classList.add('fade-in'));
+        container.querySelectorAll('.product-grid-col').forEach(el => el.classList.add('fade-in'));
         document.getElementById('loader').style.display = 'none';
         container.style.opacity = 1;
         updateSidebarCheckboxes();

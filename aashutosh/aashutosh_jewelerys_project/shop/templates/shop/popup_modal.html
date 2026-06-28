@@ -1,529 +1,156 @@
 {% load static %}
-<!-- ======== PREMIUM POPUP MODAL ======== -->
+<!-- Popup Modal for Live Rates & Admin Promotions -->
 {% if popup %}
-<div class="popup-modal-overlay" id="popupModal">
-    <div class="popup-modal-container">
-        <!-- Close Button -->
-        <button class="popup-close-btn" id="closePopupBtn" aria-label="Close popup">
-            <i class="fas fa-times"></i>
-        </button>
-
-        <!-- Popup Content -->
-        <div class="popup-content">
-            {% if popup.poster_image %}
-                <!-- Poster Image Layout -->
-                <div class="popup-poster">
-                    <img src="{{ popup.poster_image.url }}" alt="{{ popup.title }}" class="popup-poster-img">
-                    <!-- Buttons Overlay for Poster -->
-                    <div class="popup-buttons-overlay">
-                        <div class="popup-buttons-row">
-                            <a href="{% url 'shop' %}" class="popup-btn popup-btn-primary">
-                                <i class="fas fa-shopping-bag"></i>
-                                Shop
-                            </a>
-                            <a href="{% url 'live_rates' %}" class="popup-btn popup-btn-secondary">
-                                <i class="fas fa-chart-line"></i>
-                                Rates
-                            </a>
-                            <a href="{% url 'rate_calculator' %}" class="popup-btn popup-btn-accent">
-                                <i class="fas fa-calculator"></i>
-                                Calculate
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            {% else %}
-                <!-- Professional Text & Info Layout -->
-                <div class="popup-text">
-                    <div class="popup-brand-badge">
-                        <i class="fas fa-gem"></i>
-                    </div>
-                    <h3 class="popup-title">{{ popup.title }}</h3>
-                    {% if popup.message %}
-                        <p class="popup-message">{{ popup.message }}</p>
-                    {% endif %}
-                    
-                    <!-- Compact Side-by-Side Live Rates Display -->
-                    {% if gold_price or silver_price %}
-                    <div class="popup-rates-grid">
-                        {% if gold_price %}
-                        <div class="popup-rate-card gold-accent">
-                            <div class="rate-dot gold"></div>
-                            <div class="rate-info">
-                                <span class="rate-label">Gold 24K</span>
-                                <span class="rate-value">₹{{ gold_price.price_per_gram|default:"0" }}/g</span>
-                            </div>
-                        </div>
-                        {% endif %}
-                        {% if silver_price %}
-                        <div class="popup-rate-card silver-accent">
-                            <div class="rate-dot silver"></div>
-                            <div class="rate-info">
-                                <span class="rate-label">Silver</span>
-                                <span class="rate-value">₹{{ silver_price.price_per_gram|default:"0" }}/g</span>
-                            </div>
-                        </div>
-                        {% endif %}
-                    </div>
-                    {% endif %}
-                    
-                    <!-- Action Buttons -->
-                    <div class="popup-buttons-row">
-                        <a href="{% url 'shop' %}" class="popup-btn popup-btn-primary">
-                            <i class="fas fa-shopping-bag"></i>
-                            Shop
-                        </a>
-                        <a href="{% url 'live_rates' %}" class="popup-btn popup-btn-secondary">
-                            <i class="fas fa-chart-line"></i>
-                            Rates
-                        </a>
-                        <a href="{% url 'rate_calculator' %}" class="popup-btn popup-btn-accent">
-                            <i class="fas fa-calculator"></i>
-                            Calc
-                        </a>
-                    </div>
-                </div>
+<div class="modal fade" id="ratesPopup" tabindex="-1" aria-labelledby="ratesPopupLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content position-relative" style="border-radius: 20px; overflow: hidden; border: 2px solid rgba(212,175,55,0.4); box-shadow: 0 15px 40px rgba(212,175,55,0.2);">
+            
+            {% if not popup.show_title %}
+            <button type="button" class="btn-close btn-close-white position-absolute" data-bs-dismiss="modal" aria-label="Close" style="top: 15px; right: 15px; z-index: 1055; background-color: rgba(0,0,0,0.5); padding: 8px; border-radius: 50%;"></button>
             {% endif %}
-        </div>
 
-        <!-- Footer / Don't Show Checkbox -->
-        <div class="popup-footer">
-            <label class="popup-dont-show">
-                <input type="checkbox" id="dontShowAgain">
-                <span>Don't show again today</span>
-            </label>
+            {% if popup.show_title and popup.title %}
+            <!-- Header -->
+            <div class="modal-header text-white py-3 px-4" style="background: linear-gradient(135deg, #0f0f0f 0%, #2d2512 40%, #0f0f0f 100%); border-bottom: 2px solid #FFD700;">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: radial-gradient(circle at 30% 30%, #FFD700 0%, #d4af37 50%, #8B6914 100%); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">
+                        <i class="fas fa-gem fa-2x" style="color: #fff;"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title mb-0" id="ratesPopupLabel" style="font-weight: 700; font-size: 1.3rem; text-transform: uppercase;">{{ popup.title }}</h5>
+                        <p class="mb-0" style="color: #ccc; font-size: 0.9rem;">{{ popup.updated_at|date:"d M Y" }}</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+            <!-- Poster Image -->
+            {% if popup.show_poster_image and popup.poster_image %}
+            <div class="text-center p-0 overflow-hidden">
+                <img src="{{ popup.poster_image.url }}" class="img-fluid w-100" style="max-height: 450px; object-fit: cover;" alt="{{ popup.title }}">
+            </div>
+            {% endif %}
+
+            <!-- Body -->
+            <div class="modal-body p-4" style="background: linear-gradient(180deg, #fffaf0 0%, #ffffff 40%, #fffaf0 100%);">
+                {% if popup.show_message and popup.message %}
+                <div class="text-center mb-4">
+                    <p class="lead mb-0 text-dark" style="font-size: 1.1rem; font-weight: 500;">{{ popup.message|linebreaksbr }}</p>
+                </div>
+                {% endif %}
+                
+                {% if popup.show_rates_grid %}
+                <div class="row g-3 justify-content-center">
+                    {% for rate in metal_rates %}
+                    <div class="col-6 col-sm-4 col-md-3">
+                        <div class="card border-0 shadow-sm h-100 rate-card-border-{% if 'GOLD' in rate.metal_type or 'Gold' in rate.metal_type %}gold{% else %}silver{% endif %}" style="border-radius: 15px; background: linear-gradient(145deg, #ffffff 0%, #fffdf3 100%);">
+                            <div class="card-body p-3 text-center">
+                                <div class="mx-auto mb-2 rounded-circle d-flex align-items-center justify-content-center rate-icon-bg-{% if 'GOLD' in rate.metal_type or 'Gold' in rate.metal_type %}gold{% else %}silver{% endif %}" style="width: 50px; height: 50px;">
+                                    {% if 'GOLD' in rate.metal_type or 'Gold' in rate.metal_type %}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4a3607" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                      <circle cx="12" cy="12" r="10"/>
+                                      <path d="M8 12a4 4 0 0 1 8 0"/>
+                                    </svg>
+                                    {% else %}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                      <circle cx="12" cy="12" r="10"/>
+                                      <path d="M8 12a4 4 0 0 1 8 0"/>
+                                    </svg>
+                                    {% endif %}
+                                </div>
+                                <h6 class="fw-bold mb-1" style="color: #333; font-size: 1rem;">{{ rate.get_metal_type_display }}</h6>
+                                <p class="text-muted small mb-2" style="font-size: 0.8rem;">
+                                    {% if 'SILVER' in rate.metal_type or 'Silver' in rate.get_metal_type_display %}92.5{% else %}{{ rate.purity }}{% endif %}% Purity
+                                </p>
+                                <h4 class="fw-bold mb-0 {% if 'GOLD' in rate.metal_type %}rate-price-gold{% else %}rate-price-silver{% endif %}" style="font-size: 1.4rem;">₹{{ rate.rate_per_gram|floatformat:2 }}</h4>
+                                {% if 'GOLD' in rate.metal_type or 'Gold' in rate.metal_type %}
+                                <p class="text-muted small mb-0" style="font-size: 0.8rem;">per gram</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer justify-content-center gap-2 p-3" style="background: linear-gradient(180deg, #fafafa 0%, #f5f5f5 100%); border-top: 1px solid rgba(212,175,55,0.2);">
+                {% if popup.show_shop_button %}
+                <a href="{{ popup.shop_button_url }}" class="btn" style="background: linear-gradient(135deg, #d4af37 0%, #daa520 100%); color: white; font-weight: 600; border-radius: 50px; padding: 8px 24px; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3); border: none;">
+                    <i class="fas fa-shopping-bag me-1"></i> {{ popup.shop_button_text }}
+                </a>
+                {% endif %}
+                
+                {% if popup.show_rates_button %}
+                <a href="{{ popup.rates_button_url }}" class="btn" style="background: transparent; border: 1px solid rgba(212,175,55,0.4); color: #d4af37; font-weight: 600; border-radius: 50px; padding: 8px 24px; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.05);">
+                    <i class="fas fa-chart-line me-1"></i> {{ popup.rates_button_text }}
+                </a>
+                {% endif %}
+                
+                {% if popup.show_calc_button %}
+                {% if popup.calc_button_url == '#live-calculator' or popup.calc_button_url == '#home-calculator-section' or popup.calc_button_url == '#calculator-section' %}
+                <button type="button" class="btn" data-bs-dismiss="modal" onclick="setTimeout(function(){ document.getElementById('home-calculator-section').scrollIntoView({behavior: 'smooth'}) }, 350)" style="background: #111; color: white; font-weight: 600; border-radius: 50px; padding: 8px 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: none;">
+                    <i class="fas fa-calculator me-1"></i> {{ popup.calc_button_text }}
+                </button>
+                {% else %}
+                <a href="{{ popup.calc_button_url }}" class="btn" style="background: #111; color: white; font-weight: 600; border-radius: 50px; padding: 8px 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: none;">
+                    <i class="fas fa-calculator me-1"></i> {{ popup.calc_button_text }}
+                </a>
+                {% endif %}
+                {% endif %}
+                
+                <button type="button" class="btn btn-outline-secondary" style="border-radius: 50px; padding: 8px 24px; font-weight: 500;" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> Close
+                </button>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Popup CSS -->
+<!-- Modal CSS classes to support gold/silver styling -->
 <style>
-    /* Backdrop Overlay */
-    .popup-modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(10, 10, 10, 0.72);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        z-index: 10000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.4s;
-    }
-
-    .popup-modal-overlay.show {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    /* Modal Card Container (Small & Premium Size) */
-    .popup-modal-container {
-        position: relative;
-        width: 100%;
-        max-width: 380px; /* Reduced width for a modern, compact card layout */
-        background: rgba(255, 255, 255, 0.98);
-        border: 1px solid rgba(212, 175, 55, 0.3);
-        border-radius: 20px;
-        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15), 0 0 40px rgba(212, 175, 55, 0.08);
-        overflow: hidden;
-        transform: scale(0.9) translateY(15px);
-        transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .popup-modal-overlay.show .popup-modal-container {
-        transform: scale(1) translateY(0);
-    }
-
-    /* Clean Close Button */
-    .popup-close-btn {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        width: 32px;
-        height: 32px;
-        border: 1px solid rgba(0, 0, 0, 0.08);
-        background: rgba(255, 255, 255, 0.9);
-        color: #555;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        transition: all 0.3s ease;
-        z-index: 10;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-
-    .popup-close-btn:hover {
-        background: #fff;
-        color: #d4af37;
-        border-color: rgba(212, 175, 55, 0.5);
-        transform: rotate(90deg);
-    }
-
-    /* Content Area */
-    .popup-content {
-        width: 100%;
-    }
-
-    /* Poster Mode Styles */
-    .popup-poster {
-        width: 100%;
-        position: relative;
-    }
-
-    .popup-poster-img {
-        width: 100%;
-        height: auto;
-        max-height: 60vh;
-        object-fit: contain;
-        display: block;
-    }
-
-    .popup-buttons-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 65%, transparent 100%);
-        padding: 24px 16px;
-    }
-
-    /* Text & Info Mode (Default) */
-    .popup-text {
-        padding: 32px 24px 24px 24px;
-        text-align: center;
-    }
-
-    .popup-brand-badge {
-        width: 48px;
-        height: 48px;
-        background: rgba(212, 175, 55, 0.08);
-        border: 1.5px solid rgba(212, 175, 55, 0.25);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 16px;
-        font-size: 20px;
-        color: #b8952b;
-    }
-
-    .popup-title {
-        font-family: 'Cinzel', serif;
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #111;
-        margin-bottom: 8px;
-        letter-spacing: 0.5px;
-    }
-
-    .popup-message {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.82rem;
-        color: #666;
-        line-height: 1.5;
-        margin-bottom: 20px;
-        padding: 0 10px;
-    }
-
-    /* Compact Side-by-Side Live Rates Display */
-    .popup-rates-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        margin-bottom: 20px;
-    }
-
-    .popup-rate-card {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        background: rgba(248, 247, 243, 0.8);
-        border-radius: 12px;
-        padding: 10px 12px;
-        text-align: left;
-        transition: transform 0.3s ease;
-    }
-
-    .popup-rate-card:hover {
-        transform: translateY(-2px);
-    }
-
-    .popup-rate-card.gold-accent {
-        border: 1px solid rgba(212, 175, 55, 0.2);
-    }
-
-    .popup-rate-card.silver-accent {
-        border: 1px solid rgba(192, 192, 192, 0.35);
-    }
-
-    .rate-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        flex-shrink: 0;
-    }
-
-    .rate-dot.gold {
-        background: #d4af37;
-        box-shadow: 0 0 6px rgba(212, 175, 55, 0.6);
-    }
-
-    .rate-dot.silver {
-        background: #c0c0c0;
-        box-shadow: 0 0 6px rgba(192, 192, 192, 0.6);
-    }
-
-    .rate-info {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .rate-label {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.68rem;
-        font-weight: 500;
-        color: #777;
-        text-transform: uppercase;
-        letter-spacing: 0.2px;
-        line-height: 1.2;
-    }
-
-    .rate-value {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.88rem;
-        font-weight: 700;
-        color: #1a1a1a;
-        margin-top: 2px;
-    }
-
-    /* Elegant Pill Action Buttons */
-    .popup-buttons-row {
-        display: flex;
-        gap: 8px;
-        justify-content: center;
-    }
-
-    .popup-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        padding: 10px 14px;
-        border-radius: 30px;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.72rem;
-        font-weight: 600;
-        text-decoration: none;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-        cursor: pointer;
-        flex: 1;
-        box-sizing: border-box;
-    }
-
-    .popup-btn i {
-        font-size: 11px;
-    }
-
-    /* Primary: Gold background */
-    .popup-btn-primary {
-        background: linear-gradient(135deg, #d4af37 0%, #b8952b 100%);
-        color: #fff;
-        border: none;
-    }
-
-    .popup-btn-primary:hover {
-        background: linear-gradient(135deg, #b8952b 0%, #a28020 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(212, 175, 55, 0.25);
-    }
-
-    /* Secondary: Thin outline */
-    .popup-btn-secondary {
-        background: transparent;
-        color: #b8952b;
-        border: 1px solid rgba(212, 175, 55, 0.5);
-    }
-
-    .popup-btn-secondary:hover {
-        background: rgba(212, 175, 55, 0.05);
-        color: #d4af37;
-        border-color: #d4af37;
-        transform: translateY(-2px);
-    }
-
-    /* Accent: Dark/gold border */
-    .popup-btn-accent {
-        background: #111;
-        color: #fff;
-        border: 1px solid #111;
-    }
-
-    .popup-btn-accent:hover {
-        background: #252525;
-        border-color: #252525;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Popup Footer Checkbox */
-    .popup-footer {
-        padding: 12px 20px;
-        background: #fafaf9;
-        border-top: 1px solid rgba(0, 0, 0, 0.05);
-        text-align: center;
-    }
-
-    .popup-dont-show {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        cursor: pointer;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.72rem;
-        color: #888;
-        user-select: none;
-    }
-
-    .popup-dont-show input[type="checkbox"] {
-        width: 14px;
-        height: 14px;
-        cursor: pointer;
-        accent-color: #d4af37;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 400px) {
-        .popup-modal-container {
-            max-width: 90%;
-        }
-        .popup-text {
-            padding: 24px 16px 20px 16px;
-        }
-        .popup-btn {
-            padding: 8px 10px;
-            font-size: 0.68rem;
-            gap: 4px;
-        }
-        .popup-rates-grid {
-            gap: 8px;
-        }
-        .popup-rate-card {
-            padding: 8px 10px;
-        }
-        .rate-value {
-            font-size: 0.8rem;
-        }
-    }
+.rate-card-border-gold {
+    border: 2px solid rgba(212, 175, 55, 0.25) !important;
+}
+.rate-card-border-silver {
+    border: 2px solid rgba(192, 192, 192, 0.4) !important;
+}
+.rate-icon-bg-gold {
+    background-color: rgba(212, 175, 55, 0.15);
+}
+.rate-icon-bg-silver {
+    background-color: rgba(192, 192, 192, 0.2);
+}
+.rate-price-gold {
+    color: #b18a22;
+}
+.rate-price-silver {
+    color: #444444;
+}
 </style>
 
-<!-- Popup JavaScript -->
 <script>
-(function() {
-    'use strict';
-
-    // Check if popup should show
-    function shouldShowPopup() {
-        const dontShowKey = 'popup_dont_show_{{ popup.id }}';
-        const lastShown = localStorage.getItem(dontShowKey);
+document.addEventListener('DOMContentLoaded', function() {
+    const ratesPopupElement = document.getElementById('ratesPopup');
+    if (ratesPopupElement) {
+        const lastShownDate = localStorage.getItem('ratesPopupLastShown');
+        const today = new Date().toDateString();
         
-        if (lastShown) {
-            const lastShownDate = new Date(lastShown);
-            const today = new Date();
-            const hoursSinceShown = (today - lastShownDate) / (1000 * 60 * 60);
-            
-            // Don't show if less than 24 hours have passed
-            if (hoursSinceShown < 24) {
-                return false;
-            }
-        }
-        
-        return true;
-    }
-
-    // Show popup
-    function showPopup() {
-        if (!shouldShowPopup()) {
-            return;
-        }
-
-        const modal = document.getElementById('popupModal');
-        if (modal) {
-            // Small delay for better UX
-            setTimeout(() => {
-                modal.classList.add('show');
-            }, 500);
+        if (lastShownDate !== today) {
+            setTimeout(function() {
+                const ratesModal = new bootstrap.Modal(ratesPopupElement);
+                ratesModal.show();
+                
+                localStorage.setItem('ratesPopupLastShown', today);
+                
+                ratesPopupElement.addEventListener('hidden.bs.modal', function() {
+                    localStorage.setItem('ratesPopupLastShown', today);
+                });
+            }, 1000);
         }
     }
-
-    // Close popup
-    function closePopup() {
-        const modal = document.getElementById('popupModal');
-        const dontShowCheckbox = document.getElementById('dontShowAgain');
-        
-        if (modal) {
-            modal.classList.remove('show');
-            
-            // Save preference if checkbox is checked
-            if (dontShowCheckbox && dontShowCheckbox.checked) {
-                const dontShowKey = 'popup_dont_show_{{ popup.id }}';
-                localStorage.setItem(dontShowKey, new Date().toISOString());
-            }
-            
-            // Remove modal from DOM after animation
-            setTimeout(() => {
-                modal.style.display = 'none';
-            }, 300);
-        }
-    }
-
-    // Initialize popup
-    function initPopup() {
-        const closeBtn = document.getElementById('closePopupBtn');
-        const modal = document.getElementById('popupModal');
-        
-        if (modal) {
-            showPopup();
-            
-            if (closeBtn) {
-                closeBtn.addEventListener('click', closePopup);
-            }
-            
-            // Close on overlay click
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    closePopup();
-                }
-            });
-            
-            // Close on Escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && modal.classList.contains('show')) {
-                    closePopup();
-                }
-            });
-        }
-    }
-
-    // Initialize when DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initPopup);
-    } else {
-        initPopup();
-    }
-
-})();
+});
 </script>
 {% endif %}

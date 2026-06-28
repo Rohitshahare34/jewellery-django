@@ -7,7 +7,7 @@ from django.urls import reverse
 # CATEGORY MODEL
 # -----------------------------
 class Category(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, blank=True, null=True)
     image = models.ImageField(upload_to='categories/', blank=True, null=True)
 
     class Meta:
@@ -32,8 +32,8 @@ class Category(models.Model):
 # SUBCATEGORY MODEL
 # -----------------------------
 class SubCategory(models.Model):
-    category = models.ForeignKey(Category, related_name='subcategories', on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
+    category = models.ForeignKey(Category, related_name='subcategories', on_delete=models.SET_NULL, blank=True, null=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
     image = models.ImageField(upload_to='subcategory_images/', blank=True, null=True)
     is_featured = models.BooleanField(default=False, help_text="Show in 'Recommended for you' section")
     sort_order = models.IntegerField(default=0, help_text="Order of display (lower numbers first)")
@@ -43,7 +43,9 @@ class SubCategory(models.Model):
         ordering = ['sort_order', 'name']
 
     def __str__(self):
-        return f"{self.category.name} - {self.name}"
+        cat_name = self.category.name if self.category else "No Category"
+        subcat_name = self.name if self.name else "Unnamed SubCategory"
+        return f"{cat_name} - {subcat_name}"
 
     def image_url(self):
         """Return subcategory image or fallback placeholder."""
@@ -57,9 +59,9 @@ class SubCategory(models.Model):
 
 
 # -----------------------------
-# JEWELLERY MODEL
+# PRODUCT MODEL
 # -----------------------------
-class Jewellery(models.Model):
+class Product(models.Model):
     BADGE_CHOICES = [
         ('NEW', 'New Arrival'),
         ('SALE', 'On Sale'),
@@ -113,7 +115,7 @@ class Jewellery(models.Model):
     ]
 
     # --- Basic Info ---
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, blank=True, null=True)
     subcategory = models.ForeignKey(
         'SubCategory',  # quoted in case SubCategory defined later in file
         on_delete=models.SET_NULL,
@@ -121,19 +123,19 @@ class Jewellery(models.Model):
         blank=True,
         related_name="jewellery_items"
     )
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='jewellery/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_featured = models.BooleanField(default=False)
-    badge = models.CharField(max_length=20, choices=BADGE_CHOICES, default='NONE')
-    stone_type = models.CharField(max_length=20, choices=STONE_CHOICES, default='OTHER')
-    color = models.CharField(max_length=20, choices=COLOR_CHOICES, default='GOLD')
+    badge = models.CharField(max_length=20, choices=BADGE_CHOICES, default='NONE', blank=True, null=True)
+    stone_type = models.CharField(max_length=20, choices=STONE_CHOICES, default='OTHER', blank=True, null=True)
+    color = models.CharField(max_length=20, choices=COLOR_CHOICES, default='GOLD', blank=True, null=True)
     in_stock = models.BooleanField(default=True)
 
     # --- Metal & Stone Details ---
-    metal_type = models.CharField(max_length=20, choices=METAL_CHOICES, default='GOLD')
+    metal_type = models.CharField(max_length=20, choices=METAL_CHOICES, default='GOLD', blank=True, null=True)
 
     # Gold-specific fields
     gold_purity = models.CharField(
@@ -188,30 +190,78 @@ class Jewellery(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-        verbose_name_plural = "Jewellery"
+        verbose_name_plural = "Products"
+        db_table = 'shop_jewellery'
 
     def __str__(self):
-        return self.name
+        return self.name or "Unnamed Product"
+
+    def recalculate_price(self, save=False):
+        """
+        Recalculates gold/silver value, making charges, gst and total price
+        based on the current MetalRate records in the database.
+        """
+        rate = None
+        weight = 0
+        
+        if self.metal_type == 'GOLD':
+            purity_code = f"GOLD_{self.gold_purity}" if self.gold_purity else "GOLD_22K"
+            weight = self.gold_weight or 0
+            try:
+                rate = MetalRate.objects.get(metal_type=purity_code)
+            except:
+                pass
+        elif self.metal_type == 'SILVER':
+            weight = self.silver_weight or 0
+            try:
+                rate = MetalRate.objects.get(metal_type='SILVER')
+            except:
+                pass
+                
+        if rate:
+            # 1. Calculate metal value
+            metal_value = rate.rate_per_gram * weight
+            if self.metal_type == 'GOLD':
+                self.gold_value = metal_value
+                self.silver_value = 0
+                self.platinum_value = 0
+            elif self.metal_type == 'SILVER':
+                self.silver_value = metal_value
+                self.gold_value = 0
+                self.platinum_value = 0
+                
+            # 2. Calculate making charge based on the daily rate
+            if rate.making_type == 'FIXED':
+                self.making_charges = rate.making_charge * weight
+            else:
+                self.making_charges = (metal_value * rate.making_charge) / 100
+                
+            # 3. Calculate GST (3% of metal value + making charges)
+            subtotal = metal_value + (self.making_charges or 0)
+            self.gst = (subtotal * rate.gst_percentage) / 100
+            
+            # 4. Total Price
+            self.total_price = subtotal + (self.gst or 0) + (self.stone_value or 0)
+            self.price = self.total_price
+            
+            if save:
+                super().save()
+        else:
+            # Fallback if no rate exists: sum manual values
+            metal_total = (self.gold_value or 0) + (self.silver_value or 0) + (self.platinum_value or 0)
+            self.total_price = (
+                metal_total +
+                (self.stone_value or 0) +
+                (self.making_charges or 0) +
+                (self.gst or 0)
+            )
+            self.price = self.total_price
 
     def save(self, *args, **kwargs):
         """
         Automatically calculate total_price and keep price synced.
-        total_price sums the relevant metal value(s) + stone_value + making_charges + gst.
-        (If metal-specific value fields are zero for a given metal, they won't affect total.)
         """
-        # Sum all metal values (only one usually non-zero depending on metal_type)
-        metal_total = (self.gold_value or 0) + (self.silver_value or 0) + (self.platinum_value or 0)
-
-        self.total_price = (
-            metal_total +
-            (self.stone_value or 0) +
-            (self.making_charges or 0) +
-            (self.gst or 0)
-        )
-
-        # Keep price in sync with calculated total
-        self.price = self.total_price
-
+        self.recalculate_price(save=False)
         super().save(*args, **kwargs)
 
     def get_badge_color(self):
@@ -234,81 +284,30 @@ class Jewellery(models.Model):
 
 
 # -----------------------------
-# JEWELLERY IMAGE MODEL
-# -----------------------------
-class JewelleryImage(models.Model):
-    jewellery = models.ForeignKey(Jewellery, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='jewellery/gallery/')
-    alt_text = models.CharField(max_length=255, blank=True, null=True)
-
-    def __str__(self):
-        return f"Image for {self.jewellery.name}"
-
-
-# -----------------------------
-# PRODUCT MODEL
-# -----------------------------
-class Product(models.Model):
-    subcategory = models.ForeignKey('SubCategory', related_name='products', on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
-    description = models.TextField(blank=True, null=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='products/')
-    is_available = models.BooleanField(default=True)
-
-    metal_type = models.CharField(max_length=50, blank=True, null=True)
-    gold_purity = models.CharField(max_length=10, blank=True, null=True)
-    gold_weight = models.CharField(max_length=20, blank=True, null=True)
-    diamond_weight = models.CharField(max_length=20, blank=True, null=True)
-    diamond_clarity = models.CharField(max_length=20, blank=True, null=True)
-    diamond_color = models.CharField(max_length=20, blank=True, null=True)
-
-    badge = models.CharField(
-        max_length=50,
-        choices=[
-            ('NONE', 'None'),
-            ('NEW', 'New Arrival'),
-            ('TRENDING', 'Trending'),
-            ('BEST', 'Best Seller'),
-        ],
-        default='NONE'
-    )
-
-    class Meta:
-        ordering = ['name']
-
-    def __str__(self):
-        return self.name
-
-    def image_url(self):
-        return self.image.url if self.image else '/static/img/no-image.png'
-
-    def get_badge_color(self):
-        colors = {'NEW': 'success', 'TRENDING': 'info', 'BEST': 'warning'}
-        return colors.get(self.badge, 'secondary')
-
-    def get_absolute_url(self):
-        return reverse("product_detail", args=[str(self.id)])
-
-
-# -----------------------------
 # PRODUCT IMAGE MODEL
 # -----------------------------
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_images')
-    image = models.ImageField(upload_to='product_images/')
+    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='jewellery/gallery/')
     alt_text = models.CharField(max_length=255, blank=True, null=True)
 
+    class Meta:
+        db_table = 'shop_jewelleryimage'
+
     def __str__(self):
-        return f"Image for {self.product.name}"
+        prod_name = self.product.name if self.product else "No Product"
+        return f"Image for {prod_name}"
+
+
+
 
 
 # -----------------------------
 # WISHLIST MODEL
 # -----------------------------
 class Wishlist(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="wishlist")
-    product = models.ForeignKey(Jewellery, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name="wishlist")
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -316,41 +315,13 @@ class Wishlist(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.user.username} - {self.product.name}"
+        u_name = self.user.username if self.user else "Anonymous"
+        p_name = self.product.name if self.product else "No Product"
+        return f"{u_name} - {p_name}"
 
     def added_time(self):
         return self.created_at.strftime("%b %d, %Y")
 
-
-# -----------------------------
-# METAL PRICE MODEL (Live Gold/Silver Rates)
-# -----------------------------
-class MetalPrice(models.Model):
-    metal_type = models.CharField(max_length=20, choices=[
-        ('GOLD', 'Gold'),
-        ('SILVER', 'Silver'),
-    ])
-    price_per_gram = models.DecimalField(max_digits=10, decimal_places=2)  # 24K for gold
-    price_22k = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, help_text="22K gold price (auto-calculated)")
-    currency = models.CharField(max_length=10, default='INR')
-    change_percent = models.DecimalField(max_digits=5, decimal_places=2, default=0)
-    is_up = models.BooleanField(default=True)
-    last_updated = models.DateTimeField(auto_now=True)
-    
-    class Meta:
-        verbose_name_plural = "Metal Prices"
-        ordering = ['metal_type']
-
-    def __str__(self):
-        return f"{self.metal_type} - ₹{self.price_per_gram}/g"
-
-    def formatted_price(self):
-        """Return formatted price string."""
-        return f"₹{self.price_per_gram:,.2f}"
-
-    def last_updated_formatted(self):
-        """Return formatted last updated time."""
-        return self.last_updated.strftime("%b %d, %Y %I:%M %p")
 
 
 # -----------------------------
@@ -361,7 +332,7 @@ class MetalRate(models.Model):
         ("GOLD_24K", "24K Gold"),
         ("GOLD_22K", "22K Gold"),
         ("GOLD_18K", "18K Gold"),
-        ("SILVER", "Silver"),
+        ("SILVER", "9 to 5 Silver Jewellery"),
     ]
     MAKING_CHOICES = [
         ("FIXED", "Fixed (₹/g)"),
@@ -371,17 +342,23 @@ class MetalRate(models.Model):
     metal_type = models.CharField(
         max_length=20, 
         choices=METAL_CHOICES, 
-        unique=True
+        unique=True,
+        blank=True,
+        null=True
     )
     purity = models.DecimalField(
         max_digits=5, 
         decimal_places=2, 
-        default=0.0
+        default=0.0,
+        blank=True,
+        null=True
     )
     rate_per_gram = models.DecimalField(
         max_digits=12, 
         decimal_places=2, 
-        default=0.0
+        default=0.0,
+        blank=True,
+        null=True
     )
     making_charge = models.DecimalField(
         max_digits=10, 
@@ -398,7 +375,9 @@ class MetalRate(models.Model):
         decimal_places=2, 
         default=3.0
     )
-    status = models.BooleanField(default=True)
+    status = models.BooleanField(default=True, help_text="Show this metal rate block on frontend")
+    show_making_charge = models.BooleanField(default=True, help_text="Show making charge value on frontend")
+    show_gst = models.BooleanField(default=True, help_text="Show GST calculation on frontend")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -416,89 +395,71 @@ class MetalRate(models.Model):
                 return choice[1]
         return self.metal_type
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        
+        # Automatically update all Product products matching this metal rate
+        if self.metal_type.startswith('GOLD_'):
+            purity = self.metal_type.replace('GOLD_', '')
+            products = Product.objects.filter(metal_type='GOLD', gold_purity=purity)
+        elif self.metal_type == 'SILVER':
+            products = Product.objects.filter(metal_type='SILVER')
+        else:
+            products = []
+            
+        for product in products:
+            product.recalculate_price(save=True)
 
-# -----------------------------
-# JEWELRY PRODUCT MODEL
-# -----------------------------
-class JewelryProduct(models.Model):
-    METAL_CHOICES = [
-        ("GOLD_24K", "24K Gold"),
-        ("GOLD_22K", "22K Gold"),
-        ("GOLD_18K", "18K Gold"),
-        ("SILVER", "Silver"),
-    ]
-    MAKING_CHOICES = [
-        ("FIXED", "Fixed (₹/g)"),
-        ("PERCENTAGE", "Percentage (%)"),
-        ("USE_RATE", "Use from Metal Rate"),
-    ]
-    
-    name = models.CharField(max_length=200)
-    metal_type = models.CharField(max_length=20, choices=METAL_CHOICES)
-    weight = models.DecimalField(max_digits=10, decimal_places=3, default=0.0)
-    description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to="jewelry_products/", blank=True, null=True)
-    status = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    making_type = models.CharField(
-        max_length=20, 
-        choices=MAKING_CHOICES, 
-        default="USE_RATE"
-    )
-    making_charge = models.DecimalField(
-        max_digits=10, 
-        decimal_places=2, 
-        blank=True, 
-        null=True
-    )
-    category = models.ForeignKey(
-        Category, 
-        on_delete=models.CASCADE, 
-        related_name="jewelry_products"
-    )
-    subcategory = models.ForeignKey(
-        SubCategory, 
-        on_delete=models.CASCADE, 
-        related_name="jewelry_products", 
-        blank=True, 
-        null=True
-    )
 
-    class Meta:
-        ordering = ["-created_at"]
 
-    def __str__(self):
-        return self.name
 
 
 # -----------------------------
 # POPUP MESSAGE MODEL
 # -----------------------------
 class PopupMessage(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, blank=True, null=True)
     message = models.TextField(blank=True, null=True)
     poster_image = models.ImageField(upload_to='popup_posters/', blank=True, null=True, help_text="Upload discount poster image")
     status = models.BooleanField(default=True)
     show_on_refresh = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    # Layout Customizations
+    show_title = models.BooleanField(default=True, help_text="Toggle title visibility")
+    show_message = models.BooleanField(default=True, help_text="Toggle message text visibility")
+    show_poster_image = models.BooleanField(default=True, help_text="Toggle poster image visibility")
+    show_rates_grid = models.BooleanField(default=True, help_text="Toggle daily rates grid inside popup")
+    
+    # Custom Action Buttons & Links
+    show_shop_button = models.BooleanField(default=True, help_text="Toggle Shop button visibility")
+    shop_button_text = models.CharField(max_length=50, default="Shop", help_text="Text for Shop button")
+    shop_button_url = models.CharField(max_length=255, default="/shop/", help_text="URL path for Shop button")
+    
+    show_rates_button = models.BooleanField(default=True, help_text="Toggle Rates button visibility")
+    rates_button_text = models.CharField(max_length=50, default="Rates", help_text="Text for Rates button")
+    rates_button_url = models.CharField(max_length=255, default="/live-rates/", help_text="URL path for Rates button")
+    
+    show_calc_button = models.BooleanField(default=True, help_text="Toggle Calculator button visibility")
+    calc_button_text = models.CharField(max_length=50, default="Calc", help_text="Text for Calculator button")
+    calc_button_url = models.CharField(max_length=255, default="#live-calculator", help_text="URL path/anchor for Calculator button")
     
     class Meta:
         verbose_name_plural = "Popup Messages"
         ordering = ["-created_at"]
 
     def __str__(self):
-        return self.title
+        return self.title or "Untitled Popup Message"
 
 
 # -----------------------------
 # TESTIMONIAL MODEL
 # -----------------------------
 class Testimonial(models.Model):
-    name = models.CharField(max_length=100)
-    rating = models.PositiveIntegerField(default=5)
-    message = models.TextField()
+    name = models.CharField(max_length=100, blank=True, null=True)
+    rating = models.PositiveIntegerField(default=5, blank=True, null=True)
+    message = models.TextField(blank=True, null=True)
     designation = models.CharField(max_length=100, blank=True, default="Verified Buyer")
     created_at = models.DateTimeField(auto_now_add=True)
     is_approved = models.BooleanField(default=True)
@@ -507,7 +468,46 @@ class Testimonial(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.name} - {self.rating} stars"
+        name_display = self.name if self.name else "Anonymous"
+        return f"{name_display} - {self.rating} stars"
+
+
+# -----------------------------
+# SIGNATURE COLLECTION SECTION MODEL
+# -----------------------------
+class SignatureCollection(models.Model):
+    title = models.CharField(max_length=200, blank=True, null=True, help_text="Section title for Signature Collection")
+    subtitle = models.TextField(blank=True, null=True, help_text="Section subtitle/description")
+    is_active = models.BooleanField(default=True, help_text="Show this section on homepage")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = "Signature Collections"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title or "Signature Collection Section"
+
+
+class SignatureCollectionItem(models.Model):
+    collection = models.ForeignKey(SignatureCollection, related_name='items', on_delete=models.CASCADE)
+    title = models.CharField(max_length=200, blank=True, null=True, help_text="Item title")
+    description = models.TextField(blank=True, null=True, help_text="Short description for this item")
+    image = models.ImageField(upload_to='signature_collection/', blank=True, null=True, help_text="Image for this signature collection item")
+    sort_order = models.IntegerField(default=0, help_text="Order of display (lower numbers first)")
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['sort_order', '-id']
+
+    def __str__(self):
+        return self.title or f"Signature Item {self.id}"
+
+    def image_url(self):
+        if self.image:
+            return self.image.url
+        return '/static/img/no-image.png'
 
 
 # -----------------------------
@@ -515,7 +515,7 @@ class Testimonial(models.Model):
 # -----------------------------
 class Reel(models.Model):
     title = models.CharField(max_length=200, blank=True)
-    video = models.FileField(upload_to='reels/')
+    video = models.FileField(upload_to='reels/', blank=True, null=True)
     cover_image = models.ImageField(upload_to='reels/covers/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)

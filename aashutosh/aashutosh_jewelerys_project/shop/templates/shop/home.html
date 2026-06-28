@@ -1071,22 +1071,52 @@
 </section>
 
 <!-- ===== Scrolling Collection Banner (Left to Right) ===== -->
+{% if signature_collection and signature_items %}
 <section class="scrolling-collections-section py-4">
   <div class="scrolling-collections-title text-center mb-3">
+    {% if signature_collection.title %}
+    <span class="text-gold font-cinzel text-uppercase tracking-wider small">{{ signature_collection.title }}</span>
+    {% else %}
     <span class="text-gold font-cinzel text-uppercase tracking-wider small">Our Signature Collections</span>
+    {% endif %}
   </div>
   <div class="collections-marquee-wrapper">
     <div class="collections-marquee-track">
-      {% if signature_collections %}
         <!-- Group 1 (Dynamic from DB) -->
         <div class="collections-marquee-group">
-          {% for col in signature_collections %}
-            <a href="{{ col.link }}" class="collection-marquee-card">
-              <img src="{{ col.image_url }}" alt="{{ col.title }}">
+          {% for item in signature_items %}
+            <a href="{% url 'shop' %}" class="collection-marquee-card">
+              {% if item.image %}
+              <img src="{{ item.image.url }}" alt="{{ item.title|default:'Signature Item' }}">
+              {% else %}
+              {% with item.sort_order|stringformat:"s" as key %}
+                {% if key == "1" %}
+                <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_07_35 PM.png' %}" alt="{{ item.title|default:'Gold Ornaments' }}">
+                {% elif key == "2" %}
+                <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_19_00 PM.png' %}" alt="{{ item.title|default:'Diamond Rings' }}">
+                {% elif key == "3" %}
+                <img src="{% static 'hero-section-imgs/hero1.png' %}" alt="{{ item.title|default:'Traditional Necklace' }}">
+                {% elif key == "4" %}
+                <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_25_40 PM.png' %}" alt="{{ item.title|default:'Antique Masterpieces' }}">
+                {% elif key == "5" %}
+                <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_26_05 PM.png' %}" alt="{{ item.title|default:'Royal Chokers' }}">
+                {% elif key == "6" %}
+                <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_36_19 PM.png' %}" alt="{{ item.title|default:'Bespoke Rings' }}">
+                {% elif key == "7" %}
+                <img src="{% static 'hero-section-imgs/hero2.png' %}" alt="{{ item.title|default:'Bridal Special' }}">
+                {% else %}
+                <img src="{% static 'hero-section-imgs/hero1.png' %}" alt="{{ item.title|default:'Signature Item' }}">
+                {% endif %}
+              {% endwith %}
+              {% endif %}
               <div class="collection-marquee-overlay"></div>
               <div class="collection-marquee-content">
-                <h3>{{ col.title }}</h3>
-                <span class="shop-now-text">{{ col.subtitle }} <i class="fas fa-chevron-right ms-1"></i></span>
+                <h3>{{ item.title|default:'Signature Item' }}</h3>
+                {% if item.description %}
+                <span class="shop-now-text">{{ item.description }} <i class="fas fa-chevron-right ms-1"></i></span>
+                {% else %}
+                <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
+                {% endif %}
               </div>
             </a>
           {% endfor %}
@@ -1094,141 +1124,48 @@
         
         <!-- Duplicate Group 1 (Dynamic from DB) for seamless loop -->
         <div class="collections-marquee-group" aria-hidden="true">
-          {% for col in signature_collections %}
-            <a href="{{ col.link }}" class="collection-marquee-card">
-              <img src="{{ col.image_url }}" alt="{{ col.title }}">
+          {% for item in signature_items %}
+            <a href="{% url 'shop' %}" class="collection-marquee-card">
+              {% if item.image %}
+              <img src="{{ item.image.url }}" alt="{{ item.title|default:'Signature Item' }}">
+              {% else %}
+              {% with item.sort_order|stringformat:"s" as key %}
+                {% if key == "1" %}
+                <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_07_35 PM.png' %}" alt="{{ item.title|default:'Gold Ornaments' }}">
+                {% elif key == "2" %}
+                <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_19_00 PM.png' %}" alt="{{ item.title|default:'Diamond Rings' }}">
+                {% elif key == "3" %}
+                <img src="{% static 'hero-section-imgs/hero1.png' %}" alt="{{ item.title|default:'Traditional Necklace' }}">
+                {% elif key == "4" %}
+                <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_25_40 PM.png' %}" alt="{{ item.title|default:'Antique Masterpieces' }}">
+                {% elif key == "5" %}
+                <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_26_05 PM.png' %}" alt="{{ item.title|default:'Royal Chokers' }}">
+                {% elif key == "6" %}
+                <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_36_19 PM.png' %}" alt="{{ item.title|default:'Bespoke Rings' }}">
+                {% elif key == "7" %}
+                <img src="{% static 'hero-section-imgs/hero2.png' %}" alt="{{ item.title|default:'Bridal Special' }}">
+                {% else %}
+                <img src="{% static 'hero-section-imgs/hero1.png' %}" alt="{{ item.title|default:'Signature Item' }}">
+                {% endif %}
+              {% endwith %}
+              {% endif %}
               <div class="collection-marquee-overlay"></div>
               <div class="collection-marquee-content">
-                <h3>{{ col.title }}</h3>
-                <span class="shop-now-text">{{ col.subtitle }} <i class="fas fa-chevron-right ms-1"></i></span>
+                <h3>{{ item.title|default:'Signature Item' }}</h3>
+                {% if item.description %}
+                <span class="shop-now-text">{{ item.description }} <i class="fas fa-chevron-right ms-1"></i></span>
+                {% else %}
+                <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
+                {% endif %}
               </div>
             </a>
           {% endfor %}
         </div>
-      {% else %}
-        <!-- Fallback Group 1 (If DB is empty) -->
-        <div class="collections-marquee-group">
-          <a href="{% url 'shop' %}" class="collection-marquee-card">
-            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_07_35 PM.png' %}" alt="Gold Ornaments">
-            <div class="collection-marquee-overlay"></div>
-            <div class="collection-marquee-content">
-              <h3>Gold Ornaments</h3>
-              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
-            </div>
-          </a>
-          <a href="{% url 'shop' %}" class="collection-marquee-card">
-            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_19_00 PM.png' %}" alt="Diamond Rings">
-            <div class="collection-marquee-overlay"></div>
-            <div class="collection-marquee-content">
-              <h3>Diamond Rings</h3>
-              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
-            </div>
-          </a>
-          <a href="{% url 'shop' %}" class="collection-marquee-card">
-            <img src="{% static 'hero-section-imgs/hero1.png' %}" alt="Traditional Necklace">
-            <div class="collection-marquee-overlay"></div>
-            <div class="collection-marquee-content">
-              <h3>Traditional Designs</h3>
-              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
-            </div>
-          </a>
-          <a href="{% url 'shop' %}" class="collection-marquee-card">
-            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_25_40 PM.png' %}" alt="Antique Necklaces">
-            <div class="collection-marquee-overlay"></div>
-            <div class="collection-marquee-content">
-              <h3>Antique Masterpieces</h3>
-              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
-            </div>
-          </a>
-          <a href="{% url 'shop' %}" class="collection-marquee-card">
-            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_26_05 PM.png' %}" alt="Royal Chokers">
-            <div class="collection-marquee-overlay"></div>
-            <div class="collection-marquee-content">
-              <h3>Royal Chokers</h3>
-              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
-            </div>
-          </a>
-          <a href="{% url 'shop' %}" class="collection-marquee-card">
-            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_36_19 PM.png' %}" alt="Bespoke Rings">
-            <div class="collection-marquee-overlay"></div>
-            <div class="collection-marquee-content">
-              <h3>Bespoke Rings</h3>
-              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
-            </div>
-          </a>
-          <a href="{% url 'shop' %}" class="collection-marquee-card">
-            <img src="{% static 'hero-section-imgs/hero2.png' %}" alt="Bridal Special">
-            <div class="collection-marquee-overlay"></div>
-            <div class="collection-marquee-content">
-              <h3>Bridal Special</h3>
-              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
-            </div>
-          </a>
-        </div>
-        
-        <!-- Fallback Duplicate Group 1 for seamless infinite looping -->
-        <div class="collections-marquee-group" aria-hidden="true">
-          <a href="{% url 'shop' %}" class="collection-marquee-card">
-            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_07_35 PM.png' %}" alt="Gold Ornaments">
-            <div class="collection-marquee-overlay"></div>
-            <div class="collection-marquee-content">
-              <h3>Gold Ornaments</h3>
-              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
-            </div>
-          </a>
-          <a href="{% url 'shop' %}" class="collection-marquee-card">
-            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_19_00 PM.png' %}" alt="Diamond Rings">
-            <div class="collection-marquee-overlay"></div>
-            <div class="collection-marquee-content">
-              <h3>Diamond Rings</h3>
-              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
-            </div>
-          </a>
-          <a href="{% url 'shop' %}" class="collection-marquee-card">
-            <img src="{% static 'hero-section-imgs/hero1.png' %}" alt="Traditional Necklace">
-            <div class="collection-marquee-overlay"></div>
-            <div class="collection-marquee-content">
-              <h3>Traditional Designs</h3>
-              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
-            </div>
-          </a>
-          <a href="{% url 'shop' %}" class="collection-marquee-card">
-            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_25_40 PM.png' %}" alt="Antique Necklaces">
-            <div class="collection-marquee-overlay"></div>
-            <div class="collection-marquee-content">
-              <h3>Antique Masterpieces</h3>
-              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
-            </div>
-          </a>
-          <a href="{% url 'shop' %}" class="collection-marquee-card">
-            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_26_05 PM.png' %}" alt="Royal Chokers">
-            <div class="collection-marquee-overlay"></div>
-            <div class="collection-marquee-content">
-              <h3>Royal Chokers</h3>
-              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
-            </div>
-          </a>
-          <a href="{% url 'shop' %}" class="collection-marquee-card">
-            <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 20, 2026, 07_36_19 PM.png' %}" alt="Bespoke Rings">
-            <div class="collection-marquee-overlay"></div>
-            <div class="collection-marquee-content">
-              <h3>Bespoke Rings</h3>
-              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
-            </div>
-          </a>
-          <a href="{% url 'shop' %}" class="collection-marquee-card">
-            <img src="{% static 'hero-section-imgs/hero2.png' %}" alt="Bridal Special">
-            <div class="collection-marquee-overlay"></div>
-            <div class="collection-marquee-content">
-              <h3>Bridal Special</h3>
-              <span class="shop-now-text">Shop Collection <i class="fas fa-chevron-right ms-1"></i></span>
-            </div>
-          </a>
-        </div>
-      {% endif %}
     </div>
   </div>
 </section>
+{% endif %}
+
 
 <!-- ===== Today's Rates & Calculator Section ===== -->
 <section class="py-5 bg-white border-bottom">
@@ -1268,13 +1205,17 @@
                     {% endif %}
                   </div>
                   <div>
-                    <h6 class="fw-bold mb-0" style="font-size: 0.95rem;">{{ rate.get_metal_type_display }}</h6>
-                    <span class="text-muted small" style="font-size: 0.8rem;">{{ rate.purity }}% Purity</span>
+                    <h6 class="fw-bold mb-0" style="font-size: 0.95rem;">{{ rate.metal_type }}</h6>
+                    <span class="text-muted small" style="font-size: 0.8rem;">
+                      {% if 'SILVER' in rate.metal_type or 'Silver' in rate.get_metal_type_display %}92.5{% else %}{{ rate.purity }}{% endif %}% Purity
+                    </span>
                   </div>
                 </div>
                 <div class="text-end">
                   <span class="fw-bold text-gold" style="font-size: 1.25rem;">₹{{ rate.rate_per_gram|floatformat:2 }}</span>
+                  {% if not 'SILVER' in rate.metal_type and not 'Silver' in rate.get_metal_type_display %}
                   <span class="text-muted small d-block" style="font-size: 0.75rem;">per gram</span>
+                  {% endif %}
                 </div>
               </div>
             </a>
@@ -1349,25 +1290,25 @@
               <div class="col-6">
                 <div class="p-2 rounded-3 bg-white border border-light shadow-sm">
                   <span class="text-muted d-block mb-1" style="font-size: 0.7rem;">Today's Rate / Gram</span>
-                  <span class="fw-bold text-dark" id="calcMetalRate" style="font-size: 0.95rem;">₹0.00</span>
+                  <span class="fw-bold text-dark" id="calcMetalRate" style="font-size: 0.95rem;">-</span>
                 </div>
               </div>
               <div class="col-6">
                 <div class="p-2 rounded-3 bg-white border border-light shadow-sm">
                   <span class="text-muted d-block mb-1" style="font-size: 0.7rem;">Making Charge</span>
-                  <span class="fw-bold text-dark" id="calcMakingCharge" style="font-size: 0.95rem;">₹0.00</span>
+                  <span class="fw-bold text-dark" id="calcMakingCharge" style="font-size: 0.95rem;">-</span>
                 </div>
               </div>
               <div class="col-6">
                 <div class="p-2 rounded-3 bg-white border border-light shadow-sm">
                   <span class="text-muted d-block mb-1" style="font-size: 0.7rem;">GST Rate</span>
-                  <span class="fw-bold text-dark" id="calcGSTRate" style="font-size: 0.95rem;">3%</span>
+                  <span class="fw-bold text-dark" id="calcGSTRate" style="font-size: 0.95rem;">-</span>
                 </div>
               </div>
               <div class="col-6">
                 <div class="p-2 rounded-3 bg-white border border-light shadow-sm">
                   <span class="text-muted d-block mb-1" style="font-size: 0.7rem;">Standard Purity</span>
-                  <span class="fw-bold text-dark" id="calcPurity" style="font-size: 0.95rem;">75%</span>
+                  <span class="fw-bold text-dark" id="calcPurity" style="font-size: 0.95rem;">-</span>
                 </div>
               </div>
             </div>
@@ -1428,12 +1369,18 @@
     flex: 2;
     border-radius: 20px;
     overflow: hidden;
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .composite-left-pane img {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    max-width: 100%;
+    max-height: 100%;
   }
 
   .composite-right-pane {
@@ -1447,6 +1394,10 @@
     flex: 1;
     border-radius: 15px;
     overflow: hidden;
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .composite-sub-img-wrapper img {
@@ -1461,15 +1412,47 @@
       flex-direction: column;
       height: auto;
       margin-left: 0;
+      gap: 0.8rem;
     }
 
     .composite-left-pane {
-      height: 250px;
+      height: 360px;
+      width: 100%;
+    }
+
+    .composite-left-pane img {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
     }
 
     .composite-right-pane {
       flex-direction: row;
+      gap: 0.8rem;
+      width: 100%;
     }
+
+    .composite-sub-img-wrapper {
+      flex: 1;
+      height: 120px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .composite-left-pane {
+      height: 280px;
+    }
+
+    .composite-right-pane {
+      flex-direction: row;
+      gap: 0.6rem;
+      width: 100%;
+    }
+
+    .composite-sub-img-wrapper {
+      height: 90px;
+    }
+  }
 
     .necklace-title {
       font-size: 1.0rem;
@@ -1737,7 +1720,7 @@
 {% endif %}
 
 <!-- ===== Reels Section ===== -->
-{% if reels|length > 1 %}
+{% if reels %}
 <section class="reels-section">
   <div class="container">
     <h3 class="reels-title">Jewellery Showcase</h3>
@@ -1820,6 +1803,9 @@
       <div class="col-lg-3 col-md-4 col-sm-6 d-flex">
         <div class="card product-card h-100 border-0 rounded-4 overflow-hidden w-100 d-flex flex-column">
           <div class="position-relative overflow-hidden" style="height: 250px;">
+            <button class="wishlist-btn" data-product-id="{{ product.id }}" aria-label="Add to Wishlist">
+              <i class="{% if product.id in user_wishlist_ids %}fas fa-heart text-danger{% else %}far fa-heart{% endif %}"></i>
+            </button>
             {% if product.image %}
             <img src="{{ product.image.url }}" class="card-img-top product-image h-100 w-100" alt="{{ product.name }}" style="object-fit: cover;">
             {% else %}
@@ -1866,6 +1852,9 @@
         <a href="{% url 'product_detail' product.pk %}" class="text-decoration-none text-dark w-100">
           <div class="card product-card h-100 border-0 rounded-4 overflow-hidden w-100">
             <div class="position-relative overflow-hidden" style="height: 180px;">
+              <button class="wishlist-btn" data-product-id="{{ product.id }}" aria-label="Add to Wishlist">
+                <i class="{% if product.id in user_wishlist_ids %}fas fa-heart text-danger{% else %}far fa-heart{% endif %}"></i>
+              </button>
               {% if product.image %}
               <img src="{{ product.image.url }}" class="card-img-top product-image h-100 w-100" alt="{{ product.name }}" style="object-fit: cover;">
               {% else %}
@@ -1898,9 +1887,9 @@
 
       <div class="promise-card">
         <div class="icon-box">
-          <img src="{% static 'shop/images/Exchange_icon.png' %}" alt="Lifetime Exchange">
+          <img src="{% static 'shop/images/Exchange_icon.png' %}" alt="Lifetime exchange according to purity">
         </div>
-        <p>Lifetime Exchange</p>
+        <p>Lifetime exchange according to purity</p>
       </div>
 
       <div class="promise-card">
@@ -1915,13 +1904,6 @@
           <img src="{% static 'shop/images/buyback.png' %}" alt="Lifetime Buyback">
         </div>
         <p>Lifetime Buyback</p>
-      </div>
-
-      <div class="promise-card">
-        <div class="icon-box">
-          <img src="{% static 'shop/images/shipping_icon.png' %}" alt="Insured Free Shipping">
-        </div>
-        <p>Insured Free Shipping</p>
       </div>
 
       <div class="promise-card">
@@ -1934,9 +1916,9 @@
       <!-- duplicate for infinite scroll -->
       <div class="promise-card">
         <div class="icon-box">
-          <img src="{% static 'shop/images/Exchange_icon.png' %}" alt="Lifetime Exchange">
+          <img src="{% static 'shop/images/Exchange_icon.png' %}" alt="Lifetime exchange according to purity">
         </div>
-        <p>Lifetime Exchange</p>
+        <p>Lifetime exchange according to purity</p>
       </div>
 
       <div class="promise-card">
@@ -1951,13 +1933,6 @@
           <img src="{% static 'shop/images/buyback.png' %}" alt="Lifetime Buyback">
         </div>
         <p>Lifetime Buyback</p>
-      </div>
-
-      <div class="promise-card">
-        <div class="icon-box">
-          <img src="{% static 'shop/images/shipping_icon.png' %}" alt="Insured Free Shipping">
-        </div>
-        <p>Insured Free Shipping</p>
       </div>
 
       <div class="promise-card">
@@ -2417,14 +2392,31 @@ function initHomeCalculator() {
         totalPriceEl.textContent = '₹' + totalPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
         // Update Rate Parameters display
-        calcMetalRateEl.textContent = '₹' + data.rate_per_gram.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        if (data.making_type === 'FIXED') {
+        if (!data.rate_per_gram || parseFloat(data.rate_per_gram) === 0) {
+            calcMetalRateEl.textContent = '-';
+        } else {
+            calcMetalRateEl.textContent = '₹' + data.rate_per_gram.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        if (!data.making_charge || parseFloat(data.making_charge) === 0) {
+            calcMakingChargeEl.textContent = '-';
+        } else if (data.making_type === 'FIXED') {
             calcMakingChargeEl.textContent = '₹' + data.making_charge.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '/g';
         } else {
             calcMakingChargeEl.textContent = data.making_charge + '%';
         }
-        calcGSTRateEl.textContent = data.gst_percentage + '%';
-        calcPurityEl.textContent = data.purity + '%';
+
+        if (!data.gst_percentage || parseFloat(data.gst_percentage) === 0) {
+            calcGSTRateEl.textContent = '-';
+        } else {
+            calcGSTRateEl.textContent = data.gst_percentage + '%';
+        }
+
+        if (!data.purity || parseFloat(data.purity) === 0) {
+            calcPurityEl.textContent = '-';
+        } else {
+            calcPurityEl.textContent = data.purity + '%';
+        }
     }
 
     // Event listeners
@@ -2450,83 +2442,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ride: 'carousel'
         });
     }
-    
-    // Show rates popup automatically on every visit to homepage if the modal element is present
-    const ratesPopupElement = document.getElementById('ratesPopup');
-    if (ratesPopupElement) {
-        setTimeout(function() {
-            const ratesModal = new bootstrap.Modal(ratesPopupElement);
-            ratesModal.show();
-        }, 1000); // 1-second delay for smoother UX
-    }
 });
 </script>
-
-<!-- Popup Modal for Live Rates -->
-{% if active_popup %}
-<div class="modal fade" id="ratesPopup" tabindex="-1" aria-labelledby="ratesPopupLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content" style="border-radius: 20px; overflow: hidden; border: 2px solid rgba(212,175,55,0.4); box-shadow: 0 15px 40px rgba(212,175,55,0.2);">
-            <!-- Header -->
-            <div class="modal-header text-white py-3 px-4" style="background: linear-gradient(135deg, #0f0f0f 0%, #2d2512 40%, #0f0f0f 100%); border-bottom: 2px solid #FFD700;">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: radial-gradient(circle at 30% 30%, #FFD700 0%, #d4af37 50%, #8B6914 100%); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">
-                        <i class="fas fa-gem fa-2x" style="color: #fff;"></i>
-                    </div>
-                    <div>
-                        <h5 class="modal-title mb-0" id="ratesPopupLabel" style="font-weight: 700; font-size: 1.3rem; text-transform: uppercase;">{{ active_popup.title }}</h5>
-                        <p class="mb-0" style="color: #ccc; font-size: 0.9rem;">{{ active_popup.updated_at|date:"d M Y" }}</p>
-                    </div>
-                </div>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <!-- Body -->
-            <div class="modal-body p-4" style="background: linear-gradient(180deg, #fffaf0 0%, #ffffff 40%, #fffaf0 100%);">
-                <div class="row g-3">
-                    {% for rate in metal_rates %}
-                    <div class="col-6 col-lg-3">
-                        <div class="card border-0 shadow-sm h-100 rate-card-border-{% if 'GOLD' in rate.metal_type or 'Gold' in rate.metal_type %}gold{% else %}silver{% endif %}" style="border-radius: 15px; background: linear-gradient(145deg, #ffffff 0%, #fffdf3 100%);">
-                            <div class="card-body p-3 text-center">
-                                <div class="mx-auto mb-2 rounded-circle d-flex align-items-center justify-content-center rate-icon-bg-{% if 'GOLD' in rate.metal_type or 'Gold' in rate.metal_type %}gold{% else %}silver{% endif %}" style="width: 50px; height: 50px;">
-                                    {% if 'GOLD' in rate.metal_type or 'Gold' in rate.metal_type %}
-                                    <!-- Gold Icon (Ring) -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4a3607" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                      <circle cx="12" cy="12" r="10"/>
-                                      <path d="M8 12a4 4 0 0 1 8 0"/>
-                                    </svg>
-                                    {% else %}
-                                    <!-- Silver Icon (Ring) -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                      <circle cx="12" cy="12" r="10"/>
-                                      <path d="M8 12a4 4 0 0 1 8 0"/>
-                                    </svg>
-                                    {% endif %}
-                                </div>
-                                <h6 class="fw-bold mb-1" style="color: #333; font-size: 1rem;">{{ rate.metal_type }}</h6>
-                                <p class="text-muted small mb-2" style="font-size: 0.8rem;">{{ rate.purity }}% Pure</p>
-                                <h4 class="fw-bold mb-0 {% if 'GOLD' in rate.metal_type %}rate-price-gold{% else %}rate-price-silver{% endif %}" style="font-size: 1.4rem;">₹{{ rate.rate_per_gram|floatformat:2 }}</h4>
-                                <p class="text-muted small mb-0" style="font-size: 0.8rem;">per gram</p>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            <!-- Footer -->
-            <div class="modal-footer justify-content-center gap-2 p-3" style="background: linear-gradient(180deg, #fafafa 0%, #f5f5f5 100%); border-top: 1px solid rgba(212,175,55,0.2);">
-                <a href="{% url 'live_rates' %}" class="btn" style="background: linear-gradient(135deg, #d4af37 0%, #daa520 100%); color: white; font-weight: 600; border-radius: 50px; padding: 8px 24px; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3); border: none;">
-                    <i class="fas fa-chart-line me-1"></i> View Rates
-                </a>
-                <a href="{% url 'live_rates' %}#live-calculator" class="btn" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; font-weight: 600; border-radius: 50px; padding: 8px 24px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2); border: none;">
-                    <i class="fas fa-calculator me-1"></i> Calculator
-                </a>
-                <button type="button" class="btn btn-outline-secondary" style="border-radius: 50px; padding: 8px 24px; font-weight: 500;" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-1"></i> Close
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
 
 {% endblock %}

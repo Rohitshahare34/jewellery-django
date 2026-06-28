@@ -9,27 +9,31 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 
-from .models import Jewellery, Product, Category, SubCategory, Wishlist, MetalPrice, MetalRate, PopupMessage, JewelryProduct, Testimonial, Reel
+from .models import Product, Category, SubCategory, Wishlist, PopupMessage, Testimonial, Reel, MetalRate, SignatureCollection, SignatureCollectionItem
 
 # ======================================================
 # LIVE RATES VIEW
 # ======================================================
 def live_rates(request):
     """Today's Rates Page"""
-    rates = MetalRate.objects.filter(status=True)
-    
+    rates = MetalRate.objects.filter(status=True).order_by('metal_type')
     rates_with_breakdown = []
+    
     for rate in rates:
         base_price = rate.rate_per_gram
         
-        # Calculate making amount
-        if rate.making_type == 'FIXED':
-            making_amount = rate.making_charge
-        else:
-            making_amount = (base_price * rate.making_charge) / 100
-        
+        # Calculate making amount for 1 gram
+        making_amount = 0
+        if rate.show_making_charge:
+            if rate.making_type == 'FIXED':
+                making_amount = rate.making_charge
+            else:
+                making_amount = base_price * (rate.making_charge / 100)
+                
         subtotal = base_price + making_amount
-        gst_amount = (subtotal * rate.gst_percentage) / 100
+        
+        # Calculate GST
+        gst_amount = (subtotal * rate.gst_percentage / 100) if rate.show_gst else 0
         total_amount = subtotal + gst_amount
         
         rates_with_breakdown.append({
@@ -42,17 +46,15 @@ def live_rates(request):
                 'total_amount': total_amount
             }
         })
-    
+        
     return render(request, 'shop/live_rates.html', {
         'rates_with_breakdown': rates_with_breakdown
     })
 
-# ======================================================
-# RATE CALCULATOR VIEW
-# ======================================================
+
 def rate_calculator(request):
     """Rate Calculator Page"""
-    metal_rates = MetalRate.objects.filter(status=True)
+    metal_rates = MetalRate.objects.filter(status=True).order_by('metal_type')
     
     selected_metal = request.GET.get('metal', None)
     weight = request.GET.get('weight', None)
@@ -63,29 +65,32 @@ def rate_calculator(request):
     if selected_metal and weight:
         try:
             weight = float(weight)
-            selected_rate = MetalRate.objects.get(metal_type=selected_metal)
+            # Find selected rate in database
+            selected_rate = MetalRate.objects.filter(metal_type=selected_metal).first()
             
-            base_price = selected_rate.rate_per_gram * weight
-            
-            if selected_rate.making_type == 'FIXED':
-                making_amount = selected_rate.making_charge * weight
-            else:
-                making_amount = (base_price * selected_rate.making_charge) / 100
-            
-            subtotal = base_price + making_amount
-            gst_amount = (subtotal * selected_rate.gst_percentage) / 100
-            total_amount = subtotal + gst_amount
-            
-            breakdown = {
-                'base_price': base_price,
-                'making_amount': making_amount,
-                'subtotal': subtotal,
-                'gst_amount': gst_amount,
-                'total_amount': total_amount
-            }
-        except:
+            if selected_rate:
+                base_price = selected_rate.rate_per_gram * weight
+                making_amount = 0
+                if selected_rate.show_making_charge:
+                    if selected_rate.making_type == 'FIXED':
+                        making_amount = selected_rate.making_charge * weight
+                    else:
+                        making_amount = base_price * (selected_rate.making_charge / 100)
+                
+                subtotal = base_price + making_amount
+                gst_amount = (subtotal * selected_rate.gst_percentage / 100) if selected_rate.show_gst else 0
+                total_amount = subtotal + gst_amount
+                
+                breakdown = {
+                    'base_price': base_price,
+                    'making_amount': making_amount,
+                    'subtotal': subtotal,
+                    'gst_amount': gst_amount,
+                    'total_amount': total_amount
+                }
+        except Exception as e:
             pass
-    
+            
     return render(request, 'shop/rate_calculator.html', {
         'metal_rates': metal_rates,
         'selected_metal': selected_metal,
@@ -94,27 +99,38 @@ def rate_calculator(request):
         'selected_rate': selected_rate
     })
 
+
 # ======================================================
 # HOME PAGE VIEW
 # ======================================================
 def home(request):
-    featured_products = Jewellery.objects.filter(is_featured=True, in_stock=True)[:8]
-    new_arrivals = Jewellery.objects.filter(badge='NEW', in_stock=True)[:6]
+    featured_products = Product.objects.filter(is_featured=True, in_stock=True)[:8]
+    new_arrivals = Product.objects.filter(badge='NEW', in_stock=True)[:6]
     categories = Category.objects.all()[:4]
-    metal_rates = MetalRate.objects.filter(status=True)
     testimonials = Testimonial.objects.filter(is_approved=True)
     featured_subcategories = SubCategory.objects.filter(is_featured=True)
-    reels = Reel.objects.filter(is_active=True)
+    reels = Reel.objects.filter(is_active=True, video__isnull=False).exclude(video='')
+    
+    # Get active Signature Collection
+    signature_collection = SignatureCollection.objects.filter(is_active=True).first()
+    signature_items = []
+    if signature_collection:
+        signature_items = SignatureCollectionItem.objects.filter(collection=signature_collection, is_active=True).order_by('sort_order')
+
+    # Get metal rates to display on home page
+    metal_rates = MetalRate.objects.filter(status=True).order_by('metal_type')
 
     context = {
         'featured_products': featured_products,
         'new_arrivals': new_arrivals,
         'categories': categories,
-        'metal_rates': metal_rates,
         'hero_videos': [1, 2, 3],  # pass the number of hero videos
         'testimonials': testimonials,
         'featured_subcategories': featured_subcategories,
         'reels': reels,
+        'signature_collection': signature_collection,
+        'signature_items': signature_items,
+        'metal_rates': metal_rates,
     }
     return render(request, 'shop/home.html', context)
 
@@ -123,7 +139,7 @@ def home(request):
 # SHOP PAGE VIEW
 # ======================================================
 def shop_view(request):
-    products = Jewellery.objects.filter(in_stock=True)
+    products = Product.objects.filter(in_stock=True)
 
     # Filters
     category_filter = request.GET.get('category')
@@ -191,7 +207,7 @@ def subcategory_products(request, subcategory_id):
     subcategory = get_object_or_404(SubCategory, id=subcategory_id)
     
     # Get all products under this subcategory
-    products = Jewellery.objects.filter(subcategory=subcategory, in_stock=True)
+    products = Product.objects.filter(subcategory=subcategory, in_stock=True)
     
     context = {
         'subcategory': subcategory,
@@ -204,8 +220,8 @@ def subcategory_products(request, subcategory_id):
 # PRODUCT DETAIL VIEW
 # ======================================================
 def product_detail(request, pk):
-    # Get the jewellery product by ID
-    product = get_object_or_404(Jewellery, pk=pk)
+    # Get the product by ID
+    product = get_object_or_404(Product, pk=pk)
 
     # Get all related images (safe check)
     images = product.images.all() if hasattr(product, 'images') else []
@@ -215,7 +231,7 @@ def product_detail(request, pk):
     category = subcategory.category if subcategory else None
 
     # Fetch related products from the same subcategory
-    related_products = Jewellery.objects.filter(
+    related_products = Product.objects.filter(
         subcategory=subcategory,
         in_stock=True
     ).exclude(pk=pk)[:4]
@@ -237,7 +253,7 @@ def search(request):
     query = request.GET.get('q', '')
     results = []
     if query:
-        results = Jewellery.objects.filter(name__icontains=query, in_stock=True)
+        results = Product.objects.filter(name__icontains=query, in_stock=True)
     return render(request, 'shop/search_results.html', {'query': query, 'results': results})
 
 
@@ -267,7 +283,7 @@ def profile_view(request):
 
 @require_POST
 def toggle_wishlist(request, product_id):
-    product = get_object_or_404(Jewellery, id=product_id)
+    product = get_object_or_404(Product, id=product_id)
     wishlist_item, created = Wishlist.objects.get_or_create(
         user=request.user, product=product
     )
@@ -326,7 +342,7 @@ def contact(request):
 
 def category_products(request, id):
     category = get_object_or_404(Category, id=id)
-    products = Jewellery.objects.filter(subcategory__category=category)
+    products = Product.objects.filter(subcategory__category=category)
     return render(request, 'shop/category_products.html', {
         'category': category,
         'products': products,
@@ -334,7 +350,7 @@ def category_products(request, id):
 
 def all_products(request):
     """Display all available products across all categories and subcategories."""
-    products = Jewellery.objects.filter(in_stock=True).order_by('-created_at')
+    products = Product.objects.filter(in_stock=True).order_by('-created_at')
     categories = Category.objects.all()
 
     context = {
@@ -342,6 +358,7 @@ def all_products(request):
         'categories': categories,
     }
     return render(request, 'shop/all_products.html', context)
+
 
 def profile_edit(request):
     """
@@ -416,7 +433,7 @@ def wishlist_toggle(request, product_id):
                 return JsonResponse({"success": False, "message": "Authentication required"}, status=401)
             return redirect('login')
 
-        product = get_object_or_404(Jewellery, id=product_id)
+        product = get_object_or_404(Product, id=product_id)
         wishlist_item, created = Wishlist.objects.get_or_create(
             user=request.user, product=product
         )
@@ -448,29 +465,29 @@ def get_metal_prices(request):
     Returns JSON response with gold and silver prices.
     """
     try:
-        gold_price = MetalPrice.objects.filter(metal_type='GOLD').first()
-        silver_price = MetalPrice.objects.filter(metal_type='SILVER').first()
+        gold_24k = MetalRate.objects.filter(metal_type='GOLD_24K', status=True).first()
+        gold_22k = MetalRate.objects.filter(metal_type='GOLD_22K', status=True).first()
+        silver = MetalRate.objects.filter(metal_type='SILVER', status=True).first()
         
         response_data = {
             'success': True,
             'gold': {
-                'price': str(gold_price.price_per_gram) if gold_price else '0',
-                'price_24k': str(gold_price.price_per_gram) if gold_price else '0',
-                'price_22k': str(gold_price.price_22k) if hasattr(gold_price, 'price_22k') and gold_price.price_22k else '0',
-                'change_percent': str(gold_price.change_percent) if gold_price else '0',
-                'is_up': gold_price.is_up if gold_price else True,
+                'price': str(gold_24k.rate_per_gram) if gold_24k else '0',
+                'price_24k': str(gold_24k.rate_per_gram) if gold_24k else '0',
+                'price_22k': str(gold_22k.rate_per_gram) if gold_22k else '0',
+                'change_percent': '0',
+                'is_up': True,
             },
             'silver': {
-                'price': str(silver_price.price_per_gram) if silver_price else '0',
-                'change_percent': str(silver_price.change_percent) if silver_price else '0',
-                'is_up': silver_price.is_up if silver_price else True,
+                'price': str(silver.rate_per_gram) if silver else '0',
+                'change_percent': '0',
+                'is_up': True,
             },
         }
         
-        if gold_price:
-            response_data['gold']['last_updated'] = gold_price.last_updated_formatted()
-        if silver_price:
-            response_data['silver']['last_updated'] = silver_price.last_updated_formatted()
+        last_updated = "Updated today"
+        response_data['gold']['last_updated'] = last_updated
+        response_data['silver']['last_updated'] = last_updated
             
         return JsonResponse(response_data)
         
@@ -484,35 +501,12 @@ def get_metal_prices(request):
 @require_POST
 def refresh_metal_prices(request):
     """
-    Manual trigger to refresh metal prices from API.
-    Can be called from admin panel or button click.
+    Manual trigger to refresh metal prices (dummy response since MetalPrice is removed).
     """
-    try:
-        from .price_api import update_metal_prices
-        
-        result = update_metal_prices()
-        
-        if result['success']:
-            messages.success(request, 'Metal prices updated successfully!')
-            return JsonResponse({
-                'success': True,
-                'message': result['message'],
-                'gold': str(result['gold']['price_per_gram']),
-                'silver': str(result['silver']['price_per_gram']),
-            })
-        else:
-            messages.error(request, result['message'])
-            return JsonResponse({
-                'success': False,
-                'message': result['message']
-            }, status=400)
-            
-    except Exception as e:
-        messages.error(request, f'Error updating prices: {str(e)}')
-        return JsonResponse({
-            'success': False,
-            'message': str(e)
-        }, status=500)
+    return JsonResponse({
+        'success': True,
+        'message': 'Prices are managed manually via Today\'s Rates admin panel.'
+    })
 
 
 @require_POST

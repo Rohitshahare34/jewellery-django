@@ -2,32 +2,270 @@
 {% load static %}
 
 {% block content %}
-<section class="py-5 bg-light">
+<!-- Google Fonts (for a modern premium look) -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* ====== ALL PRODUCTS PAGE SYSTEM ====== */
+  .all-products-wrapper {
+    font-family: 'Outfit', 'Inter', sans-serif;
+    padding: 80px 0;
+    background: radial-gradient(circle at 50% 50%, rgba(254, 253, 249, 1) 0%, rgba(246, 243, 233, 1) 100%);
+    min-height: 90vh;
+  }
+
+  .catalog-title-section {
+    margin-bottom: 50px;
+  }
+
+  .catalog-title {
+    font-weight: 800;
+    color: #111;
+    font-size: 2.2rem;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 15px;
+  }
+
+  .catalog-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #d4af37, transparent);
+  }
+
+  .catalog-subtitle {
+    color: #666;
+    font-size: 1.05rem;
+    margin-top: 12px;
+  }
+
+  /* ====== LUXURY PRODUCT CARD ====== */
+  .product-card-premium {
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid rgba(212, 175, 55, 0.12);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .product-card-premium:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(184, 149, 43, 0.08);
+    border-color: rgba(212, 175, 55, 0.35);
+  }
+
+  .product-img-wrapper-premium {
+    position: relative;
+    padding-bottom: 100%;
+    overflow: hidden;
+    background: #faf9f5;
+  }
+
+  .product-img-wrapper-premium img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+
+  .product-card-premium:hover .product-img-wrapper-premium img {
+    transform: scale(1.06);
+  }
+
+  /* Wishlist Icon floating on image */
+  .wishlist-btn-premium {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    color: #777;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+  }
+
+  .wishlist-btn-premium:hover {
+    background: #fff;
+    color: #dc3545;
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(220, 53, 69, 0.15);
+  }
+
+  .wishlist-btn-premium.active {
+    color: #dc3545;
+  }
+
+  /* Badge styling */
+  .badge-premium {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 9;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  }
+
+  .product-body-premium {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    text-align: center;
+  }
+
+  .product-title-premium {
+    font-weight: 700;
+    color: #111;
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+    line-height: 1.4;
+    transition: color 0.3s ease;
+  }
+
+  .product-card-premium:hover .product-title-premium {
+    color: #b8952b;
+  }
+
+  .product-meta-premium {
+    color: #777;
+    font-size: 0.82rem;
+    margin-bottom: 10px;
+  }
+
+  .product-price-premium {
+    font-weight: 800;
+    color: #b8952b;
+    font-size: 1.15rem;
+    margin-bottom: 18px;
+  }
+
+  /* ====== PREMIUM BUTTONS ====== */
+  .btn-premium-gold {
+    background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+    border: none;
+    color: #111;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 10px 22px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .btn-premium-gold:hover {
+    background: linear-gradient(135deg, #ffd700 30%, #ffd700 100%);
+    color: #000;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+  }
+
+  /* ====== MOBILE OPTIMIZATIONS ====== */
+  @media (max-width: 767.98px) {
+    .product-grid-col {
+      width: 50% !important; /* Force 2-columns on mobile */
+    }
+    .product-body-premium {
+      padding: 12px;
+    }
+    .product-title-premium {
+      font-size: 0.92rem;
+      margin-bottom: 4px;
+    }
+    .product-price-premium {
+      font-size: 1rem;
+      margin-bottom: 12px;
+    }
+    .btn-premium-gold {
+      padding: 8px 10px;
+      font-size: 0.78rem;
+    }
+    .wishlist-btn-premium {
+      width: 32px;
+      height: 32px;
+      top: 10px;
+      right: 10px;
+    }
+    .badge-premium {
+      top: 10px;
+      left: 10px;
+      padding: 4px 8px;
+      font-size: 0.65rem;
+    }
+  }
+</style>
+
+<div class="all-products-wrapper">
   <div class="container">
-    <h2 class="text-center mb-5 fw-bold text-uppercase text-gold">All Products</h2>
+    
+    <!-- Title Section -->
+    <div class="text-center catalog-title-section">
+      <h2 class="catalog-title">Complete Catalog</h2>
+      <p class="catalog-subtitle">Explore all our masterfully crafted luxury jewellery designs</p>
+    </div>
+
+    <!-- Products Grid (2 columns on mobile, 4 columns on desktop) -->
     <div class="row g-4">
       {% for product in products %}
-      <div class="col-md-4 col-lg-3">
-        <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
-          <a href="{% url 'product_detail' product.id %}" class="text-decoration-none">
-            <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}">
-            <div class="card-body text-center bg-white">
-              <h6 class="fw-semibold text-dark">{{ product.name }}</h6>
-              <p class="text-muted mb-0">₹{{ product.price }}</p>
+      <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 d-flex product-grid-col">
+        <div class="product-card-premium w-100">
+          <div class="product-img-wrapper-premium">
+            <!-- Floating Wishlist Button -->
+            <button class="wishlist-btn-premium {% if product.id in user_wishlist_ids %}active{% endif %}" data-product-id="{{ product.id }}" aria-label="Add to Wishlist">
+              <i class="{% if product.id in user_wishlist_ids %}fas fa-heart text-danger{% else %}far fa-heart{% endif %}"></i>
+            </button>
+            <img src="{{ product.image_url }}" alt="{{ product.name }}">
+            
+            {% if product.badge != 'NONE' %}
+            <span class="badge-premium badge bg-{{ product.get_badge_color }}">
+              {{ product.get_badge_display }}
+            </span>
+            {% endif %}
+          </div>
+          
+          <div class="product-body-premium">
+            <h5 class="product-title-premium">{{ product.name }}</h5>
+            <p class="product-meta-premium">{{ product.stone_type }} • {{ product.color }}</p>
+            <p class="product-price-premium">₹{{ product.price }}</p>
+            <div class="mt-auto">
+              <a href="{% url 'product_detail' product.pk %}" class="btn-premium-gold text-center">View Details</a>
             </div>
-          </a>
+          </div>
         </div>
       </div>
       {% empty %}
-      <p class="text-center">No products found.</p>
+      <div class="col-12 text-center py-5 bg-white rounded-4 border border-dashed">
+        <i class="fas fa-gem fs-2 text-muted mb-3 d-block"></i>
+        <h5 class="text-muted mb-0">No masterpieces are currently listed in the catalog.</h5>
+      </div>
       {% endfor %}
     </div>
-  </div>
-</section>
 
-<style>
-.text-gold { color: #b1976b; }
-.card img { height: 240px; object-fit: cover; transition: 0.4s ease; }
-.card:hover img { transform: scale(1.05); filter: brightness(0.9); }
-</style>
+  </div>
+</div>
 {% endblock %}

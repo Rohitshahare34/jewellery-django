@@ -2,223 +2,603 @@
 {% load static %}
 
 {% block content %}
+<!-- Google Fonts (for a modern premium look) -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
-  /* ====== PROFILE PAGE STYLING ====== */
+  /* ====== DESIGN SYSTEM TOKENS & TYPOGRAPHY ====== */
   .profile-wrapper {
-    padding: 60px 0;
-    background: linear-gradient(180deg, #fffdf8 0%, #f9f7f0 100%);
-  }
-  .profile-card {
-    border: none;
-    border-radius: 20px;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  .profile-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 35px rgba(0, 0, 0, 0.12);
-  }
-  .profile-header {
-    background: linear-gradient(90deg, #d4a017, #f4c542);
-    color: white;
-    padding: 30px;
-  }
-  .profile-header i {
-    font-size: 60px;
-  }
-  .list-group-item {
-    transition: all 0.3s ease;
-  }
-  .list-group-item:hover {
-    background: #fff9e6;
-  }
-  .wishlist-card {
-    border-radius: 15px;
-    border: 1px solid #f0e6c8;
-    overflow: hidden;
-    transition: all 0.3s ease;
-  }
-  .wishlist-card:hover {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-    transform: translateY(-3px);
-  }
-  .btn-gold {
-    background: linear-gradient(90deg, #d4a017, #f4c542);
-    border: none;
-    color: white;
-    font-weight: 600;
-  }
-  .btn-gold:hover {
-    background: linear-gradient(90deg, #b88b13, #dfb529);
+    font-family: 'Outfit', 'Inter', sans-serif;
+    padding: 100px 0 80px 0;
+    background: radial-gradient(circle at 10% 20%, rgba(253, 252, 247, 1) 0%, rgba(246, 243, 233, 1) 90%);
+    min-height: 90vh;
   }
 
-  /* ===== Signature Styling ===== */
-  .crafted-signature {
-    display: inline-block;
-    font-size: 0.95rem;
-    margin-top: 25px;
+  /* ====== LUXURY GLASS CARDS ====== */
+  .profile-glass-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(212, 175, 55, 0.18);
+    border-radius: 24px;
+    box-shadow: 0 15px 35px rgba(184, 149, 43, 0.04), 0 5px 15px rgba(0, 0, 0, 0.02);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
 
-  .crafted-label {
+  .profile-glass-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(184, 149, 43, 0.08), 0 8px 20px rgba(0, 0, 0, 0.03);
+    border-color: rgba(212, 175, 55, 0.3);
+  }
+
+  /* ====== PROFILE SIDEBAR HEADER ====== */
+  .profile-header-premium {
+    background: linear-gradient(135deg, #1e1e1e 0%, #111111 100%);
+    padding: 35px 30px;
+    text-align: center;
+    border-bottom: 2px solid #d4af37;
+    position: relative;
+  }
+
+  .profile-header-premium::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #ffd700, transparent);
+  }
+
+  .avatar-ring {
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    border: 2px solid #d4af37;
+    padding: 4px;
+    margin: 0 auto 15px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  }
+
+  .avatar-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #111;
+    font-size: 2.2rem;
     font-weight: 700;
-    color: #000;
   }
 
-  .signature-name {
+  .profile-header-premium h4 {
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    font-size: 1.35rem;
+  }
+
+  .profile-header-premium p {
+    color: #d4af37;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 0;
+  }
+
+  /* ====== PREMIUM SIDEBAR NAVIGATION ====== */
+  .profile-nav-list {
+    padding: 20px;
+  }
+
+  .profile-nav-link {
+    display: flex;
+    align-items: center;
+    padding: 14px 18px;
+    color: #2c2c2c;
+    text-decoration: none;
+    border-radius: 16px;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border: 1px solid transparent;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  .profile-nav-link i {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: rgba(212, 175, 55, 0.08);
+    color: #d4af37;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 14px;
+    font-size: 1.05rem;
+    transition: all 0.3s ease;
+  }
+
+  .profile-nav-link:hover {
+    background: rgba(212, 175, 55, 0.06);
+    color: #b8952b;
+    border-color: rgba(212, 175, 55, 0.15);
+    transform: translateX(5px);
+  }
+
+  .profile-nav-link:hover i {
+    background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+    color: #111;
+    transform: scale(1.1);
+  }
+
+  .profile-nav-link.logout-btn {
+    color: #dc3545;
+  }
+
+  .profile-nav-link.logout-btn i {
+    background: rgba(220, 53, 69, 0.08);
+    color: #dc3545;
+  }
+
+  .profile-nav-link.logout-btn:hover {
+    background: rgba(220, 53, 69, 0.06);
+    color: #bd2130;
+    border-color: rgba(220, 53, 69, 0.15);
+  }
+
+  .profile-nav-link.logout-btn:hover i {
+    background: #dc3545;
+    color: #fff;
+  }
+
+  /* ====== RIGHT CONTENT PANEL ====== */
+  .profile-content-card {
+    padding: 40px;
+  }
+
+  .section-title-wrapper {
+    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+  }
+
+  .section-title {
+    font-weight: 800;
+    color: #111;
+    font-size: 1.6rem;
+  }
+
+  .section-subtitle {
+    color: #777;
+    font-size: 0.9rem;
+    margin-top: 4px;
+  }
+
+  /* ====== PROFILE DETAILS GRID ====== */
+  .profile-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .detail-box-premium {
+    background: linear-gradient(180deg, #ffffff 0%, #faf9f5 100%);
+    border-radius: 18px;
+    padding: 20px 24px;
+    border: 1px solid rgba(212, 175, 55, 0.12);
+    border-left: 4px solid #d4af37;
+    transition: all 0.3s ease;
+  }
+
+  .detail-box-premium:hover {
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.05);
+    border-color: rgba(212, 175, 55, 0.25);
+  }
+
+  .detail-label {
+    font-size: 0.8rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     font-weight: 600;
-    background: linear-gradient(90deg, #f4b942, #c471ed, #f64f59);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-style: normal;
+    margin-bottom: 6px;
   }
 
-  @media (max-width: 576px) {
-    .crafted-signature {
-      font-size: 0.85rem;
+  .detail-value {
+    font-size: 1.05rem;
+    color: #222;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  /* ====== WISHLIST PRODUCT CARDS ====== */
+  .wishlist-grid-premium {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+
+  .wishlist-card-premium {
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid rgba(212, 175, 55, 0.12);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .wishlist-card-premium:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(184, 149, 43, 0.08);
+    border-color: rgba(212, 175, 55, 0.35);
+  }
+
+  .wishlist-img-wrapper {
+    position: relative;
+    padding-bottom: 95%; /* Make aspect ratio golden */
+    overflow: hidden;
+    background: #faf9f5;
+  }
+
+  .wishlist-img-wrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+
+  .wishlist-card-premium:hover .wishlist-img-wrapper img {
+    transform: scale(1.06);
+  }
+
+  .wishlist-body-premium {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .wishlist-body-premium h6 {
+    font-weight: 700;
+    color: #111;
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .wishlist-price-premium {
+    font-weight: 800;
+    color: #b8952b;
+    font-size: 1.15rem;
+    margin-bottom: 18px;
+  }
+
+  .wishlist-actions-premium {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+  }
+
+  /* ====== PREMIUM BUTTONS ====== */
+  .btn-premium-gold {
+    background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+    border: none;
+    color: #111;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 10px 22px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15);
+  }
+
+  .btn-premium-gold:hover {
+    background: linear-gradient(135deg, #ffd700 30%, #ffd700 100%);
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+  }
+
+  .btn-premium-outline {
+    background: transparent;
+    border: 1.5px solid #d4af37;
+    color: #d4af37;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 10px 22px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-premium-outline:hover {
+    background: rgba(212, 175, 55, 0.08);
+    color: #b8952b;
+    border-color: #b8952b;
+    transform: translateY(-2px);
+  }
+
+  .btn-premium-danger {
+    background: rgba(220, 53, 69, 0.08);
+    border: 1px solid rgba(220, 53, 69, 0.2);
+    color: #dc3545;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 8px 16px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-premium-danger:hover {
+    background: #dc3545;
+    color: #fff;
+    border-color: #dc3545;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
+  }
+
+  .btn-premium-dark-outline {
+    background: transparent;
+    border: 1.5px solid #222;
+    color: #222;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 8px 16px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-premium-dark-outline:hover {
+    background: #222;
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  /* ====== MOBILE RESPONSIVENESS ====== */
+  @media (max-width: 991.98px) {
+    .profile-wrapper {
+      padding: 80px 10px 60px 10px;
+    }
+    .profile-content-card {
+      padding: 30px 20px;
+    }
+  }
+
+  @media (max-width: 767.98px) {
+    .profile-details-grid {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+    .wishlist-grid-premium {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .section-title-wrapper {
+      flex-direction: column;
+      align-items: flex-start !important;
+      gap: 15px;
+    }
+    .section-title-wrapper .d-flex {
+      width: 100%;
+    }
+    .section-title-wrapper .btn {
+      flex-grow: 1;
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    .avatar-ring {
+      width: 72px;
+      height: 72px;
+    }
+    .avatar-inner {
+      font-size: 1.8rem;
+    }
+    .profile-header-premium {
+      padding: 25px 20px;
+    }
+    .profile-nav-list {
+      padding: 15px 10px;
+    }
+    .wishlist-body-premium {
+      padding: 15px;
     }
   }
 </style>
 
-<div class="profile-wrapper container">
-  {% if user.is_authenticated %}
-  <div class="row g-4">
+<div class="profile-wrapper">
+  <div class="container">
+    {% if user.is_authenticated %}
+    <div class="row g-4">
 
-    <!-- Left Sidebar -->
-    <div class="col-md-4">
-      <div class="profile-card">
-        <div class="profile-header d-flex align-items-center">
-          <i class="bi bi-person-circle me-3"></i>
-          <div>
-            <h4 class="mb-0 fw-bold">{{ user.username }}</h4>
-            <small>Welcome to Aashutosh Jewellers</small>
+      <!-- Left Sidebar Column -->
+      <div class="col-lg-4 col-md-5">
+        <div class="profile-glass-card">
+          <!-- Profile Quick Info -->
+          <div class="profile-header-premium">
+            <div class="avatar-ring">
+              <div class="avatar-inner">
+                {{ user.username|slice:":1"|upper }}
+              </div>
+            </div>
+            <h4>{{ user.username }}</h4>
+            <p>Showroom Guest</p>
           </div>
-        </div>
-        <div class="list-group list-group-flush">
-          <a href="https://wa.me/918668865990?text=Hello%20Aashutosh%20Jewellers%2C%20I%20want%20to%20know%20about%20my%20previous%20enquiries."
-             target="_blank" class="list-group-item list-group-item-action d-flex align-items-center">
-            <i class="bi bi-clock-history fs-5 me-3 text-warning"></i>
-            Order / Enquiry History
-          </a>
-          <a href="https://wa.me/918668865990?text=Hello%20Aashutosh%20Jewellers%2C%20I%20want%20to%20check%20my%20gift%20card%20balance."
-             target="_blank" class="list-group-item list-group-item-action d-flex align-items-center">
-            <i class="bi bi-gift fs-5 me-3 text-warning"></i>
-            Gift Card Balance
-          </a>
-          <a href="https://wa.me/918668865990?text=Hello%20Aashutosh%20Jewellers%2C%20I%20want%20to%20track%20my%20order."
-             target="_blank" class="list-group-item list-group-item-action d-flex align-items-center">
-            <i class="bi bi-geo-alt fs-5 me-3 text-warning"></i>
-            Track Order
-          </a>
-          <a href="{% url 'contact' %}"
-             target="_blank" class="list-group-item list-group-item-action d-flex align-items-center">
-            <i class="bi bi-chat-dots fs-5 me-3 text-warning"></i>
-            Contact Us
-          </a>
-          <a href="{% url 'logout' %}" class="list-group-item list-group-item-action text-danger fw-semibold">
-            <i class="bi bi-box-arrow-right fs-5 me-3"></i> Log Out
-          </a>
+
+          <!-- Navigation Links -->
+          <div class="profile-nav-list">
+            <a href="https://wa.me/918668865990?text=Hello%20Aashutosh%20Jewellers%2C%20I%20want%20to%20know%20about%20my%20previous%20enquiries."
+               target="_blank" class="profile-nav-link">
+              <i class="fas fa-history"></i>
+              Enquiry History
+            </a>
+            <a href="https://wa.me/918668865990?text=Hello%20Aashutosh%20Jewellers%2C%20I%20want%20to%20check%20my%20gift%20card%20balance."
+               target="_blank" class="profile-nav-link">
+              <i class="fas fa-gift"></i>
+              Gift Card Balance
+            </a>
+            <a href="https://wa.me/918668865990?text=Hello%20Aashutosh%20Jewellers%2C%20I%20want%20to%20track%20my%20order."
+               target="_blank" class="profile-nav-link">
+              <i class="fas fa-shipping-fast"></i>
+              Track Order
+            </a>
+            <a href="{% url 'contact' %}" class="profile-nav-link">
+              <i class="fas fa-comment-alt"></i>
+              Contact Support
+            </a>
+            <a href="{% url 'logout' %}" class="profile-nav-link logout-btn">
+              <i class="fas fa-sign-out-alt"></i>
+              Log Out
+            </a>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Right Content -->
-    <div class="col-md-8">
-      <div class="card border-0 shadow-sm rounded-4 p-4">
-        <div class="d-flex align-items-center justify-content-between mb-3">
-          <div>
-            <h4 class="fw-bold mb-0">Your Profile</h4>
-            <small class="text-muted">Manage your account and wishlist</small>
+      <!-- Right Content Column -->
+      <div class="col-lg-8 col-md-7">
+        <div class="profile-glass-card profile-content-card">
+          
+          <!-- Section Title & Buttons -->
+          <div class="section-title-wrapper d-flex align-items-md-center justify-content-between flex-wrap">
+            <div>
+              <h2 class="section-title mb-0">Personal Profile</h2>
+              <p class="section-subtitle">Manage your personal credentials and items of interest.</p>
+            </div>
+            <div class="d-flex gap-2 mt-3 mt-md-0 w-100 w-md-auto">
+              <a href="{% url 'edit_profile' %}" class="btn btn-premium-outline flex-grow-1">Edit Profile</a>
+              <a href="{% url 'change_password' %}" class="btn btn-premium-gold flex-grow-1">Change Password</a>
+            </div>
           </div>
-          <div class="d-flex gap-2">
-            <a href="{% url 'edit_profile' %}" class="btn btn-outline-dark btn-sm">Edit Profile</a>
-            <a href="{% url 'change_password' %}" class="btn btn-gold btn-sm">Change Password</a>
-          </div>
-        </div>
 
-        <!-- Account Details -->
-        <div class="row mb-4">
-          <div class="col-sm-6">
-            <p class="text-muted small mb-1">Username</p>
-            <p class="fw-semibold">{{ user.username }}</p>
+          <!-- Account Details Box -->
+          <div class="profile-details-grid">
+            <div class="detail-box-premium">
+              <div class="detail-label">Username</div>
+              <div class="detail-value">{{ user.username }}</div>
+            </div>
+            <div class="detail-box-premium">
+              <div class="detail-label">Email Address</div>
+              <div class="detail-value">{{ user.email|default:"Not specified" }}</div>
+            </div>
           </div>
-          <div class="col-sm-6">
-            <p class="text-muted small mb-1">Email</p>
-            <p class="fw-semibold">{{ user.email }}</p>
-          </div>
-        </div>
 
-        <!-- Wishlist -->
-        <h5 class="fw-bold mb-3">Your Wishlist</h5>
-        <div id="wishlistContainer">
-          {% if wishlist_items %}
-            <div class="row g-3">
-              {% for item in wishlist_items %}
-                {% with product=item.product %}
-                <div class="col-md-6" id="wishlist-item-{{ product.id }}">
-                  <div class="wishlist-card card h-100">
-                    <img src="{{ product.image_url }}" class="img-fluid" alt="{{ product.name }}">
-                    <div class="card-body">
-                      <h6 class="fw-bold">{{ product.name }}</h6>
-                      <p class="text-muted mb-2">₹{{ product.price }}</p>
-                      <div class="d-flex justify-content-between">
-                        <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-dark btn-sm">View</a>
-                        <button class="btn btn-danger btn-sm remove-wishlist-btn" data-product-id="{{ product.id }}">Remove</button>
+          <!-- Wishlist Section -->
+          <h4 class="fw-bold mb-4" style="color: #111; letter-spacing: 0.5px;">
+            <i class="fas fa-heart text-danger me-2"></i>My Wishlist
+          </h4>
+          
+          <div id="wishlistContainer">
+            {% if wishlist_items %}
+              <div class="wishlist-grid-premium">
+                {% for item in wishlist_items %}
+                  {% with product=item.product %}
+                  <div class="wishlist-card-premium" id="wishlist-item-{{ product.id }}">
+                    <div class="wishlist-img-wrapper">
+                      <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                    </div>
+                    <div class="wishlist-body-premium">
+                      <h6>{{ product.name }}</h6>
+                      <p class="wishlist-price-premium">₹{{ product.price }}</p>
+                      <div class="wishlist-actions-premium">
+                        <a href="{% url 'product_detail' product.id %}" class="btn btn-premium-dark-outline flex-grow-1">View Details</a>
+                        <button class="btn btn-premium-danger remove-wishlist-btn" data-product-id="{{ product.id }}">
+                          <i class="fas fa-trash-alt"></i>
+                        </button>
                       </div>
                     </div>
                   </div>
-                </div>
-                {% endwith %}
-              {% endfor %}
-            </div>
-          {% else %}
-            <p class="text-muted">You don't have any items in your wishlist yet.</p>
-            <a href="{% url 'shop' %}" class="btn btn-gold btn-sm">Shop Now</a>
-          {% endif %}
+                  {% endwith %}
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="text-center py-4 bg-light rounded-4 border border-dashed">
+                <i class="far fa-heart fs-2 text-muted mb-2"></i>
+                <p class="text-muted mb-3">You don't have any items in your wishlist yet.</p>
+                <a href="{% url 'shop' %}" class="btn btn-premium-gold px-4">Start Shopping</a>
+              </div>
+            {% endif %}
+          </div>
+
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- CSRF Token for AJAX -->
-  <input type="hidden" id="csrfToken" value="{{ csrf_token }}">
+    <!-- CSRF Token for AJAX -->
+    <input type="hidden" id="csrfToken" value="{{ csrf_token }}">
 
-  <!-- Wishlist Remove AJAX -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      document.querySelectorAll('.remove-wishlist-btn').forEach(button => {
-        button.addEventListener('click', function () {
-          const productId = this.dataset.productId;
-          const csrfToken = document.getElementById('csrfToken').value;
+    <!-- Wishlist Remove AJAX with Smooth Animation -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.remove-wishlist-btn').forEach(button => {
+          button.addEventListener('click', function () {
+            const productId = this.dataset.productId;
+            const csrfToken = document.getElementById('csrfToken').value;
 
-          fetch(`/wishlist/toggle/${productId}/`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRFToken': csrfToken,
-              'X-Requested-With': 'XMLHttpRequest'
-            }
-          })
-          .then(res => res.json())
-          .then(data => {
-            if (data.status === 'removed') {
-              const item = document.getElementById(`wishlist-item-${productId}`);
-              if (item) item.remove();
-            }
-          })
-          .catch(() => alert('Something went wrong! Please try again.'));
+            fetch(`/wishlist/toggle/${productId}/`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest'
+              }
+            })
+            .then(res => res.json())
+            .then(data => {
+              if (data.status === 'removed') {
+                const item = document.getElementById(`wishlist-item-${productId}`);
+                if (item) {
+                  // Premium Fade-Out animation
+                  item.style.transition = 'all 0.4s ease';
+                  item.style.opacity = '0';
+                  item.style.transform = 'scale(0.9)';
+                  setTimeout(() => {
+                    item.remove();
+                    // Check if wishlist container is now empty
+                    const remainingItems = document.querySelectorAll('.wishlist-card-premium');
+                    if (remainingItems.length === 0) {
+                      document.getElementById('wishlistContainer').innerHTML = `
+                        <div class="text-center py-4 bg-light rounded-4 border border-dashed">
+                          <i class="far fa-heart fs-2 text-muted mb-2"></i>
+                          <p class="text-muted mb-3">You don't have any items in your wishlist yet.</p>
+                          <a href="{% url 'shop' %}" class="btn btn-premium-gold px-4">Start Shopping</a>
+                        </div>
+                      `;
+                    }
+                  }, 400);
+                }
+              }
+            })
+            .catch(() => alert('Something went wrong! Please try again.'));
+          });
         });
       });
-    });
-  </script>
+    </script>
 
-  {% else %}
-  <div class="text-center py-5">
-    <p class="text-muted">You are not logged in.</p>
-    <a href="{% url 'login' %}" class="btn btn-gold px-4 py-2 rounded-pill">Login</a>
+    {% else %}
+    <div class="profile-glass-card text-center py-5 px-4 max-width-md mx-auto" style="max-width: 500px;">
+      <i class="fas fa-lock fs-1 text-gold mb-3"></i>
+      <h4 class="fw-bold mb-2">Access Restrictive</h4>
+      <p class="text-muted mb-4">Please log in to view your showroom account and saved wishlist items.</p>
+      <a href="{% url 'login' %}" class="btn btn-premium-gold px-5">Log In</a>
+    </div>
+    {% endif %}
   </div>
-  {% endif %}
 </div>
-{% endblock %}
+{% endblock %}%}

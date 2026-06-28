@@ -33,8 +33,8 @@
         lastUpdatedEl = document.getElementById('last-updated');
 
         // Check if elements exist
-        if (!goldPriceEl || !silverPriceEl) {
-            console.warn('Price ticker elements not found');
+        if (!goldPriceEl) {
+            console.warn('Gold price ticker elements not found');
             return;
         }
 

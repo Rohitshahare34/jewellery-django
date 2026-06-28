@@ -50,66 +50,17 @@
                             <i class="fas fa-coins me-2"></i> Rates
                         </a>
                     </li>
-                    <!-- GOLD DROPDOWN -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="goldDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-coins me-2 text-warning"></i> Gold
+                    <!-- SHOP -->
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" href="{% url 'shop' %}">
+                            <i class="fas fa-shopping-bag me-2"></i> Shop
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="goldDropdown">
-                            <li class="dropdown-submenu">
-                                <a class="dropdown-item dropdown-toggle d-flex align-items-center" href="#">
-                                    <i class="fas fa-heart me-2"></i> Mangal sutra
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=long-mangalsutra">
-                                        <i class="fas fa-minus me-2"></i> Long Mangalsutra</a></li>
-                                    <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=short-mangalsutra">
-                                        <i class="fas fa-compress me-2"></i> Short Mangalsutra</a></li>
-                                </ul>
-                            </li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=necklace-set">
-                                <i class="fas fa-gem me-2"></i> Necklace Set</a></li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=chain">
-                                <i class="fas fa-link me-2"></i> Chain</a></li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=chain-pendant">
-                                <i class="fas fa-circle me-2"></i> Chain Pendant</a></li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=earrings">
-                                <i class="fas fa-dot-circle me-2"></i> Earrings</a></li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=ring">
-                                <i class="fas fa-ring me-2"></i> Ring</a></li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=nath">
-                                <i class="fas fa-gem me-2"></i> Nath</a></li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=womens-bracelet">
-                                <i class="fas fa-hand-paper me-2"></i> Womens Bracelet / Kada</a></li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=mens-bracelet">
-                                <i class="fas fa-hand-rock me-2"></i> Mens Bracelet / Kada</a></li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=bangles">
-                                <i class="fas fa-circle-notch me-2"></i> Bangles</a></li>
-                        </ul>
                     </li>
-                    <!-- SILVER DROPDOWN -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="silverDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-coins me-2 text-secondary"></i> Silver
+                    <!-- CATEGORIES -->
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" href="{% url 'shop_by_category' %}">
+                            <i class="fas fa-th-large me-2"></i> Categories
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="silverDropdown">
-                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=sterling-silver-mangalsutra">
-                                <i class="fas fa-heart me-2"></i> Sterling Silver Mangalsutra</a></li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=silver-chain-set">
-                                <i class="fas fa-gem me-2"></i> Silver Chain Set</a></li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=silver-bracelet">
-                                <i class="fas fa-hand-paper me-2"></i> Silver Bracelet</a></li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=silver-ring">
-                                <i class="fas fa-ring me-2"></i> Silver Ring</a></li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=silver-payal">
-                                <i class="fas fa-shoe-prints me-2"></i> Silver Payal</a></li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=silver-toering">
-                                <i class="fas fa-shoe-prints me-2"></i> Silver Toering</a></li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=silver-kada">
-                                <i class="fas fa-hand-rock me-2"></i> Silver Kada</a></li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'shop' %}?subcategory=silver-ladies-ring">
-                                <i class="fas fa-ring me-2"></i> Silver Ladies Ring</a></li>
-                        </ul>
                     </li>
                     <!-- ABOUT US DROPDOWN -->
                     <li class="nav-item dropdown">
@@ -151,13 +102,13 @@
                         <a class="nav-link d-flex align-items-center" href="https://www.instagram.com/aashutosh_jewellers_?igsh=MTA2d2NneGYzbTlheg==" target="_blank" title="Follow us on Instagram">
                             <i class="fab fa-instagram fs-5"></i>
                         </a>
-                        <!-- Cart -->
-                        <a class="nav-link d-flex align-items-center" href="{% url 'cart' %}" title="Cart">
+                        <!-- Wishlist -->
+                        <a class="nav-link d-flex align-items-center" href="{% if user.is_authenticated %}{% url 'wishlist' %}{% else %}{% url 'login' %}{% endif %}" title="Wishlist">
                             <div class="position-relative">
-                                <i class="fas fa-shopping-cart fs-5"></i>
-                                {% if cart_items_count > 0 %}
+                                <i class="fas fa-heart fs-5 text-danger"></i>
+                                {% if wishlist_count > 0 %}
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge">
-                                    {{ cart_items_count }}
+                                    {{ wishlist_count }}
                                 </span>
                                 {% endif %}
                             </div>
@@ -196,17 +147,7 @@
                             <i class="fas fa-heart fs-4 text-danger"></i>
                         </a>
 
-                        <!-- Cart (Mobile Only) -->
-                        <a class="nav-link p-0 position-relative d-flex align-items-center" href="{% url 'cart' %}" title="Cart">
-                            <div class="position-relative d-inline-block">
-                                <i class="fas fa-shopping-cart fs-4"></i>
-                                {% if cart_items_count > 0 %}
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge" style="font-size: 0.6rem; padding: 2px 4px;">
-                                    {{ cart_items_count }}
-                                </span>
-                                {% endif %}
-                            </div>
-                        </a>
+
 
                         <!-- Account Profile / Login (Mobile Only) -->
                         {% if user.is_authenticated %}
@@ -579,115 +520,24 @@
         });
     </script>
 
-    <!-- Popup Modal for Today's Rates -->
-    <div id="active-popup-flag" data-active="{% if active_popup %}true{% else %}false{% endif %}" style="display: none;"></div>
-    {% if active_popup %}
-    <div class="modal fade" id="ratesPopup" tabindex="-1" aria-labelledby="ratesPopupLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content" style="border-radius: 20px; overflow: hidden; border: 2px solid rgba(212,175,55,0.4); box-shadow: 0 15px 40px rgba(212,175,55,0.2);">
-                <!-- Header -->
-                <div class="modal-header text-white py-3 px-4" style="background: linear-gradient(135deg, #0f0f0f 0%, #2d2512 40%, #0f0f0f 100%); border-bottom: 2px solid #FFD700;">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: radial-gradient(circle at 30% 30%, #FFD700 0%, #d4af37 50%, #8B6914 100%); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">
-                            <i class="fas fa-gem fa-2x" style="color: #fff;"></i>
-                        </div>
-                        <div>
-                            <h5 class="modal-title mb-0" id="ratesPopupLabel" style="font-weight: 700; font-size: 1.3rem; text-transform: uppercase;">{{ active_popup.title }}</h5>
-                            <p class="mb-0" style="color: #ccc; font-size: 0.9rem;">{{ active_popup.updated_at|date:"d M Y" }}</p>
-                        </div>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <!-- Body -->
-                <div class="modal-body p-4" style="background: linear-gradient(180deg, #fffaf0 0%, #ffffff 40%, #fffaf0 100%);">
-                    <div class="row g-3">
-                        {% for rate in metal_rates %}
-                        <div class="col-6 col-lg-3">
-                            <div class="card border-0 shadow-sm h-100 {% if 'GOLD' in rate.metal_type or 'Gold' in rate.metal_type %}popup-rate-card-gold{% else %}popup-rate-card-silver{% endif %}" style="border-radius: 15px; background: linear-gradient(145deg, #ffffff 0%, #fffdf3 100%);">
-                                <div class="card-body p-3 text-center">
-                                    <div class="mx-auto mb-2 rounded-circle d-flex align-items-center justify-content-center {% if 'GOLD' in rate.metal_type or 'Gold' in rate.metal_type %}popup-rate-icon-gold{% else %}popup-rate-icon-silver{% endif %}" style="width: 50px; height: 50px;">
-                                        {% if 'GOLD' in rate.metal_type or 'Gold' in rate.metal_type %}
-                                        <!-- Gold Icon (Ring) -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4a3607" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                          <circle cx="12" cy="12" r="10"/>
-                                          <path d="M8 12a4 4 0 0 1 8 0"/>
-                                        </svg>
-                                        {% else %}
-                                        <!-- Silver Icon (Ring) -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                          <circle cx="12" cy="12" r="10"/>
-                                          <path d="M8 12a4 4 0 0 1 8 0"/>
-                                        </svg>
-                                        {% endif %}
-                                    </div>
-                                    <h6 class="fw-bold mb-1" style="color: #333; font-size: 1rem;">{{ rate.metal_type }}</h6>
-                                    <p class="text-muted small mb-2" style="font-size: 0.8rem;">{{ rate.purity }}% Pure</p>
-                                    <h4 class="fw-bold mb-0 {% if 'GOLD' in rate.metal_type %}popup-rate-price-gold{% else %}popup-rate-price-silver{% endif %}" style="font-size: 1.4rem;">₹{{ rate.rate_per_gram|floatformat:2 }}</h4>
-                                    <p class="text-muted small mb-0" style="font-size: 0.8rem;">per gram</p>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                <!-- Footer -->
-                <div class="modal-footer justify-content-center gap-2 p-3" style="background: linear-gradient(180deg, #fafafa 0%, #f5f5f5 100%); border-top: 1px solid rgba(212,175,55,0.2);">
-                    <a href="{% url 'live_rates' %}" class="btn" style="background: linear-gradient(135deg, #d4af37 0%, #daa520 100%); color: white; font-weight: 600; border-radius: 50px; padding: 8px 24px; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3); border: none;">
-                        <i class="fas fa-chart-line me-1"></i> View Rates
-                    </a>
-                    <a href="{% url 'rate_calculator' %}" class="btn" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; font-weight: 600; border-radius: 50px; padding: 8px 24px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2); border: none;">
-                        <i class="fas fa-calculator me-1"></i> Calculator
-                    </a>
-                    <button type="button" class="btn btn-outline-secondary" style="border-radius: 50px; padding: 8px 24px; font-weight: 500;" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-1"></i> Close
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
+
 
     <!-- WhatsApp Floating Button -->
-    <a href="https://wa.me/918668865990" 
+    {% if product %}
+    <a href="https://wa.me/918668865990?text=Hello%20Aashutosh%20Jewellers,%20I%20am%20interested%20in%20the%20product%20{{ product.name|urlencode }}." 
        target="_blank" 
        class="whatsapp-float" 
        title="Chat with us on WhatsApp">
         <i class="fab fa-whatsapp"></i>
     </a>
-
-    <!-- Chatbot Floating Button -->
-    <button class="chatbot-float" id="chatbotToggle" title="Ask Jewellery Assistant">
-        <i class="fas fa-robot"></i>
-    </button>
-
-    <!-- Chatbot Window -->
-    <div class="chatbot-window" id="chatbotWindow">
-        <div class="chatbot-header" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-bottom: 2px solid #FFD700;">
-            <div class="d-flex align-items-center gap-2">
-                <i class="fas fa-gem" style="color: #FFD700;"></i>
-                <div>
-                    <h6 class="mb-0 text-white">Aashutosh</h6>
-                    <p class="mb-0 small text-light" style="color: #aaa;">Online</p>
-                </div>
-            </div>
-            <button class="btn-close btn-close-white" id="chatbotClose"></button>
-        </div>
-        <div class="chatbot-messages" id="chatbotMessages">
-            <div class="chatbot-message bot">
-                <p class="mb-0">Namaste! 🙏 I'm Aashutosh! Welcome to Aashutosh Jewellers! How can I assist you today?</p>
-            </div>
-            <div class="chatbot-suggestions mt-2">
-                <button class="suggestion-btn" onclick="sendSuggestion('Today rates')">Today's rates</button>
-                <button class="suggestion-btn" onclick="sendSuggestion('Calculate 10g 24K Gold')">Calculate price</button>
-                <button class="suggestion-btn" onclick="sendSuggestion('24K Gold')">24K Gold</button>
-                <button class="suggestion-btn" onclick="sendSuggestion('Silver')">Silver</button>
-            </div>
-        </div>
-        <div class="chatbot-input">
-            <input type="text" id="chatbotInput" placeholder="Type your message...">
-            <button id="chatbotSend"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
+    {% else %}
+    <a href="https://wa.me/918668865990?text=Hello%20Aashutosh%20Jewellers,%20I%20would%20like%20to%20inquire%20about%20your%20jewellery%20collections." 
+       target="_blank" 
+       class="whatsapp-float" 
+       title="Chat with us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    {% endif %}
 
     <style>
         /* Navbar styles */
@@ -751,654 +601,29 @@
         }
 
         /* Chatbot styles */
-        .chatbot-float {
-            position: fixed;
-            bottom: 25px;
-            right: 20px;
-            background: linear-gradient(135deg, #d4af37 0%, #daa520 100%);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            font-size: 18px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .chatbot-float:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        .chatbot-window {
-            position: fixed;
-            bottom: 100px;
-            right: 30px;
-            width: 350px;
-            height: 450px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            z-index: 1001;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            border: 2px solid rgba(212, 175, 55, 0.3);
-        }
-
-        .chatbot-window.active {
-            display: flex;
-        }
-
-        .chatbot-header {
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .chatbot-messages {
-            flex-grow: 1;
-            padding: 15px;
-            overflow-y: auto;
-            background-color: #fafafa;
-        }
-
-        .chatbot-message {
-            padding: 10px 15px;
-            border-radius: 15px;
-            margin-bottom: 10px;
-            max-width: 80%;
-        }
-
-        .chatbot-message.bot {
-            background-color: white;
-            color: #333;
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            align-self: flex-start;
-        }
-
-        .chatbot-message.user {
-            background: linear-gradient(135deg, #d4af37 0%, #daa520 100%);
-            color: white;
-            align-self: flex-end;
-            margin-left: auto;
-        }
-
-        .chatbot-suggestions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .suggestion-btn {
-            border: 1px solid rgba(212, 175, 55, 0.5);
-            background: white;
-            color: #333;
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .suggestion-btn:hover {
-            background: linear-gradient(135deg, #d4af37 0%, #daa520 100%);
-            color: white;
-            border-color: transparent;
-        }
-
-        .chatbot-input {
-            display: flex;
-            padding: 10px;
-            border-top: 1px solid #eee;
-            background: white;
-        }
-
-        .chatbot-input input {
-            flex-grow: 1;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            padding: 10px 15px;
-            outline: none;
-        }
-
-        .chatbot-input input:focus {
-            border-color: #d4af37;
-        }
-
-        .chatbot-input button {
-            background: linear-gradient(135deg, #d4af37 0%, #daa520 100%);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            margin-left: 10px;
-            cursor: pointer;
-        }
-
         /* Mobile styles */
         @media (max-width: 768px) {
             .whatsapp-float {
-                bottom: 85px;
+                bottom: 25px;
                 right: 15px;
-                width: 42px;
-                height: 42px;
-                min-width: 42px;
+                width: 45px;
+                height: 45px;
+                min-width: 45px;
                 padding: 0;
                 border-radius: 50%;
             }
 
             .whatsapp-float i {
-                font-size: 18px;
+                font-size: 20px;
                 margin-right: 0;
             }
 
             .whatsapp-text {
                 display: none;
             }
-
-            .chatbot-float {
-                bottom: 25px;
-                right: 15px;
-                width: 42px;
-                height: 42px;
-                font-size: 16px;
-            }
-
-            .chatbot-window {
-                bottom: 80px;
-                right: 10px;
-                left: 10px;
-                width: auto;
-                height: 400px;
-            }
         }
     </style>
-    <script id="chatbot-metal-rates-data" type="application/json">
-        {{ metal_rates_json|safe|default:"[]" }}
     </script>
-
-    <script>
-        // Metal rates data for chatbot
-        const chatbotRatesElement = document.getElementById('chatbot-metal-rates-data');
-        const rawChatbotMetalRates = chatbotRatesElement ? JSON.parse(chatbotRatesElement.textContent) : [];
-        
-        // Dynamic fallback rates if database is empty
-        const fallbackRates = [
-            { metal_type: "24K Gold", metal_code: "GOLD_24K", purity: 99.9, rate_per_gram: 7250, making_charge: 150, making_type: "FIXED", gst_percentage: 3 },
-            { metal_type: "22K Gold", metal_code: "GOLD_22K", purity: 91.6, rate_per_gram: 6650, making_charge: 10, making_type: "PERCENTAGE", gst_percentage: 3 },
-            { metal_type: "18K Gold", metal_code: "GOLD_18K", purity: 75.0, rate_per_gram: 5440, making_charge: 12, making_type: "PERCENTAGE", gst_percentage: 3 },
-            { metal_type: "Silver", metal_code: "SILVER", purity: 99.9, rate_per_gram: 88, making_charge: 10, making_type: "FIXED", gst_percentage: 3 }
-        ];
-        
-        const chatbotMetalRates = (rawChatbotMetalRates && rawChatbotMetalRates.length > 0) ? rawChatbotMetalRates : fallbackRates;
-
-        // DOM Elements
-        const chatbotToggle = document.getElementById('chatbotToggle');
-        const chatbotWindow = document.getElementById('chatbotWindow');
-        const chatbotClose = document.getElementById('chatbotClose');
-        const chatbotInput = document.getElementById('chatbotInput');
-        const chatbotSend = document.getElementById('chatbotSend');
-        const chatbotMessages = document.getElementById('chatbotMessages');
-
-        // Toggle chatbot
-        chatbotToggle.addEventListener('click', function() {
-            chatbotWindow.classList.toggle('active');
-        });
-
-        chatbotClose.addEventListener('click', function() {
-            chatbotWindow.classList.remove('active');
-        });
-
-        // Send message
-        function sendMessage(message) {
-            if (!message.trim()) return;
-
-            // Add user message
-            const userMessageDiv = document.createElement('div');
-            userMessageDiv.className = 'chatbot-message user';
-            userMessageDiv.innerHTML = `<p class="mb-0">${message}</p>`;
-            chatbotMessages.appendChild(userMessageDiv);
-
-            // Scroll to bottom
-            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-
-            // Clear input
-            chatbotInput.value = '';
-
-            // Process and add bot response
-            setTimeout(() => {
-                const botResponse = generateBotResponse(message);
-                const botMessageDiv = document.createElement('div');
-                botMessageDiv.className = 'chatbot-message bot';
-                botMessageDiv.innerHTML = botResponse;
-                chatbotMessages.appendChild(botMessageDiv);
-                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-            }, 400);
-        }
-
-        // Send suggestion
-        function sendSuggestion(text) {
-            sendMessage(text);
-        }
-
-        // --- INTELLIGENT MATCHING ENGINE ---
-
-        // Levenshtein Distance logic for typo tolerance
-        function getLevenshteinDistance(a, b) {
-            if (a.length === 0) return b.length;
-            if (b.length === 0) return a.length;
-            const matrix = [];
-            for (let i = 0; i <= b.length; i++) { matrix[i] = [i]; }
-            for (let j = 0; j <= a.length; j++) { matrix[0][j] = j; }
-            for (let i = 1; i <= b.length; i++) {
-                for (let j = 1; j <= a.length; j++) {
-                    if (b.charAt(i - 1) === a.charAt(j - 1)) {
-                        matrix[i][j] = matrix[i - 1][j - 1];
-                    } else {
-                        matrix[i][j] = Math.min(
-                            matrix[i - 1][j - 1] + 1, // substitution
-                            matrix[i][j - 1] + 1,     // insertion
-                            matrix[i - 1][j] + 1      // deletion
-                        );
-                    }
-                }
-            }
-            return matrix[b.length][a.length];
-        }
-
-        // Multilingual Vocabulary Dictionary
-        const dictionary = {
-            gold: ['gold', 'golld', 'goldd', 'sona', 'sone', 'sounya', 'soyna', 'sonya', 'सोना', 'सोने', 'सोन्याचा'],
-            silver: ['silver', 'silvr', 'chandi', 'chandee', 'chandicha', 'चांदी', 'चांदीचा'],
-            rate: ['rate', 'price', 'bhav', 'dar', 'prays', 'rat', 'rates', 'prices', 'bhavv', 'darr', 'भाव', 'दर', 'किंमत'],
-            calculate: ['calculate', 'calclate', 'kitna', 'kiti', 'hisab', 'calculatee', 'कितना', 'किती', 'मोजा', 'हिसाब', 'कॅल्क्युलेटर'],
-            location: ['location', 'address', 'adrs', 'kaha', 'kuthe', 'patta', 'akola', 'keshav', 'nagar', 'पत्ता', 'कुठे', 'कहाँ', 'पत्ता'],
-            timing: ['time', 'timing', 'timings', 'open', 'close', 'hour', 'hours', 'kab', 'kiti', 'vajta', 'uphadte', 'uphad', 'uphd', 'वेळ', 'कधी', 'वेळा', 'उघडते', 'बंद'],
-            purity: ['purity', 'pure', 'purety', 'hallmark', 'huid', 'original', 'sacchai', 'real', 'original', 'हॉलमार्क', 'शुद्धता', 'खरे'],
-            making: ['making', 'charge', 'charges', 'mking', 'ghadavval', 'ghadavai', 'ghadavni', 'mkg', 'charges', 'घडणावळ', 'घडणावळी', 'मेकिंग'],
-            custom: ['custom', 'design', 'order', 'modify', 'banav', 'banvayche', 'बनवायचे', 'ऑर्डर', 'डिझाईन'],
-            payment: ['payment', 'pay', 'upi', 'gpay', 'phonepe', 'card', 'cash', 'emi', 'गुगलपे', 'पैसे'],
-            return_policy: ['return', 'exchange', 'replace', 'refund', 'rtrn', 'exchng', 'परत', 'बदलून', 'एक्सचेंज'],
-            contact: ['contact', 'phone', 'mobile', 'number', 'call', 'phn', 'num', 'फोन', 'संपर्क', 'नंबर'],
-            products: ['products', 'jewellery', 'ring', 'necklace', 'mangalsutra', 'bangles', 'earrings', 'payal', 'jewelry', 'rings', 'daagine', 'angthi', 'haar', 'mangalsutraa', 'दागिने', 'अंगठी', 'हार', 'मंगळसूत्र', 'बांगड्या'],
-            help: ['help', 'madad', 'assistant', 'sahyata', 'मदत', 'सहायता'],
-            hello: ['hello', 'hi', 'hey', 'namaste', 'namaskar', 'ram', 'kaise', 'kasa', 'kase', 'नमस्ते', 'नमस्कार', 'राम']
-        };
-
-        // Fuzzy matches a word token against synonyms
-        function findMatchedKeyword(w) {
-            w = w.toLowerCase().trim();
-            if (w.length < 2) return null;
-            
-            for (let key in dictionary) {
-                for (let word of dictionary[key]) {
-                    const cleanWord = word.toLowerCase();
-                    // Direct match or partial string matching
-                    if (w === cleanWord || w.includes(cleanWord) || cleanWord.includes(w)) {
-                        return key;
-                    }
-                    // Levenshtein typo matching (only for words >= 3 chars)
-                    if (w.length >= 3 && cleanWord.length >= 3) {
-                        const dist = getLevenshteinDistance(w, cleanWord);
-                        const maxAllowedDist = cleanWord.length <= 4 ? 1 : 2;
-                        if (dist <= maxAllowedDist) {
-                            return key;
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
-        // Auto-detect layout language (en, hi, mr)
-        function detectLanguage(text) {
-            const devanagariPattern = /[\u0900-\u097F]/;
-            const isDevanagari = devanagariPattern.test(text);
-            
-            // Devanagari quick classification
-            if (isDevanagari) {
-                const mrChars = ['ळ', 'आहे', 'कुठे', 'मदत', 'दर', 'सोने', 'घडणावळ'];
-                if (mrChars.some(char => text.includes(char))) {
-                    return 'mr';
-                }
-                const hiChars = ['है', 'कहाँ', 'मदद', 'भाव', 'सोना', 'दुकान'];
-                if (hiChars.some(char => text.includes(char))) {
-                    return 'hi';
-                }
-            }
-            
-            // Latin-Hinglish/Marathish quick classification
-            const marathiLatin = ['ahe', 'aahe', 'kuthe', 'kasa', 'kase', 'kashale', 'kiti', 'mahit', 'sone', 'chandi', 'dar', 'ghadavval', 'todar', 'patlya'];
-            const hindiLatin = ['hai', 'kaha', 'kahan', 'kaise', 'kitna', 'dukan', 'dookan', 'kab', 'sona', 'bhav', 'madad'];
-            
-            let mrScore = 0;
-            let hiScore = 0;
-            const words = text.toLowerCase().split(/\s+/);
-            
-            words.forEach(w => {
-                if (marathiLatin.some(kw => w === kw || w.includes(kw))) mrScore += 2;
-                if (hindiLatin.some(kw => w === kw || w.includes(kw))) hiScore += 2;
-            });
-            
-            if (mrScore > hiScore) return 'mr';
-            if (hiScore > mrScore) return 'hi';
-            
-            return 'en';
-        }
-
-        // Generate final bot response
-        function generateBotResponse(input) {
-            const detectedLang = detectLanguage(input);
-            const lowerInput = input.toLowerCase();
-            
-            // Clean input punctuation
-            const cleanInput = lowerInput.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "");
-            const tokens = cleanInput.split(/\s+/).filter(Boolean);
-            
-            // Build key matches
-            const activeKeys = new Set();
-            tokens.forEach(token => {
-                const key = findMatchedKeyword(token);
-                if (key) {
-                    activeKeys.add(key);
-                }
-            });
-
-            // Fallback: direct substring checks
-            for (let key in dictionary) {
-                dictionary[key].forEach(syn => {
-                    if (lowerInput.includes(syn.toLowerCase())) {
-                        activeKeys.add(key);
-                    }
-                });
-            }
-
-            // Price formatting helper
-            function formatPrice(price) {
-                return parseFloat(price).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            }
-            
-            // Weight detail extraction helper
-            function extractWeightDetails(text) {
-                const numMatch = text.match(/(\d+(\.\d+)?)/);
-                if (!numMatch) return null;
-                const weight = parseFloat(numMatch[1]);
-                
-                let unit = 'gram';
-                if (text.includes('tola') || text.includes('tole') || text.includes('tolya') || text.includes('तोळा') || text.includes('तोल्या') || text.includes('तोला')) {
-                    unit = 'tola';
-                }
-                return { weight, unit };
-            }
-
-            // Custom responses database
-            const responses = {
-                hello: {
-                    en: `<p class="mb-0">Hello! 👋 I am Aashutosh, your virtual jewellery assistant. How can I help you today? You can ask me about:
-                        <ul class="mb-0 mt-1">
-                            <li>Today's rates 💎</li>
-                            <li>Calculate prices (e.g., "10g gold price") 🧮</li>
-                            <li>Address & location 📍</li>
-                            <li>Store timings ⏰</li>
-                        </ul></p>`,
-                    hi: `<p class="mb-0">नमस्ते! 👋 मैं आशुतोष हूँ, आपका ज्वेलरी असिस्टेंट। आज मैं आपकी क्या मदद कर सकता हूँ? आप मुझसे पूछ सकते हैं:
-                        <ul class="mb-0 mt-1">
-                            <li>आज के लाइव सोने-चांदी के भाव 💎</li>
-                            <li>कीमत का हिसाब (जैसे: "10 ग्राम सोने का भाव") 🧮</li>
-                            <li>दुकान का पता 📍</li>
-                            <li>दुकान का समय ⏰</li>
-                        </ul></p>`,
-                    mr: `<p class="mb-0">नमस्कार! 👋 मी आशुतोष आहे, आपला सुवर्ण सहाय्यक. आज मी तुम्हाला काय मदत करू शकतो? तुम्ही मला खालील गोष्टींबद्दल विचारू शकता:
-                        <ul class="mb-0 mt-1">
-                            <li>आजचे थेट सोने-चांदीचे दर 💎</li>
-                            <li>किंमत मोजणे (उदा., "10 ग्रॅम सोन्याची किंमत") 🧮</li>
-                            <li>दुकानाचा पत्ता 📍</li>
-                            <li>दुकानाच्या वेळा ⏰</li>
-                        </ul></p>`
-                },
-                location: {
-                    en: `<p class="mb-0">📍 <strong>Aashutosh Jewellers</strong> is located at:<br>Keshav Nagar, Krishna Apartment, Ring Road, Akola, Maharashtra.<br><a href="https://maps.google.com/?q=Keshav+Nagar,+Krishna+Apartment,+Ring+Road,+Akola" target="_blank" class="fw-semibold text-gold"><i class="fas fa-map-marked-alt me-1"></i>Open in Google Maps →</a></p>`,
-                    hi: `<p class="mb-0">📍 <strong>आशुतोष ज्वेलर्स</strong> का पता है:<br>केशव नगर, कृष्णा अपार्टमेंट, रिंग रोड, अकोला, महाराष्ट्र।<br><a href="https://maps.google.com/?q=Keshav+Nagar,+Krishna+Apartment,+Ring+Road,+Akola" target="_blank" class="fw-semibold text-gold"><i class="fas fa-map-marked-alt me-1"></i>गूगल मैप्स पर देखें →</a></p>`,
-                    mr: `<p class="mb-0">📍 <strong>आशुतोष ज्वेलर्स</strong> पत्ता:<br>केशव नगर, कृष्णा अपार्टमेंट, रिंग रोड, अकोला, महाराष्ट्र.<br><a href="https://maps.google.com/?q=Keshav+Nagar,+Krishna+Apartment,+Ring+Road,+Akola" target="_blank" class="fw-semibold text-gold"><i class="fas fa-map-marked-alt me-1"></i>गूगल मॅप्सवर पहा →</a></p>`
-                },
-                timing: {
-                    en: `<p class="mb-0">⏰ <strong>Store Timings:</strong><br>Monday to Saturday: 10:30 AM to 8:30 PM<br>Sunday: Closed</p>`,
-                    hi: `<p class="mb-0">⏰ <strong>दुकान का समय:</strong><br>सोमवार से शनिवार: सुबह 10:30 बजे से रात 8:30 बजे तक<br>रविवार: बंद रहता है</p>`,
-                    mr: `<p class="mb-0">⏰ <strong>दुकानाच्या वेळा:</strong><br>सोमवार ते शनिवार: सकाळी १०:३० ते रात्री ८:३०<br>रविवार: बंद असते</p>`
-                },
-                purity: {
-                    en: `<p class="mb-0">🛡️ <strong>Purity & Certification:</strong><br>All our gold jewellery is 100% BIS Hallmark certified with unique HUID identification. We guarantee absolute purity and provide lifetime exchange/buyback guarantees.</p>`,
-                    hi: `<p class="mb-0">🛡️ <strong>शुद्धता और हॉलमार्क:</strong><br>हमारी सभी सोने की ज्वेलरी 100% BIS हॉलमार्क और HUID प्रमाणित है। हम शुद्धता की पूरी गारंटी देते हैं और लाइफटाइम एक्सचेंज/बायबैक पॉलिसी प्रदान करते हैं।</p>`,
-                    mr: `<p class="mb-0">🛡️ <strong>शुद्धता आणि हॉलमार्क:</strong><br>आमचे सर्व सोन्याचे दागिने १००% BIS हॉलमार्क आणि HUID प्रमाणित आहेत. आम्ही शुद्धतेची पूर्ण शाश्वती देतो आणि लाइफटाइम एक्सचेंज/बायबॅक हमी देतो.</p>`
-                },
-                making: {
-                    en: `<p class="mb-0">🔨 <strong>Making Charges:</strong><br>Our making charges vary by design, generally ranging from 8% to 15% depending on the complexity of the craftsmanship. Please check the Today's Rates page or consult our staff for details.</p>`,
-                    hi: `<p class="mb-0">🔨 <strong>मेकिंग चार्ज (घडाई):</strong><br>हमारे मेकिंग चार्ज डिजाइन के अनुसार अलग-अलग होते हैं, सामान्यतः 8% से 15% के बीच होते हैं। सटीक जानकारी के लिए लाइव रेट्स पेज देखें या संपर्क करें।</p>`,
-                    mr: `<p class="mb-0">🔨 <strong>घडणावळ (मेकिंग चार्जेस):</strong><br>आमचे घडणावळ डिझाइनवर अवलंबून असते, साधारणपणे ८% ते १५% पर्यंत असते. अधिक माहितीसाठी थेट लाईव्ह रेट्स पेज पहा.</p>`
-                },
-                custom: {
-                    en: `<p class="mb-0">✨ <strong>Custom Orders:</strong><br>Yes! We specialize in custom-designed jewellery tailored to your exact specifications. Share your reference design on WhatsApp or visit our store to consult with our master designers.</p>`,
-                    hi: `<p class="mb-0">✨ <strong>कस्टमाइज्ड ऑर्डर:</strong><br>हाँ! हम आपकी पसंद के अनुसार कस्टमाइज्ड ज्वेलरी बनाने में सक्षम हैं। आप अपना पसंदीदा डिज़ाइन व्हाट्सएप पर साझा कर सकते हैं या दुकान पर संपर्क कर सकते हैं।</p>`,
-                    mr: `<p class="mb-0">✨ <strong>कस्टमाइज्ड ऑर्डर:</strong><br>होय! आम्ही तुमच्या आवडीनुसार कस्टमाइज्ड दागिने बनवून देतो. तुमचे डिझाइन आम्हाला व्हॉट्सॲपवर पाठवा किंवा दुकानाला भेट द्या.</p>`
-                },
-                payment: {
-                    en: `<p class="mb-0">💳 <strong>Payment Options & Schemes:</strong><br>We accept UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards, Cash, and Online Transfers. We also offer monthly gold investment savings schemes.</p>`,
-                    hi: `<p class="mb-0">💳 <strong>भुगतान विकल्प और योजनाएं:</strong><br>हम UPI (GPay, PhonePe, Paytm), कार्ड्स, कैश और बैंक ट्रांसफर स्वीकार करते हैं। हम मासिक स्वर्ण बचत योजना भी प्रदान करते हैं।</p>`,
-                    mr: `<p class="mb-0">💳 <strong>पेमेंट पर्याय आणि योजना:</strong><br>आम्ही UPI (GPay, PhonePe, Paytm), कार्ड्स, कॅश आणि बँक ट्रान्सफर स्वीकारतो. आमच्याकडे मासिक सुवर्ण बचत योजना देखील उपलब्ध आहेत.</p>`
-                },
-                return_policy: {
-                    en: `<p class="mb-0">🔄 <strong>Exchange & Return Policy:</strong><br>We offer a transparent lifetime exchange and buyback policy based on the current market value of gold/silver (excluding making charges and GST).</p>`,
-                    hi: `<p class="mb-0">🔄 <strong>एक्सचेंज और रिटर्न पॉलिसी:</strong><br>हम सोने/चांदी के वर्तमान बाजार मूल्य (मेकिंग चार्ज और जीएसटी को छोड़कर) के आधार पर लाइफटाइम एक्सचेंज और बायबैक पॉलिसी प्रदान करते हैं।</p>`,
-                    mr: `<p class="mb-0">🔄 <strong>एक्सचेंज आणि रिटर्न पॉलिसी:</strong><br>आम्ही सध्याच्या सोने/चांदीच्या बाजार भावानुसार (मेकिंग आणि जीएसटी वगळून) लाइफटाइम एक्सचेंज आणि बायबॅक गॅरंटी देतो.</p>`
-                },
-                contact: {
-                    en: `<p class="mb-0">📞 <strong>Contact Us:</strong><br>Call: +91 86688 65990 | +91 70588 65990<br>Email: aashutoshjeweller@gmail.com<br><a href="https://wa.me/918668865990" target="_blank" class="fw-semibold text-gold"><i class="fab fa-whatsapp me-1"></i>Chat on WhatsApp →</a></p>`,
-                    hi: `<p class="mb-0">📞 <strong>संपर्क करें:</strong><br>कॉल: +91 86688 65990 | +91 70588 65990<br>ईमेल: aashutoshjeweller@gmail.com<br><a href="https://wa.me/918668865990" target="_blank" class="fw-semibold text-gold"><i class="fab fa-whatsapp me-1"></i>व्हाट्सएप पर चैट करें →</a></p>`,
-                    mr: `<p class="mb-0">📞 <strong>आमच्याशी संपर्क साधा:</strong><br>कॉल: +91 86688 65990 | +91 70588 65990<br>ईमेल: aashutoshjeweller@gmail.com<br><a href="https://wa.me/918668865990" target="_blank" class="fw-semibold text-gold"><i class="fab fa-whatsapp me-1"></i>व्हॉट्सॲपवर चॅट करा →</a></p>`
-                },
-                products: {
-                    en: `<p class="mb-0">💍 <strong>Our Collections:</strong><br>We offer Mangalsutras, Necklaces, Rings, Earrings, Bangles, Bracelets, Silver Payal, and Toerings. <a href="/shop/" class="fw-semibold text-gold"><i class="fas fa-shopping-bag me-1"></i>Browse Shop →</a></p>`,
-                    hi: `<p class="mb-0">💍 <strong>हमारी कलेक्शन:</strong><br>हम मंगलसूत्र, हार, अंगूठी, झुमके, चूड़ियाँ, ब्रेसलेट, पायल आदि प्रदान करते हैं। <a href="/shop/" class="fw-semibold text-gold"><i class="fas fa-shopping-bag me-1"></i>दुकान देखें →</a></p>`,
-                    mr: `<p class="mb-0">💍 <strong>आमचे कलेक्शन:</strong><br>आमच्याकडे मंगळसूत्र, नेकलेस, अंगठी, कानातले, बांगड्या, ब्रेसलेट, पैंजण इ. उपलब्ध आहेत. <a href="/shop/" class="fw-semibold text-gold"><i class="fas fa-shopping-bag me-1"></i>दुकान पहा →</a></p>`
-                },
-                help: {
-                    en: `<p class="mb-0">ℹ️ <strong>I can help you with:</strong>
-                        <ul class="mb-0 mt-1">
-                            <li>Live rates (type "rates" or "bhav")</li>
-                            <li>Dynamic price calculator (type "calculate 10g gold")</li>
-                            <li>Address & Location (type "address" or "patta")</li>
-                            <li>Store timings (type "timings" or "open")</li>
-                            <li>BIS Hallmark Purity (type "hallmark" or "purity")</li>
-                            <li>Exchange/Return Policies (type "return" or "exchange")</li>
-                        </ul></p>`,
-                    hi: `<p class="mb-0">ℹ️ <strong>मैं आपकी इन विषयों में सहायता कर सकता हूँ:</strong>
-                        <ul class="mb-0 mt-1">
-                            <li>आज के भाव (टाइप करें: "rates" या "bhav")</li>
-                            <li>कीमत कैलकुलेटर (जैसे: "calculate 10g gold")</li>
-                            <li>दुकान का पता (टाइप करें: "address" या "patta")</li>
-                            <li>दुकान का समय (टाइप करें: "timings" या "open")</li>
-                            <li>हॉलमार्क और शुद्धता (टाइप करें: "hallmark" या "purity")</li>
-                            <li>रिटर्न पॉलिसी (टाइप करें: "return" या "exchange")</li>
-                        </ul></p>`,
-                    mr: `<p class="mb-0">ℹ️ <strong>मी तुम्हाला खालील गोष्टींमध्ये मदत करू शकतो:</strong>
-                        <ul class="mb-0 mt-1">
-                            <li>थेट दर (टाइप करा: "rates" किंवा "dar")</li>
-                            <li>किंमत कॅल्क्युलेटर (उदा: "calculate 10g gold")</li>
-                            <li>दुकानाचा पत्ता (टाइप करा: "address" किंवा "patta")</li>
-                            <li>दुकानाच्या वेळा (टाइप करा: "timings" किंवा "open")</li>
-                            <li>हॉलमार्क व शुद्धता (टाइप करा: "hallmark" किंवा "purity")</li>
-                            <li>रिटर्न आणि एक्सचेंज पॉलिसी (टाइप करा: "return" किंवा "exchange")</li>
-                        </ul></p>`
-                }
-            };
-
-            // Dynamic Price Calculation Check
-            const weightDetails = extractWeightDetails(lowerInput);
-            if (weightDetails || activeKeys.has('calculate')) {
-                let weight = weightDetails ? weightDetails.weight : 1;
-                let unit = weightDetails ? weightDetails.unit : 'gram';
-                
-                // convert tola to grams (1 tola = 10 grams)
-                let weightInGrams = weight;
-                if (unit === 'tola') {
-                    weightInGrams = weight * 10;
-                }
-
-                // Identify metal
-                let selectedRate = null;
-                let isSilver = activeKeys.has('silver') || lowerInput.includes('chandi') || lowerInput.includes('चांदी');
-                let isGold = activeKeys.has('gold') || lowerInput.includes('sona') || lowerInput.includes('soyna') || lowerInput.includes('सोना') || lowerInput.includes('सोने');
-                
-                if (isSilver) {
-                    selectedRate = chatbotMetalRates.find(r => r.metal_code === 'SILVER' || r.metal_type.toUpperCase().includes('SILVER'));
-                } else if (isGold) {
-                    selectedRate = chatbotMetalRates.find(r => r.metal_code === 'GOLD_22K') || chatbotMetalRates.find(r => r.metal_code === 'GOLD_24K') || chatbotMetalRates.find(r => r.metal_type.toUpperCase().includes('GOLD'));
-                } else {
-                    selectedRate = chatbotMetalRates.find(r => r.metal_code === 'GOLD_22K') || chatbotMetalRates.find(r => r.metal_code === 'GOLD_24K') || chatbotMetalRates[0];
-                }
-
-                if (selectedRate) {
-                    const basePrice = selectedRate.rate_per_gram * weightInGrams;
-                    const makingAmount = selectedRate.making_type === 'PERCENTAGE' 
-                        ? basePrice * (selectedRate.making_charge / 100)
-                        : selectedRate.making_charge * weightInGrams;
-                    const subtotal = basePrice + makingAmount;
-                    const gstAmount = subtotal * (selectedRate.gst_percentage / 100);
-                    const finalPrice = subtotal + gstAmount;
-
-                    if (detectedLang === 'mr') {
-                        return `
-                            <p class="mb-1">मोजणी खालीलप्रमाणे आहे (${weight} ${unit === 'tola' ? 'तोळा' : 'ग्राम'} ${selectedRate.metal_type} साठी): 🧮</p>
-                            <ul class="mb-0">
-                                <li>मूळ किंमत: ₹${formatPrice(basePrice)}</li>
-                                <li>घडणावळ (मेकिंग): ₹${formatPrice(makingAmount)}</li>
-                                <li>जीएसटी (${selectedRate.gst_percentage}%): ₹${formatPrice(gstAmount)}</li>
-                                <li><strong>एकूण अंदाजे किंमत: ₹${formatPrice(finalPrice)}</strong></li>
-                            </ul>
-                            <p class="mb-0 mt-2"><a href="/rate-calculator/" class="text-gold fw-semibold">संपूर्ण कॅल्क्युलेटर वापरा →</a></p>
-                        `;
-                    } else if (detectedLang === 'hi') {
-                        return `
-                            <p class="mb-1">हिसाब नीचे दिया गया है (${weight} ${unit === 'tola' ? 'तोला' : 'ग्राम'} ${selectedRate.metal_type} के लिए): 🧮</p>
-                            <ul class="mb-0">
-                                <li>मूल कीमत: ₹${formatPrice(basePrice)}</li>
-                                <li>मेकिंग चार्ज (घडाई): ₹${formatPrice(makingAmount)}</li>
-                                <li>जीएसटी (${selectedRate.gst_percentage}%): ₹${formatPrice(gstAmount)}</li>
-                                <li><strong>कुल अनुमानित मूल्य: ₹${formatPrice(finalPrice)}</strong></li>
-                            </ul>
-                            <p class="mb-0 mt-2"><a href="/rate-calculator/" class="text-gold fw-semibold">पूरा कैलकुलेटर उपयोग करें →</a></p>
-                        `;
-                    } else {
-                        return `
-                            <p class="mb-1">Calculation results for ${weight} ${unit}(s) of ${selectedRate.metal_type}: 🧮</p>
-                            <ul class="mb-0">
-                                <li>Base Price: ₹${formatPrice(basePrice)}</li>
-                                <li>Making Charges: ₹${formatPrice(makingAmount)}</li>
-                                <li>GST (${selectedRate.gst_percentage}%): ₹${formatPrice(gstAmount)}</li>
-                                <li><strong>Total Estimated Price: ₹${formatPrice(finalPrice)}</strong></li>
-                            </ul>
-                            <p class="mb-0 mt-2"><a href="/rate-calculator/" class="text-gold fw-semibold">Use full calculator →</a></p>
-                        `;
-                    }
-                }
-            }
-
-            // Rates Query Check
-            if (activeKeys.has('rate')) {
-                let ratesHtml = '';
-                if (detectedLang === 'mr') {
-                    ratesHtml = '<p class="mb-1">आजचे थेट दर खालीलप्रमाणे आहेत: 💎</p><ul class="mb-0">';
-                    chatbotMetalRates.forEach(rate => {
-                        ratesHtml += `<li><strong>${rate.metal_type}:</strong> ₹${formatPrice(rate.rate_per_gram)}/g (शुद्धता: ${rate.purity}%)</li>`;
-                    });
-                    ratesHtml += '</ul><p class="mb-0 mt-2"><a href="/live-rates/" class="text-gold fw-semibold">थेट दरांचे संपूर्ण विवरण पहा →</a></p>';
-                } else if (detectedLang === 'hi') {
-                    ratesHtml = '<p class="mb-1">आज के लाइव सोने-चांदी के भाव इस प्रकार हैं: 💎</p><ul class="mb-0">';
-                    chatbotMetalRates.forEach(rate => {
-                        ratesHtml += `<li><strong>${rate.metal_type}:</strong> ₹${formatPrice(rate.rate_per_gram)}/g (शुद्धता: ${rate.purity}%)</li>`;
-                    });
-                    ratesHtml += '</ul><p class="mb-0 mt-2"><a href="/live-rates/" class="text-gold fw-semibold">सभी रेट्स विस्तार से देखें →</a></p>';
-                } else {
-                    ratesHtml = '<p class="mb-1">Here are today\'s rates: 💎</p><ul class="mb-0">';
-                    chatbotMetalRates.forEach(rate => {
-                        ratesHtml += `<li><strong>${rate.metal_type}:</strong> ₹${formatPrice(rate.rate_per_gram)}/g (purity: ${rate.purity}%)</li>`;
-                    });
-                    ratesHtml += '</ul><p class="mb-0 mt-2"><a href="/live-rates/" class="text-gold fw-semibold">View full rates breakdown →</a></p>';
-                }
-                return ratesHtml;
-            }
-
-            // Specific Gold query
-            if (activeKeys.has('gold') && !activeKeys.has('silver')) {
-                let goldRates = chatbotMetalRates.filter(r => r.metal_code.includes('GOLD') || r.metal_type.toUpperCase().includes('GOLD'));
-                if (goldRates.length > 0) {
-                    let html = '';
-                    if (detectedLang === 'mr') {
-                        html = '<p class="mb-1">आजचे सोन्याचे थेट दर: ⚜️</p><ul class="mb-0">';
-                        goldRates.forEach(r => { html += `<li><strong>${r.metal_type}:</strong> ₹${formatPrice(r.rate_per_gram)}/g</li>`; });
-                        html += '</ul>';
-                    } else if (detectedLang === 'hi') {
-                        html = '<p class="mb-1">आज के सोने के लाइव भाव: ⚜️</p><ul class="mb-0">';
-                        goldRates.forEach(r => { html += `<li><strong>${r.metal_type}:</strong> ₹${formatPrice(r.rate_per_gram)}/g</li>`; });
-                        html += '</ul>';
-                    } else {
-                        html = '<p class="mb-1">Today\'s Gold Rates: ⚜️</p><ul class="mb-0">';
-                        goldRates.forEach(r => { html += `<li><strong>${r.metal_type}:</strong> ₹${formatPrice(r.rate_per_gram)}/g</li>`; });
-                        html += '</ul>';
-                    }
-                    return html;
-                }
-            }
-
-            // Specific Silver query
-            if (activeKeys.has('silver') && !activeKeys.has('gold')) {
-                let silverRate = chatbotMetalRates.find(r => r.metal_code === 'SILVER' || r.metal_type.toUpperCase().includes('SILVER'));
-                if (silverRate) {
-                    if (detectedLang === 'mr') {
-                        return `<p class="mb-0">आज चांदीचा दर: 🥈 <strong>₹${formatPrice(silverRate.rate_per_gram)}/g</strong> (प्युरिटी ${silverRate.purity}%) आहे.</p>`;
-                    } else if (detectedLang === 'hi') {
-                        return `<p class="mb-0">आज चांदी का भाव: 🥈 <strong>₹${formatPrice(silverRate.rate_per_gram)}/g</strong> (प्योरिटी ${silverRate.purity}%) है।</p>`;
-                    } else {
-                        return `<p class="mb-0">Today's Silver price: 🥈 <strong>₹${formatPrice(silverRate.rate_per_gram)}/g</strong> (${silverRate.purity}% purity).</p>`;
-                    }
-                }
-            }
-
-            // Match active keys in order of precedence
-            for (let key of ['location', 'timing', 'contact', 'purity', 'making', 'custom', 'payment', 'return_policy', 'products', 'help', 'hello']) {
-                if (activeKeys.has(key)) {
-                    return responses[key][detectedLang];
-                }
-            }
-
-            // Default fallback response if no match
-            const fallbackResponses = {
-                en: `<p class="mb-0">I couldn't quite find details matching that. 📱 Please feel free to ask about rates, calculator, store address, or click the WhatsApp button to chat with us directly!</p>`,
-                hi: `<p class="mb-0">क्षमा करें, मुझे इस बारे में सटीक जानकारी नहीं मिल पाई। 📱 कृपया रेट्स, कैलकुलेटर या दुकान के पते के बारे में पूछें, अथवा हमसे व्हाट्सएप पर संपर्क करें!</p>`,
-                mr: `<p class="mb-0">मला याबद्दल पुरेशी माहिती मिळाली नाही. 📱 कृपया सोने-चांदीचे दर, कॅल्क्युलेटर किंवा दुकानाच्या पत्त्याबद्दल विचारा, किंवा आम्हाला व्हॉट्सॲपवर संपर्क करा!</p>`
-            };
-            return fallbackResponses[detectedLang];
-        }
-
-        // Event listeners for chatbot
-        chatbotSend.addEventListener('click', function() {
-            sendMessage(chatbotInput.value);
-        });
-
-        chatbotInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage(chatbotInput.value);
-            }
-        });
-    </script>
-
-
 
     {% block extra_scripts %}{% endblock %}
 

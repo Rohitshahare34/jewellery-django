@@ -2,33 +2,204 @@
 {% load static %}
 
 {% block content %}
-<section class="py-5 bg-light">
+<!-- Google Fonts (for a modern premium look) -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* ====== SHOP BY CATEGORY SYSTEM ====== */
+  .category-showcase-wrapper {
+    font-family: 'Outfit', 'Inter', sans-serif;
+    padding: 80px 0;
+    background: radial-gradient(circle at 50% 50%, rgba(254, 253, 249, 1) 0%, rgba(246, 243, 233, 1) 100%);
+    min-height: 90vh;
+  }
+
+  .showcase-title-section {
+    margin-bottom: 50px;
+  }
+
+  .showcase-title {
+    font-weight: 800;
+    color: #111;
+    font-size: 2.2rem;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 15px;
+  }
+
+  .showcase-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #d4af37, transparent);
+  }
+
+  .showcase-subtitle {
+    color: #666;
+    font-size: 1.05rem;
+    margin-top: 12px;
+  }
+
+  /* ====== LUXURY CATEGORY CARD ====== */
+  .category-card-premium {
+    background: #fff;
+    border-radius: 24px;
+    border: 1px solid rgba(212, 175, 55, 0.12);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 0 10px 30px rgba(184, 149, 43, 0.03);
+  }
+
+  .category-card-premium:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(184, 149, 43, 0.08);
+    border-color: rgba(212, 175, 55, 0.35);
+  }
+
+  .category-img-wrapper-premium {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+    background: #faf9f5;
+  }
+
+  .category-img-wrapper-premium img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+
+  .category-card-premium:hover .category-img-wrapper-premium img {
+    transform: scale(1.07);
+  }
+
+  .category-card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(17, 17, 17, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 2;
+  }
+
+  .category-card-premium:hover .category-card-overlay {
+    opacity: 1;
+  }
+
+  .overlay-btn-premium {
+    background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+    border: none;
+    color: #111;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 10px 22px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    transform: translateY(15px);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+
+  .category-card-premium:hover .overlay-btn-premium {
+    transform: translateY(0);
+  }
+
+  .category-body-premium {
+    padding: 24px;
+    text-align: center;
+    background: #fff;
+    border-top: 1.5px solid rgba(212, 175, 55, 0.12);
+  }
+
+  .category-title-premium {
+    font-weight: 700;
+    color: #111;
+    font-size: 1.25rem;
+    margin-bottom: 4px;
+    transition: color 0.3s ease;
+  }
+
+  .category-card-premium:hover .category-title-premium {
+    color: #b8952b;
+  }
+
+  .category-subtitle-premium {
+    color: #777;
+    font-size: 0.85rem;
+    margin-bottom: 0;
+  }
+
+  /* ====== MOBILE OPTIMIZATIONS ====== */
+  @media (max-width: 767.98px) {
+    .category-grid-col {
+      width: 50% !important; /* Force 2-columns on mobile */
+    }
+    .category-img-wrapper-premium {
+      height: 180px;
+    }
+    .category-body-premium {
+      padding: 18px;
+    }
+    .category-title-premium {
+      font-size: 1.05rem;
+    }
+    .category-subtitle-premium {
+      font-size: 0.78rem;
+    }
+  }
+</style>
+
+<div class="category-showcase-wrapper">
   <div class="container">
-    <h2 class="text-center mb-5 fw-bold text-uppercase text-gold">Shop by Category</h2>
+    
+    <!-- Title Section -->
+    <div class="text-center showcase-title-section">
+      <h2 class="showcase-title">Signature Collections</h2>
+      <p class="showcase-subtitle">Browse through our exclusive handcrafted design categories</p>
+    </div>
+
+    <!-- Categories Grid (2 columns on mobile, 4 columns on desktop) -->
     <div class="row g-4 justify-content-center">
       {% for category in categories %}
-      <div class="col-md-4 col-lg-3">
-        <a href="{% url 'category_subcategories' category.id %}" class="text-decoration-none">
-          <div class="card border-0 shadow-lg rounded-4 overflow-hidden h-100 category-card">
-            <img src="{{ category.image_url }}" class="card-img-top" alt="{{ category.name }}">
-            <div class="card-body text-center bg-white">
-              <h5 class="card-title text-dark fw-semibold mt-2">{{ category.name }}</h5>
-              <p class="small text-muted mb-0">Explore exclusive {{ category.name }} designs</p>
+      <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 d-flex category-grid-col">
+        <a href="{% url 'category_subcategories' category.id %}" class="text-decoration-none w-100">
+          <div class="category-card-premium w-100">
+            <div class="category-img-wrapper-premium">
+              <img src="{{ category.image_url }}" alt="{{ category.name }}">
+              <div class="category-card-overlay">
+                <span class="btn overlay-btn-premium">Explore</span>
+              </div>
+            </div>
+            <div class="category-body-premium">
+              <h5 class="category-title-premium">{{ category.name }}</h5>
+              <p class="category-subtitle-premium">Exclusive Handcrafted Designs</p>
             </div>
           </div>
         </a>
       </div>
       {% empty %}
-      <p class="text-center">No categories available.</p>
+      <div class="col-12 text-center py-5 bg-white rounded-4 border border-dashed">
+        <i class="fas fa-gem fs-2 text-muted mb-3 d-block"></i>
+        <h5 class="text-muted mb-0">No signature categories are listed at this moment.</h5>
+      </div>
       {% endfor %}
     </div>
-  </div>
-</section>
 
-<style>
-.text-gold { color: #b1976b; }
-.category-card img { height: 240px; object-fit: cover; transition: 0.4s ease; }
-.category-card:hover img { transform: scale(1.07); filter: brightness(0.9); }
-.category-card:hover .card-body { background: #fff8e6; }
-</style>
+  </div>
+</div>
 {% endblock %}
