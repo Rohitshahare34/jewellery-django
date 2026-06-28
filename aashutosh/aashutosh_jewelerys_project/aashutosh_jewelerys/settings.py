@@ -8,7 +8,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # --- Security settings ---
 SECRET_KEY = config('DJANGO_SECRET_KEY', default='django-insecure-your-secret-key-here')
 DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = []
+
+
+ALLOWED_HOSTS = ['aashutoshjewellers.in', 'www.aashutoshjewellers.in', 'localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://aashutoshjewellers.in', 'https://www.aashutoshjewellers.in', 'http://aashutoshjewellers.in', 'http://www.aashutoshjewellers.in']
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 
 # --- Metal Price API Configuration ---
 GOLD_API_KEY = config('GOLD_API_KEY', default='')
