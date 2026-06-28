@@ -20,7 +20,7 @@
     "model": "auth.user",
     "fields": {
         "password": "pbkdf2_sha256$1000000$b71CgVtrd0Q6Tj3l46AZUr$tsRBOVqsuhDxOq1VmzcuH+1YM5G7GWZ8lDL62QDGXXY=",
-        "last_login": "2026-06-23T18:14:22.623Z",
+        "last_login": "2026-06-28T09:29:24.054Z",
         "is_superuser": true,
         "username": "aashutosh",
         "first_name": "",
@@ -213,16 +213,16 @@
     }
 },
 {
-    "model": "shop.jewellery",
+    "model": "shop.product",
     "pk": 5,
     "fields": {
         "name": "pendant 1",
         "subcategory": 4,
-        "price": "52000.00",
+        "price": "1983612.56",
         "description": "good",
         "image": "jewellery/Pandants_mlNYpyo.jpg",
         "created_at": "2025-10-30T08:43:49.253Z",
-        "updated_at": "2025-10-30T08:43:49.253Z",
+        "updated_at": "2026-06-28T09:51:25.514Z",
         "is_featured": true,
         "badge": "TRENDING",
         "stone_type": "OTHER",
@@ -238,26 +238,26 @@
         "diamond_weight": "0.00",
         "diamond_clarity": "pure",
         "diamond_color": "white",
-        "gold_value": "50000.00",
+        "gold_value": "1645600.00",
         "silver_value": "0.00",
         "platinum_value": "0.00",
         "stone_value": "500.00",
-        "making_charges": "500.00",
-        "gst": "1000.00",
-        "total_price": "52000.00"
+        "making_charges": "279752.00",
+        "gst": "57760.56",
+        "total_price": "1983612.56"
     }
 },
 {
-    "model": "shop.jewellery",
+    "model": "shop.product",
     "pk": 4,
     "fields": {
         "name": "Rings 1",
         "subcategory": 3,
-        "price": "650.00",
+        "price": "0.00",
         "description": "good",
         "image": "jewellery/silver_ring_men_2f6p8vf.jpeg",
         "created_at": "2025-10-28T12:43:50.647Z",
-        "updated_at": "2025-10-29T09:35:48.685Z",
+        "updated_at": "2026-06-28T09:51:25.527Z",
         "is_featured": true,
         "badge": "BEST",
         "stone_type": "EMERALD",
@@ -273,26 +273,26 @@
         "diamond_weight": "0.80",
         "diamond_clarity": "VVS1",
         "diamond_color": "F",
-        "gold_value": "500.00",
+        "gold_value": "0.00",
         "silver_value": "0.00",
         "platinum_value": "0.00",
         "stone_value": "0.00",
-        "making_charges": "50.00",
-        "gst": "100.00",
-        "total_price": "650.00"
+        "making_charges": "0.00",
+        "gst": "0.00",
+        "total_price": "0.00"
     }
 },
 {
-    "model": "shop.jewellery",
+    "model": "shop.product",
     "pk": 3,
     "fields": {
         "name": "Rings 1",
         "subcategory": 2,
-        "price": "6000.00",
+        "price": "991556.28",
         "description": "good",
         "image": "jewellery/mens_ring_MEAJKtn.jpg",
         "created_at": "2025-10-28T12:31:37.066Z",
-        "updated_at": "2025-10-28T12:31:37.066Z",
+        "updated_at": "2026-06-28T09:51:25.515Z",
         "is_featured": true,
         "badge": "NEW",
         "stone_type": "DIAMOND",
@@ -308,26 +308,26 @@
         "diamond_weight": "0.00",
         "diamond_clarity": "VVS1",
         "diamond_color": "F",
-        "gold_value": "4000.00",
+        "gold_value": "822800.00",
         "silver_value": "0.00",
         "platinum_value": "0.00",
         "stone_value": "0.00",
-        "making_charges": "1000.00",
-        "gst": "1000.00",
-        "total_price": "6000.00"
+        "making_charges": "139876.00",
+        "gst": "28880.28",
+        "total_price": "991556.28"
     }
 },
 {
-    "model": "shop.jewellery",
+    "model": "shop.product",
     "pk": 2,
     "fields": {
         "name": "chain",
         "subcategory": 1,
-        "price": "53000.00",
+        "price": "1983112.56",
         "description": "good",
         "image": "jewellery/homedisplay.jpg",
         "created_at": "2025-10-28T12:03:06.159Z",
-        "updated_at": "2025-10-28T12:03:06.159Z",
+        "updated_at": "2026-06-28T09:51:25.517Z",
         "is_featured": true,
         "badge": "NEW",
         "stone_type": "OTHER",
@@ -343,26 +343,26 @@
         "diamond_weight": "0.00",
         "diamond_clarity": "VVS1",
         "diamond_color": "F",
-        "gold_value": "50000.00",
+        "gold_value": "1645600.00",
         "silver_value": "0.00",
         "platinum_value": "0.00",
         "stone_value": "0.00",
-        "making_charges": "1500.00",
-        "gst": "1500.00",
-        "total_price": "53000.00"
+        "making_charges": "279752.00",
+        "gst": "57760.56",
+        "total_price": "1983112.56"
     }
 },
 {
-    "model": "shop.jewellery",
+    "model": "shop.product",
     "pk": 1,
     "fields": {
         "name": "Chain for boys",
         "subcategory": null,
-        "price": "7500.80",
+        "price": "0.80",
         "description": "good",
         "image": "jewellery/mens.jpg",
         "created_at": "2025-10-28T09:51:49.385Z",
-        "updated_at": "2025-10-28T09:51:49.385Z",
+        "updated_at": "2026-06-28T09:51:25.519Z",
         "is_featured": true,
         "badge": "NEW",
         "stone_type": "OTHER",
@@ -378,153 +378,117 @@
         "diamond_weight": "0.00",
         "diamond_clarity": "VVS1",
         "diamond_color": "F",
-        "gold_value": "5000.00",
+        "gold_value": "0.00",
         "silver_value": "0.00",
         "platinum_value": "0.00",
         "stone_value": "0.80",
-        "making_charges": "1000.00",
-        "gst": "1500.00",
-        "total_price": "7500.80"
+        "making_charges": "0.00",
+        "gst": "0.00",
+        "total_price": "0.80"
     }
 },
 {
-    "model": "shop.jewelleryimage",
+    "model": "shop.productimage",
     "pk": 1,
     "fields": {
-        "jewellery": 1,
+        "product": 1,
         "image": "jewellery/gallery/homedisplay.jpg",
         "alt_text": null
     }
 },
 {
-    "model": "shop.jewelleryimage",
+    "model": "shop.productimage",
     "pk": 2,
     "fields": {
-        "jewellery": 2,
+        "product": 2,
         "image": "jewellery/gallery/Pandants.jpg",
         "alt_text": null
     }
 },
 {
-    "model": "shop.jewelleryimage",
+    "model": "shop.productimage",
     "pk": 3,
     "fields": {
-        "jewellery": 3,
+        "product": 3,
         "image": "jewellery/gallery/Bracelet_PoKQF4Y.jpg",
         "alt_text": null
     }
 },
 {
-    "model": "shop.jewelleryimage",
+    "model": "shop.productimage",
     "pk": 4,
     "fields": {
-        "jewellery": 4,
+        "product": 4,
         "image": "jewellery/gallery/silver_women.jpeg",
         "alt_text": null
-    }
-},
-{
-    "model": "shop.metalprice",
-    "pk": 1,
-    "fields": {
-        "metal_type": "GOLD",
-        "price_per_gram": "13937.75",
-        "price_22k": "12776.73",
-        "currency": "INR",
-        "change_percent": "0.34",
-        "is_up": false,
-        "last_updated": "2026-04-10T09:52:44.923Z"
-    }
-},
-{
-    "model": "shop.metalprice",
-    "pk": 2,
-    "fields": {
-        "metal_type": "SILVER",
-        "price_per_gram": "220.83",
-        "price_22k": null,
-        "currency": "INR",
-        "change_percent": "0.09",
-        "is_up": false,
-        "last_updated": "2026-04-10T09:52:45.655Z"
     }
 },
 {
     "model": "shop.metalrate",
     "pk": 11,
     "fields": {
-        "metal_type": "18K Gold",
+        "metal_type": "GOLD_18K",
         "purity": "75.00",
-        "rate_per_gram": "11140.00",
+        "rate_per_gram": "82280.00",
         "making_charge": "17.00",
         "making_type": "PERCENTAGE",
         "gst_percentage": "3.00",
         "status": true,
+        "show_making_charge": true,
+        "show_gst": true,
         "created_at": "2026-06-20T13:27:36.335Z",
-        "updated_at": "2026-06-20T13:27:36.335Z"
-    }
-},
-{
-    "model": "shop.metalrate",
-    "pk": 10,
-    "fields": {
-        "metal_type": "22K Gold",
-        "purity": "91.60",
-        "rate_per_gram": "13660.00",
-        "making_charge": "12.00",
-        "making_type": "PERCENTAGE",
-        "gst_percentage": "3.00",
-        "status": true,
-        "created_at": "2026-06-20T13:27:36.284Z",
-        "updated_at": "2026-06-20T13:27:36.284Z"
+        "updated_at": "2026-06-28T09:51:25.509Z"
     }
 },
 {
     "model": "shop.metalrate",
     "pk": 9,
     "fields": {
-        "metal_type": "24K Gold",
+        "metal_type": "GOLD_22K",
         "purity": "99.50",
-        "rate_per_gram": "14840.00",
+        "rate_per_gram": "89680.00",
         "making_charge": "200.00",
         "making_type": "FIXED",
         "gst_percentage": "3.00",
         "status": true,
+        "show_making_charge": true,
+        "show_gst": true,
         "created_at": "2026-06-20T13:27:36.222Z",
-        "updated_at": "2026-06-20T13:27:36.222Z"
+        "updated_at": "2026-06-28T09:51:25.519Z"
+    }
+},
+{
+    "model": "shop.metalrate",
+    "pk": 10,
+    "fields": {
+        "metal_type": "GOLD_24K",
+        "purity": "91.60",
+        "rate_per_gram": "87320.00",
+        "making_charge": "12.00",
+        "making_type": "PERCENTAGE",
+        "gst_percentage": "3.00",
+        "status": true,
+        "show_making_charge": true,
+        "show_gst": true,
+        "created_at": "2026-06-20T13:27:36.284Z",
+        "updated_at": "2026-06-28T09:51:25.519Z"
     }
 },
 {
     "model": "shop.metalrate",
     "pk": 12,
     "fields": {
-        "metal_type": "Silver",
+        "metal_type": "SILVER",
         "purity": "99.50",
-        "rate_per_gram": "245.00",
+        "rate_per_gram": "11190.00",
         "making_charge": "0.00",
         "making_type": "FIXED",
         "gst_percentage": "3.00",
         "status": true,
+        "show_making_charge": true,
+        "show_gst": true,
         "created_at": "2026-06-20T13:27:36.398Z",
-        "updated_at": "2026-06-20T13:27:36.398Z"
-    }
-},
-{
-    "model": "shop.jewelryproduct",
-    "pk": 1,
-    "fields": {
-        "name": "Ring",
-        "metal_type": "gold",
-        "weight": "0.000",
-        "description": "mzdfm",
-        "image": "jewelry_products/ChatGPT_Image_Jun_19_2026_10_02_27_PM.png",
-        "status": true,
-        "created_at": "2026-06-20T13:25:35.830Z",
-        "updated_at": "2026-06-20T13:25:35.830Z",
-        "making_type": "USE_RATE",
-        "making_charge": null,
-        "category": 1,
-        "subcategory": 2
+        "updated_at": "2026-06-28T09:51:25.519Z"
     }
 },
 {
@@ -631,7 +595,20 @@
         "status": true,
         "show_on_refresh": true,
         "created_at": "2026-06-23T18:12:33.588Z",
-        "updated_at": "2026-06-23T18:12:33.588Z"
+        "updated_at": "2026-06-23T18:12:33.588Z",
+        "show_title": true,
+        "show_message": true,
+        "show_poster_image": true,
+        "show_rates_grid": true,
+        "show_shop_button": true,
+        "shop_button_text": "Shop",
+        "shop_button_url": "/shop/",
+        "show_rates_button": true,
+        "rates_button_text": "Rates",
+        "rates_button_url": "/live-rates/",
+        "show_calc_button": true,
+        "calc_button_text": "Calc",
+        "calc_button_url": "#live-calculator"
     }
 },
 {
@@ -644,7 +621,115 @@
         "status": true,
         "show_on_refresh": true,
         "created_at": "2026-06-20T13:27:36.453Z",
-        "updated_at": "2026-06-20T13:27:36.453Z"
+        "updated_at": "2026-06-20T13:27:36.453Z",
+        "show_title": true,
+        "show_message": true,
+        "show_poster_image": true,
+        "show_rates_grid": true,
+        "show_shop_button": true,
+        "shop_button_text": "Shop",
+        "shop_button_url": "/shop/",
+        "show_rates_button": true,
+        "rates_button_text": "Rates",
+        "rates_button_url": "/live-rates/",
+        "show_calc_button": true,
+        "calc_button_text": "Calc",
+        "calc_button_url": "#live-calculator"
+    }
+},
+{
+    "model": "shop.signaturecollection",
+    "pk": 1,
+    "fields": {
+        "title": "Our Signature Collections",
+        "subtitle": "Exquisite Designs Crafted for You",
+        "is_active": true,
+        "created_at": "2026-06-28T09:39:14.393Z",
+        "updated_at": "2026-06-28T09:56:07.516Z"
+    }
+},
+{
+    "model": "shop.signaturecollectionitem",
+    "pk": 1,
+    "fields": {
+        "collection": 1,
+        "title": "Gold Ornaments",
+        "description": "Shop Collection",
+        "image": "signature_collection/download_AryvfPK.jpg",
+        "sort_order": 1,
+        "is_active": true
+    }
+},
+{
+    "model": "shop.signaturecollectionitem",
+    "pk": 2,
+    "fields": {
+        "collection": 1,
+        "title": "Diamond Rings",
+        "description": "Shop Collection",
+        "image": "",
+        "sort_order": 2,
+        "is_active": true
+    }
+},
+{
+    "model": "shop.signaturecollectionitem",
+    "pk": 3,
+    "fields": {
+        "collection": 1,
+        "title": "Traditional Necklace",
+        "description": "Shop Collection",
+        "image": "",
+        "sort_order": 3,
+        "is_active": true
+    }
+},
+{
+    "model": "shop.signaturecollectionitem",
+    "pk": 4,
+    "fields": {
+        "collection": 1,
+        "title": "Antique Masterpieces",
+        "description": "Shop Collection",
+        "image": "",
+        "sort_order": 4,
+        "is_active": true
+    }
+},
+{
+    "model": "shop.signaturecollectionitem",
+    "pk": 5,
+    "fields": {
+        "collection": 1,
+        "title": "Royal Chokers",
+        "description": "Shop Collection",
+        "image": "",
+        "sort_order": 5,
+        "is_active": true
+    }
+},
+{
+    "model": "shop.signaturecollectionitem",
+    "pk": 6,
+    "fields": {
+        "collection": 1,
+        "title": "Bespoke Rings",
+        "description": "Shop Collection",
+        "image": "",
+        "sort_order": 6,
+        "is_active": true
+    }
+},
+{
+    "model": "shop.signaturecollectionitem",
+    "pk": 7,
+    "fields": {
+        "collection": 1,
+        "title": "Bridal Special",
+        "description": "Shop Collection",
+        "image": "",
+        "sort_order": 7,
+        "is_active": true
     }
 }
 ]
