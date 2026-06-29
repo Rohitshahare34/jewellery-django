@@ -30,6 +30,31 @@
                 <img src="{% static 'shop/images/logo_aashu.png' %}" alt="Aashutosh Jewellers" class="navbar-logo">
             </a>
             
+            <!-- Mobile Quick Actions (Visible always on mobile header, next to toggler) -->
+            <div class="d-flex d-lg-none align-items-center gap-3 ms-auto me-2 mobile-quick-actions">
+                <!-- Today's Rates Button -->
+                <a class="btn btn-gold btn-sm d-flex align-items-center gap-1 py-1 px-2" href="{% url 'live_rates' %}" style="font-size: 0.75rem; border-radius: 20px; font-weight: 600; box-shadow: 0 2px 5px rgba(212, 175, 55, 0.2);">
+                    <i class="fas fa-coins text-warning"></i> Rates
+                </a>
+                <!-- WhatsApp -->
+                <a class="nav-link text-success p-1 d-flex align-items-center" href="https://wa.me/918668865990" target="_blank" title="WhatsApp Chat">
+                    <i class="fab fa-whatsapp fs-4"></i>
+                </a>
+                <!-- Wishlist -->
+                <a class="nav-link position-relative p-1 d-flex align-items-center" href="{% if user.is_authenticated %}{% url 'wishlist' %}{% else %}{% url 'login' %}{% endif %}" title="Wishlist">
+                    <i class="fas fa-heart fs-4 text-danger"></i>
+                    {% if wishlist_count > 0 %}
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge" style="font-size: 0.55rem; padding: 0.25em 0.5em;">
+                        {{ wishlist_count }}
+                    </span>
+                    {% endif %}
+                </a>
+                <!-- Account -->
+                <a class="nav-link p-1 text-secondary d-flex align-items-center" href="{% if user.is_authenticated %}{% url 'profile' %}{% else %}{% url 'login' %}{% endif %}" title="Account">
+                    <i class="fas fa-user-circle fs-4"></i>
+                </a>
+            </div>
+            
             <!-- Mobile Toggle -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -103,6 +128,18 @@
                             <i class="fab fa-instagram fs-5"></i>
                         </a>
                         
+                        <!-- Wishlist -->
+                        <a class="nav-link d-flex align-items-center" href="{% if user.is_authenticated %}{% url 'wishlist' %}{% else %}{% url 'login' %}{% endif %}" title="Wishlist">
+                            <div class="position-relative">
+                                <i class="fas fa-heart fs-5 text-danger"></i>
+                                {% if wishlist_count > 0 %}
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge" style="font-size: 0.6rem; padding: 0.25em 0.5em;">
+                                    {{ wishlist_count }}
+                                </span>
+                                {% endif %}
+                            </div>
+                        </a>
+                        
                         <!-- User Dropdown & Login (No Wishlist) -->
                         {% if user.is_authenticated %}
                         <div class="nav-item dropdown">
@@ -131,6 +168,16 @@
 
                     <!-- Mobile Action Row (Visible on Mobile only, grouped horizontally) -->
                     <div class="d-flex d-lg-none align-items-center gap-4 mt-3 w-100 justify-content-start border-top pt-3 mobile-icon-row" style="border-color: rgba(0,0,0,0.08) !important;">
+                        <!-- Wishlist (Mobile Only, red heart) -->
+                        <a class="nav-link p-0 position-relative d-flex align-items-center" href="{% if user.is_authenticated %}{% url 'wishlist' %}{% else %}{% url 'login' %}{% endif %}" title="Wishlist">
+                            <i class="fas fa-heart fs-4 text-danger"></i>
+                            {% if wishlist_count > 0 %}
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge" style="font-size: 0.6rem; padding: 0.25em 0.5em;">
+                                {{ wishlist_count }}
+                            </span>
+                            {% endif %}
+                        </a>
+
                         <!-- Account Profile / Login (Mobile Only) -->
                         {% if user.is_authenticated %}
                         <a class="nav-link p-0 d-flex align-items-center" href="{% url 'profile' %}" title="My Account">

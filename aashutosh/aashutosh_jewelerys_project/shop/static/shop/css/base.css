@@ -772,3 +772,32 @@ main {
 .wishlist-btn i.text-danger {
   color: #e53935 !important;
 }
+
+/* ===== MOBILE NAVBAR QUICK ACTIONS ===== */
+@media (max-width: 991.98px) {
+  .mobile-quick-actions {
+    display: flex !important;
+    align-items: center;
+  }
+  .mobile-quick-actions .nav-link {
+    margin: 0 !important;
+    padding: 2px 4px !important;
+    color: inherit;
+    transition: transform 0.2s ease;
+  }
+  .mobile-quick-actions .nav-link:hover {
+    background: none !important;
+    transform: scale(1.1);
+  }
+  .mobile-quick-actions .btn-gold {
+    white-space: nowrap;
+    padding: 6px 12px !important;
+    font-size: 0.75rem !important;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-radius: 30px !important;
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.25) !important;
+    border: none !important;
+  }
+}

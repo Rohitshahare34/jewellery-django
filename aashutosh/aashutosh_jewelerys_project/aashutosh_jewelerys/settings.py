@@ -48,12 +48,16 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 
-# Additional allauth settings for easier testing
+# Additional allauth settings for easier testing and seamless Google login
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False  # Don't require username for signup
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False  # Don't ask for password twice
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
-SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_AUTO_SIGNUP = True  # Auto-signup with social accounts
+SOCIALACCOUNT_EMAIL_REQUIRED = True  # Email is required from social provider
+SOCIALACCOUNT_QUERY_EMAIL = True  # Ask Google for email (already in scope)
 
 # Social account provider settings (Google)
 SOCIALACCOUNT_PROVIDERS = {
@@ -64,6 +68,7 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
         'AUTH_PARAMS': {
             'access_type': 'online',
+            'prompt': 'select_account',  # Optional: let user choose Google account (remove for auto-login)
         },
         'OAUTH_PKCE_ENABLED': True,
         'APP': {
