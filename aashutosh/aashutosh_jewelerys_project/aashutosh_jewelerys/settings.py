@@ -58,6 +58,10 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_AUTO_SIGNUP = True  # Auto-signup with social accounts
 SOCIALACCOUNT_EMAIL_REQUIRED = True  # Email is required from social provider
 SOCIALACCOUNT_QUERY_EMAIL = True  # Ask Google for email (already in scope)
+SOCIALACCOUNT_ADAPTER = 'shop.adapters.SocialAccountAdapter'  # Use our custom adapter
+SOCIALACCOUNT_STORE_TOKENS = True  # Optional: store Google tokens
+# Auto-connect social accounts to existing users with the same email
+SOCIALACCOUNT_AUTO_CONNECT = True
 
 # Social account provider settings (Google)
 SOCIALACCOUNT_PROVIDERS = {
