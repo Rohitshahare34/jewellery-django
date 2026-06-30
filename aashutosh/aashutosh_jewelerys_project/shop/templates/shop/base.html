@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +26,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'shop/css/base.css' %}?v=1.2">
+    <link rel="stylesheet" href="{% static 'shop/css/base.css' %}?v={% now 'U' %}">
 </head>
 
 <body>
@@ -29,31 +37,6 @@
             <a class="navbar-brand" href="{% url 'home' %}">
                 <img src="{% static 'shop/images/logo_aashu.png' %}" alt="Aashutosh Jewellers" class="navbar-logo">
             </a>
-            
-            <!-- Mobile Quick Actions (Visible always on mobile header, next to toggler) -->
-            <div class="d-flex d-lg-none align-items-center gap-3 ms-auto me-2 mobile-quick-actions">
-                <!-- Today's Rates Button -->
-                <a class="btn btn-gold btn-sm d-flex align-items-center gap-1 py-1 px-2" href="{% url 'live_rates' %}" style="font-size: 0.75rem; border-radius: 20px; font-weight: 600; box-shadow: 0 2px 5px rgba(212, 175, 55, 0.2);">
-                    <i class="fas fa-coins text-warning"></i> Rates
-                </a>
-                <!-- WhatsApp -->
-                <a class="nav-link text-success p-1 d-flex align-items-center" href="https://wa.me/918668865990" target="_blank" title="WhatsApp Chat">
-                    <i class="fab fa-whatsapp fs-4"></i>
-                </a>
-                <!-- Wishlist -->
-                <a class="nav-link position-relative p-1 d-flex align-items-center" href="{% if user.is_authenticated %}{% url 'wishlist' %}{% else %}{% url 'login' %}{% endif %}" title="Wishlist">
-                    <i class="fas fa-heart fs-4 text-danger"></i>
-                    {% if wishlist_count > 0 %}
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge" style="font-size: 0.55rem; padding: 0.25em 0.5em;">
-                        {{ wishlist_count }}
-                    </span>
-                    {% endif %}
-                </a>
-                <!-- Account -->
-                <a class="nav-link p-1 text-secondary d-flex align-items-center" href="{% if user.is_authenticated %}{% url 'profile' %}{% else %}{% url 'login' %}{% endif %}" title="Account">
-                    <i class="fas fa-user-circle fs-4"></i>
-                </a>
-            </div>
             
             <!-- Mobile Toggle -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -123,6 +106,11 @@
                     
                     <!-- Desktop Icons & Actions (Large screens only) -->
                     <div class="d-none d-lg-flex align-items-center gap-3">
+                        <!-- Theme Toggle -->
+                        <button class="btn nav-link d-flex align-items-center p-0 theme-toggle-btn" id="theme-toggle-desktop" title="Toggle Light/Dark Theme" style="border: none; background: transparent;">
+                            <i class="fas fa-moon fs-5"></i>
+                        </button>
+                        
                         <!-- Instagram -->
                         <a class="nav-link d-flex align-items-center" href="https://www.instagram.com/aashutosh_jewellers_?igsh=MTA2d2NneGYzbTlheg==" target="_blank" title="Follow us on Instagram">
                             <i class="fab fa-instagram fs-5"></i>
@@ -167,7 +155,17 @@
                     </div>
 
                     <!-- Mobile Action Row (Visible on Mobile only, grouped horizontally) -->
-                    <div class="d-flex d-lg-none align-items-center gap-4 mt-3 w-100 justify-content-start border-top pt-3 mobile-icon-row" style="border-color: rgba(0,0,0,0.08) !important;">
+                    <div class="d-flex d-lg-none align-items-center gap-4 mt-3 w-100 justify-content-start border-top pt-3 mobile-icon-row flex-wrap" style="border-color: rgba(0,0,0,0.08) !important;">
+                        <!-- Today's Rates Button -->
+                        <a class="btn btn-gold btn-sm d-flex align-items-center gap-1 py-1 px-2" href="{% url 'live_rates' %}" style="font-size: 0.75rem; border-radius: 20px; font-weight: 600; box-shadow: 0 2px 5px rgba(212, 175, 55, 0.2);">
+                            <i class="fas fa-coins text-warning"></i> Rates
+                        </a>
+
+                        <!-- WhatsApp -->
+                        <a class="nav-link text-success p-0 d-flex align-items-center" href="https://wa.me/918668865990" target="_blank" title="WhatsApp Chat">
+                            <i class="fab fa-whatsapp fs-4"></i>
+                        </a>
+
                         <!-- Wishlist (Mobile Only, red heart) -->
                         <a class="nav-link p-0 position-relative d-flex align-items-center" href="{% if user.is_authenticated %}{% url 'wishlist' %}{% else %}{% url 'login' %}{% endif %}" title="Wishlist">
                             <i class="fas fa-heart fs-4 text-danger"></i>
@@ -177,6 +175,11 @@
                             </span>
                             {% endif %}
                         </a>
+
+                        <!-- Theme Toggle (Mobile) -->
+                        <button class="btn nav-link p-0 d-flex align-items-center theme-toggle-btn" id="theme-toggle-mobile" title="Toggle Light/Dark Theme" style="border: none; background: transparent;">
+                            <i class="fas fa-moon fs-4"></i>
+                        </button>
 
                         <!-- Account Profile / Login (Mobile Only) -->
                         {% if user.is_authenticated %}
@@ -282,6 +285,64 @@
     </footer>
 
     <style>
+        /* Wishlist Toast Notification CSS */
+        .wishlist-toast-premium {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(17, 17, 17, 0.96);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+            opacity: 0;
+            pointer-events: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 0.85rem;
+            min-width: 170px;
+            text-align: center;
+        }
+
+        .wishlist-toast-premium.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .wishlist-toast-message-wrapper {
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .wishlist-toast-action-wrapper {
+            margin-top: 4px;
+        }
+
+        .wishlist-toast-link {
+            color: #d4af37 !important;
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 1.5px solid #d4af37;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .wishlist-toast-link:hover {
+            color: #ffd700 !important;
+            border-color: #ffd700;
+        }
+
         .social-icon:hover {
             background: #FFD700;
             color: #1a1a1a;
@@ -512,7 +573,26 @@
     document.addEventListener('DOMContentLoaded', function() {
         initDropdowns();
         initGoldTicker();
-        
+
+        // Close mobile navbar when clicking outside
+        const navbarCollapse = document.getElementById('navbarNav');
+        const navbarToggler = document.querySelector('.navbar-toggler');
+
+        document.addEventListener('click', function(e) {
+            // Only on mobile when navbar is collapsed
+            if (window.innerWidth < 992 && navbarCollapse && navbarCollapse.classList.contains('show')) {
+                // Check if click is outside navbar
+                const navbar = document.querySelector('.navbar');
+                if (!navbar.contains(e.target)) {
+                    // Close the navbar
+                    const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
+                    if (bsCollapse) {
+                        bsCollapse.hide();
+                    }
+                }
+            }
+        });
+
         // Show rates popup automatically if active
         const popupFlag = document.getElementById('active-popup-flag');
         if (popupFlag && popupFlag.getAttribute('data-active') === 'true') {
@@ -539,7 +619,120 @@
                 }, 3000);
             });
         }
+
+        // Theme Toggle Functionality
+        const themeToggleButtons = document.querySelectorAll('.theme-toggle-btn');
+        
+        function updateToggleIcons(theme) {
+            themeToggleButtons.forEach(btn => {
+                const icon = btn.querySelector('i');
+                if (icon) {
+                    if (theme === 'dark') {
+                        icon.className = 'fas fa-sun text-warning fs-5';
+                        if (btn.id === 'theme-toggle-mobile') {
+                            icon.className = 'fas fa-sun text-warning fs-4';
+                        }
+                    } else {
+                        icon.className = 'fas fa-moon text-dark fs-5';
+                        if (btn.id === 'theme-toggle-mobile') {
+                            icon.className = 'fas fa-moon text-dark fs-4';
+                        }
+                    }
+                }
+            });
+        }
+
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        updateToggleIcons(currentTheme);
+
+        themeToggleButtons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                updateToggleIcons(theme);
+            });
+        });
     });
+
+        // Global Wishlist Toast Alert function
+        window.showWishlistToast = function(message) {
+            const toast = document.getElementById('wishlist-toast');
+            const msgEl = document.getElementById('wishlist-toast-message');
+            if (!toast || !msgEl) return;
+            
+            msgEl.textContent = message;
+            toast.style.display = 'flex';
+            
+            // Trigger animation frame for CSS transition
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+            
+            // Auto-hide after 4 seconds
+            if (window.wishlistToastTimeout) {
+                clearTimeout(window.wishlistToastTimeout);
+            }
+            window.wishlistToastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+                // Hide from DOM display after transition completes
+                setTimeout(() => {
+                    if (!toast.classList.contains('show')) {
+                        toast.style.display = 'none';
+                    }
+                }, 400);
+            }, 4000);
+        };
+
+        // Global document-level click delegation for wishlist toggling on any page
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.wishlist-btn-premium');
+            if (!btn) return;
+            
+            e.preventDefault();
+            const productId = btn.dataset.productId;
+            
+            fetch(`/wishlist/toggle/${productId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.status === 401) {
+                    window.location.href = "{% url 'login' %}";
+                    return;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.success) {
+                    const icon = btn.querySelector('i');
+                    if (data.added) {
+                        btn.classList.add('active');
+                        if (icon) {
+                            icon.className = 'fas fa-heart text-danger';
+                        }
+                        if (typeof showWishlistToast === 'function') {
+                            showWishlistToast("Added to wishlist!");
+                        }
+                    } else {
+                        btn.classList.remove('active');
+                        if (icon) {
+                            icon.className = 'far fa-heart';
+                        }
+                        if (typeof showWishlistToast === 'function') {
+                            showWishlistToast("Removed from wishlist!");
+                        }
+                    }
+                }
+            })
+            .catch(err => console.error('Error toggling wishlist:', err));
+        });
 
         // Prevent dropdown from closing when clicking inside
         document.addEventListener('click', function(e) {
@@ -653,6 +846,15 @@
         }
     </style>
     </script>
+
+    <!-- Wishlist Toast Notification -->
+    <div id="wishlist-toast" class="wishlist-toast-premium" style="display: none;">
+        <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-heart text-danger"></i>
+            <span id="wishlist-toast-message">Added to wishlist!</span>
+        </div>
+        <a href="{% url 'wishlist' %}" class="wishlist-toast-link">View Wishlist</a>
+    </div>
 
     {% block extra_scripts %}{% endblock %}
 
