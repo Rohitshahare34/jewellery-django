@@ -13,7 +13,6 @@
     const REFRESH_URL = '/api/refresh-prices/';
 
     // DOM Elements
-    let goldPriceEl, gold22kPriceEl, silverPriceEl;
     let goldChangeEl, silverChangeEl;
     let goldChangeValueEl, silverChangeValueEl;
     let lastUpdatedEl;
@@ -23,20 +22,11 @@
      */
     function initTicker() {
         // Get DOM elements
-        goldPriceEl = document.getElementById('gold-price');
-        gold22kPriceEl = document.getElementById('gold-22k-price');
-        silverPriceEl = document.getElementById('silver-price');
         goldChangeEl = document.getElementById('gold-change');
         silverChangeEl = document.getElementById('silver-change');
         goldChangeValueEl = document.getElementById('gold-change-value');
         silverChangeValueEl = document.getElementById('silver-change-value');
         lastUpdatedEl = document.getElementById('last-updated');
-
-        // Check if elements exist
-        if (!goldPriceEl) {
-            console.warn('Gold price ticker elements not found');
-            return;
-        }
 
         // Initial fetch
         fetchMetalPrices();
@@ -81,20 +71,27 @@
      */
     function updateTicker(data) {
         try {
-            // Update Gold Price (24K)
-            if (data.gold) {
-                updatePrice(goldPriceEl, data.gold.price);
-                updateChangeIndicator(goldChangeEl, goldChangeValueEl, data.gold.change_percent, data.gold.is_up);
-                
-                // Update 22K price if available
-                if (gold22kPriceEl && data.gold.price_22k) {
-                    updatePrice(gold22kPriceEl, data.gold.price_22k);
+            // Update prices dynamically using the 'rates' dictionary
+            if (data.rates) {
+                for (const [metalCode, price] of Object.entries(data.rates)) {
+                    // Update main element
+                    const priceEl = document.getElementById(`price-${metalCode}`);
+                    if (priceEl) {
+                        updatePrice(priceEl, price);
+                    }
+                    // Update duplicate element
+                    const price2El = document.getElementById(`price-${metalCode}-2`);
+                    if (price2El) {
+                        updatePrice(price2El, price);
+                    }
                 }
             }
 
-            // Update Silver Price
+            // Update change indicators if available (backward compatibility)
+            if (data.gold) {
+                updateChangeIndicator(goldChangeEl, goldChangeValueEl, data.gold.change_percent, data.gold.is_up);
+            }
             if (data.silver) {
-                updatePrice(silverPriceEl, data.silver.price);
                 updateChangeIndicator(silverChangeEl, silverChangeValueEl, data.silver.change_percent, data.silver.is_up);
             }
 
@@ -103,17 +100,6 @@
                 if (lastUpdatedEl) {
                     lastUpdatedEl.textContent = data.gold.last_updated;
                 }
-            }
-
-            // Update duplicate elements (for seamless loop)
-            const goldPrice2El = document.getElementById('gold-price-2');
-            const silverPrice2El = document.getElementById('silver-price-2');
-            
-            if (goldPrice2El && data.gold) {
-                updatePrice(goldPrice2El, data.gold.price);
-            }
-            if (silverPrice2El && data.silver) {
-                updatePrice(silverPrice2El, data.silver.price);
             }
 
         } catch (error) {

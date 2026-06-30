@@ -21,7 +21,7 @@ class Category(models.Model):
         """Return a valid image URL even if no image is uploaded."""
         if self.image:
             return self.image.url
-        return '/static/img/no-image.png'
+        return '/static/shop/images/placeholder.jpg'
 
     def get_absolute_url(self):
         """URL for this category's subcategories page."""
@@ -51,7 +51,7 @@ class SubCategory(models.Model):
         """Return subcategory image or fallback placeholder."""
         if self.image:
             return self.image.url
-        return '/static/img/no-image.png'
+        return '/static/shop/images/placeholder.jpg'
 
     def get_absolute_url(self):
         """URL to view all products under this subcategory."""
@@ -276,7 +276,7 @@ class Product(models.Model):
     def image_url(self):
         if self.image:
             return self.image.url
-        return '/static/img/no-image.png'
+        return '/static/shop/images/placeholder.jpg'
 
     def get_absolute_url(self):
         """Direct link to jewellery detail page."""
@@ -332,7 +332,7 @@ class MetalRate(models.Model):
         ("GOLD_24K", "24K Gold"),
         ("GOLD_22K", "22K Gold"),
         ("GOLD_18K", "18K Gold"),
-        ("SILVER", "9 to 5 Silver Jewellery"),
+        ("SILVER", "92.5 Silver Jewellery"),
     ]
     MAKING_CHOICES = [
         ("FIXED", "Fixed (₹/g)"),

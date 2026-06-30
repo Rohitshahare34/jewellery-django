@@ -6,10 +6,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+  /* Override global main padding to clear navbar exactly with no extra white gap */
+  main {
+    padding-top: 90px !important;
+  }
+  
+  @media (max-width: 991.98px) {
+    main {
+      padding-top: 75px !important;
+    }
+  }
+
   /* ====== ALL PRODUCTS PAGE SYSTEM ====== */
   .all-products-wrapper {
     font-family: 'Outfit', 'Inter', sans-serif;
-    padding: 80px 0;
+    padding: 15px 0 60px 0;
     background: radial-gradient(circle at 50% 50%, rgba(254, 253, 249, 1) 0%, rgba(246, 243, 233, 1) 100%);
     min-height: 90vh;
   }
@@ -42,186 +53,10 @@
     font-size: 1.05rem;
     margin-top: 12px;
   }
-
-  /* ====== LUXURY PRODUCT CARD ====== */
-  .product-card-premium {
-    background: #fff;
-    border-radius: 20px;
-    border: 1px solid rgba(212, 175, 55, 0.12);
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  .product-card-premium:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 30px rgba(184, 149, 43, 0.08);
-    border-color: rgba(212, 175, 55, 0.35);
-  }
-
-  .product-img-wrapper-premium {
-    position: relative;
-    padding-bottom: 100%;
-    overflow: hidden;
-    background: #faf9f5;
-  }
-
-  .product-img-wrapper-premium img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-  }
-
-  .product-card-premium:hover .product-img-wrapper-premium img {
-    transform: scale(1.06);
-  }
-
-  /* Wishlist Icon floating on image */
-  .wishlist-btn-premium {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    z-index: 10;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(212, 175, 55, 0.2);
-    color: #777;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-    transition: all 0.3s ease;
-  }
-
-  .wishlist-btn-premium:hover {
-    background: #fff;
-    color: #dc3545;
-    transform: scale(1.1);
-    box-shadow: 0 6px 15px rgba(220, 53, 69, 0.15);
-  }
-
-  .wishlist-btn-premium.active {
-    color: #dc3545;
-  }
-
-  /* Badge styling */
-  .badge-premium {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    z-index: 9;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 0.75rem;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  }
-
-  .product-body-premium {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    text-align: center;
-  }
-
-  .product-title-premium {
-    font-weight: 700;
-    color: #111;
-    font-size: 1.05rem;
-    margin-bottom: 6px;
-    line-height: 1.4;
-    transition: color 0.3s ease;
-  }
-
-  .product-card-premium:hover .product-title-premium {
-    color: #b8952b;
-  }
-
-  .product-meta-premium {
-    color: #777;
-    font-size: 0.82rem;
-    margin-bottom: 10px;
-  }
-
-  .product-price-premium {
-    font-weight: 800;
-    color: #b8952b;
-    font-size: 1.15rem;
-    margin-bottom: 18px;
-  }
-
-  /* ====== PREMIUM BUTTONS ====== */
-  .btn-premium-gold {
-    background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
-    border: none;
-    color: #111;
-    font-weight: 700;
-    font-size: 0.85rem;
-    padding: 10px 22px;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-    width: 100%;
-  }
-
-  .btn-premium-gold:hover {
-    background: linear-gradient(135deg, #ffd700 30%, #ffd700 100%);
-    color: #000;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
-  }
-
-  /* ====== MOBILE OPTIMIZATIONS ====== */
-  @media (max-width: 767.98px) {
-    .product-grid-col {
-      width: 50% !important; /* Force 2-columns on mobile */
-    }
-    .product-body-premium {
-      padding: 12px;
-    }
-    .product-title-premium {
-      font-size: 0.92rem;
-      margin-bottom: 4px;
-    }
-    .product-price-premium {
-      font-size: 1rem;
-      margin-bottom: 12px;
-    }
-    .btn-premium-gold {
-      padding: 8px 10px;
-      font-size: 0.78rem;
-    }
-    .wishlist-btn-premium {
-      width: 32px;
-      height: 32px;
-      top: 10px;
-      right: 10px;
-    }
-    .badge-premium {
-      top: 10px;
-      left: 10px;
-      padding: 4px 8px;
-      font-size: 0.65rem;
-    }
-  }
 </style>
 
 <div class="all-products-wrapper">
-  <div class="container">
+  <div class="container-fluid px-2 px-sm-3 px-lg-5">
     
     <!-- Title Section -->
     <div class="text-center catalog-title-section">
@@ -230,7 +65,7 @@
     </div>
 
     <!-- Products Grid (2 columns on mobile, 4 columns on desktop) -->
-    <div class="row g-4">
+    <div class="row g-2 g-md-4">
       {% for product in products %}
       <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 d-flex product-grid-col">
         <div class="product-card-premium w-100">
@@ -250,10 +85,70 @@
           
           <div class="product-body-premium">
             <h5 class="product-title-premium">{{ product.name }}</h5>
-            <p class="product-meta-premium">{{ product.stone_type }} • {{ product.color }}</p>
+            <p class="product-meta-premium mb-1">{{ product.stone_type }} • {{ product.color }}</p>
             <p class="product-price-premium">₹{{ product.price }}</p>
-            <div class="mt-auto">
-              <a href="{% url 'product_detail' product.pk %}" class="btn-premium-gold text-center">View Details</a>
+            
+            <!-- Action Buttons -->
+            <div class="product-actions-premium">
+              <a href="{% url 'product_detail' product.pk %}" class="btn btn-premium-gold flex-grow-1">View Details</a>
+              <button class="btn btn-premium-outline flex-grow-1 d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#quickViewModal-{{ product.pk }}">Quick View</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick View Modal Container -->
+      <div class="modal fade" id="quickViewModal-{{ product.pk }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content-premium modal-content">
+            <div class="modal-header-premium modal-header border-0">
+              <h4 class="modal-title fw-bold" style="color: #111;">{{ product.name }}</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body-premium modal-body">
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <img src="{{ product.image_url }}" class="img-fluid rounded-4" alt="{{ product.name }}" style="box-shadow: 0 10px 25px rgba(0,0,0,0.08);">
+                </div>
+                <div class="col-md-6 d-flex flex-column justify-content-between">
+                  <div>
+                    <h3 class="fw-bold mb-2 text-gold">₹{{ product.price }}</h3>
+                    <p class="text-muted mb-4">{{ product.description|default:"A beautiful piece of premium crafted jewellery from Aashutosh Jewellers, designed to radiate timeless elegance." }}</p>
+                    
+                    <div class="table-responsive">
+                      <table class="table table-borderless table-sm">
+                        <tbody>
+                          <tr>
+                            <td class="fw-semibold text-muted" style="width: 40%;">Metal/Color:</td>
+                            <td>{{ product.color }}</td>
+                          </tr>
+                          <tr>
+                            <td class="fw-semibold text-muted">Stone Type:</td>
+                            <td>{{ product.stone_type }}</td>
+                          </tr>
+                          {% if product.purity %}
+                          <tr>
+                            <td class="fw-semibold text-muted">Purity:</td>
+                            <td>{{ product.purity }}</td>
+                          </tr>
+                          {% endif %}
+                          {% if product.weight %}
+                          <tr>
+                            <td class="fw-semibold text-muted">Weight:</td>
+                            <td>{{ product.weight }} g</td>
+                          </tr>
+                          {% endif %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="mt-4">
+                    <a href="{% url 'product_detail' product.pk %}" class="btn btn-premium-gold w-100 py-3 mb-2 d-flex align-items-center justify-content-center">
+                      <i class="fas fa-eye me-2"></i> View Complete Details
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

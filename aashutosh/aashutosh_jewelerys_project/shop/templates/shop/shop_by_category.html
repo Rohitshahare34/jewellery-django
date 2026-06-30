@@ -6,10 +6,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+  /* Override global main padding to clear navbar exactly with no extra white gap */
+  main {
+    padding-top: 90px !important;
+  }
+  
+  @media (max-width: 991.98px) {
+    main {
+      padding-top: 75px !important;
+    }
+  }
+
   /* ====== SHOP BY CATEGORY SYSTEM ====== */
   .category-showcase-wrapper {
     font-family: 'Outfit', 'Inter', sans-serif;
-    padding: 80px 0;
+    padding: 15px 0 60px 0;
     background: radial-gradient(circle at 50% 50%, rgba(254, 253, 249, 1) 0%, rgba(246, 243, 233, 1) 100%);
     min-height: 90vh;
   }

@@ -142,7 +142,7 @@ def shop_view(request):
     products = Product.objects.filter(in_stock=True)
 
     # Filters
-    category_filter = request.GET.get('category')
+    category_filter = request.GET.getlist('category')
     stone_filter = request.GET.get('stone_type')
     color_filter = request.GET.get('color')
     badge_filter = request.GET.get('badge')
@@ -150,7 +150,7 @@ def shop_view(request):
     price_max = request.GET.get('price_max')
 
     if category_filter:
-        products = products.filter(category__id=category_filter)
+        products = products.filter(subcategory__category__id__in=category_filter)
     if stone_filter:
         products = products.filter(stone_type=stone_filter)
     if color_filter:
@@ -465,16 +465,24 @@ def get_metal_prices(request):
     Returns JSON response with gold and silver prices.
     """
     try:
-        gold_24k = MetalRate.objects.filter(metal_type='GOLD_24K', status=True).first()
-        gold_22k = MetalRate.objects.filter(metal_type='GOLD_22K', status=True).first()
-        silver = MetalRate.objects.filter(metal_type='SILVER', status=True).first()
+        rates = MetalRate.objects.filter(status=True)
+        rates_dict = {}
+        for r in rates:
+            rates_dict[r.metal_type.lower()] = str(r.rate_per_gram)
+            
+        gold_24k = rates.filter(metal_type='GOLD_24K').first()
+        gold_22k = rates.filter(metal_type='GOLD_22K').first()
+        gold_18k = rates.filter(metal_type='GOLD_18K').first()
+        silver = rates.filter(metal_type='SILVER').first()
         
         response_data = {
             'success': True,
+            'rates': rates_dict,
             'gold': {
                 'price': str(gold_24k.rate_per_gram) if gold_24k else '0',
                 'price_24k': str(gold_24k.rate_per_gram) if gold_24k else '0',
                 'price_22k': str(gold_22k.rate_per_gram) if gold_22k else '0',
+                'price_18k': str(gold_18k.rate_per_gram) if gold_18k else '0',
                 'change_percent': '0',
                 'is_up': True,
             },

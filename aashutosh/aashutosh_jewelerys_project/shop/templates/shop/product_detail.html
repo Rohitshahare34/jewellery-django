@@ -279,6 +279,8 @@ document.addEventListener("DOMContentLoaded", function() {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         "X-CSRFToken": "{{ csrf_token }}",
+        "X-Requested-With": "XMLHttpRequest",
+        "Accept": "application/json"
       },
     })
     .then((response) => {
@@ -292,11 +294,17 @@ document.addEventListener("DOMContentLoaded", function() {
           wishlistBtn.classList.remove("btn-outline-dark");
           wishlistBtn.classList.add("btn-danger");
           wishlistIcon.classList.add("text-danger");
+          if (typeof showWishlistToast === 'function') {
+            showWishlistToast("Added to wishlist!");
+          }
         } else {
           wishlistText.textContent = "Add to Wishlist";
           wishlistBtn.classList.remove("btn-danger");
           wishlistBtn.classList.add("btn-outline-dark");
           wishlistIcon.classList.remove("text-danger");
+          if (typeof showWishlistToast === 'function') {
+            showWishlistToast("Removed from wishlist!");
+          }
         }
       } else {
         console.error("Wishlist action failed:", data.message);

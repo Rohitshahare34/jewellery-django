@@ -1,25 +1,411 @@
 {% extends 'shop/base.html' %}
+{% load static %}
+
 {% block content %}
+<style>
+  /* Override global main padding to clear navbar exactly with no extra white gap */
+  main {
+    padding-top: 90px !important;
+  }
+  
+  @media (max-width: 991.98px) {
+    main {
+      padding-top: 75px !important;
+    }
+  }
 
-<div class="container mx-auto py-10 px-6">
-  <h2 class="text-3xl font-bold mb-6 text-gray-800">Your Shopping Cart</h2>
+  .cart-page-wrapper {
+    font-family: 'Outfit', 'Inter', sans-serif;
+    padding: 15px 0 80px 0;
+    background: radial-gradient(circle at 50% 50%, rgba(254, 253, 249, 1) 0%, rgba(246, 243, 233, 1) 100%);
+    min-height: 80vh;
+  }
 
-  {% if cart_items %}
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {% for item in cart_items %}
-      <div class="flex items-center border p-4 rounded-2xl shadow-sm">
-        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-24 h-24 object-cover rounded-lg">
-        <div class="ml-4 flex-1">
-          <h3 class="font-semibold text-lg">{{ item.product.name }}</h3>
-          <p class="text-yellow-600 font-medium">₹{{ item.product.price }}</p>
-          <p class="text-sm text-gray-500">Qty: {{ item.quantity }}</p>
+  .cart-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .cart-header h2 {
+    font-weight: 800;
+    color: #1a1a1a;
+    font-size: 2.2rem;
+    font-family: 'Outfit', sans-serif;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 15px;
+  }
+
+  .cart-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #d4af37, transparent);
+  }
+
+  .cart-card-premium {
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid rgba(212, 175, 55, 0.12);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    padding: 24px;
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
+  }
+
+  .cart-card-premium:hover {
+    box-shadow: 0 15px 35px rgba(212, 175, 55, 0.08);
+  }
+
+  .cart-item-row {
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+  }
+
+  .cart-item-row:last-child {
+    border-bottom: none;
+  }
+
+  .cart-item-img-wrapper {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(212, 175, 55, 0.1);
+    background: #faf9f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .cart-item-img-wrapper img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .cart-item-info {
+    flex-grow: 1;
+    padding-left: 20px;
+  }
+
+  .cart-item-name {
+    font-weight: 700;
+    color: #111;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .cart-item-name:hover {
+    color: #d4af37;
+  }
+
+  .cart-item-meta {
+    font-size: 0.85rem;
+    color: #777;
+    margin-bottom: 6px;
+  }
+
+  .cart-item-price {
+    font-weight: 800;
+    color: #b8952b;
+    font-size: 1.15rem;
+  }
+
+  .cart-item-qty {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .qty-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    background: transparent;
+    color: #d4af37;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .qty-btn:hover {
+    background: #d4af37;
+    color: #fff;
+  }
+
+  .qty-val {
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  .cart-item-remove-btn {
+    color: #dc3545;
+    background: transparent;
+    border: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .cart-item-remove-btn:hover {
+    color: #bd2130;
+  }
+
+  /* ====== ORDER SUMMARY CARD ====== */
+  .summary-card {
+    background: #ffffff;
+    border-radius: 24px;
+    border: 1.5px solid rgba(212, 175, 55, 0.18);
+    padding: 30px;
+    position: sticky;
+    top: 100px;
+    box-shadow: 0 15px 35px rgba(184, 149, 43, 0.04);
+  }
+
+  .summary-title {
+    font-weight: 800;
+    font-size: 1.25rem;
+    color: #111;
+    border-bottom: 2px solid rgba(212, 175, 55, 0.15);
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+    color: #555;
+  }
+
+  .summary-row.total {
+    border-top: 1px dashed rgba(212, 175, 55, 0.25);
+    padding-top: 15px;
+    font-weight: 800;
+    font-size: 1.25rem;
+    color: #111;
+  }
+
+  .btn-inquire-whatsapp {
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 14px 20px;
+    border-radius: 12px;
+    width: 100%;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(37, 211, 102, 0.25);
+    text-decoration: none;
+  }
+
+  .btn-inquire-whatsapp:hover {
+    background: linear-gradient(135deg, #2ebd60 0%, #128C7E 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
+    color: #fff;
+  }
+
+  /* ====== EMPTY STATE ====== */
+  .empty-cart-premium {
+    text-align: center;
+    padding: 35px 20px;
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid rgba(212, 175, 55, 0.12);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+    max-width: 400px;
+    margin: 40px auto;
+  }
+
+  .empty-cart-premium i {
+    font-size: 2.8rem;
+    color: #d4af37;
+    margin-bottom: 12px;
+  }
+
+  .empty-cart-premium h3 {
+    font-weight: 700;
+    color: #1a1a1a;
+    font-size: 1.25rem;
+    margin-bottom: 6px;
+  }
+
+  .empty-cart-premium p {
+    color: #666;
+    font-size: 0.88rem;
+    margin-bottom: 20px;
+  }
+
+  /* ====== RESPONSIVE ====== */
+  @media (max-width: 767.98px) {
+    .cart-item-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+      position: relative;
+    }
+
+    .cart-item-img-wrapper {
+      width: 100%;
+      height: 150px;
+    }
+
+    .cart-item-info {
+      padding-left: 0;
+      width: 100%;
+    }
+
+    .cart-item-remove-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 6px 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+  }
+
+  /* Dark mode support */
+  [data-theme="dark"] .cart-page-wrapper {
+    background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #121212 100%) !important;
+  }
+
+  [data-theme="dark"] .cart-header h2 {
+    color: #ffffff !important;
+  }
+
+  [data-theme="dark"] .cart-card-premium,
+  [data-theme="dark"] .summary-card,
+  [data-theme="dark"] .empty-cart-premium {
+    background: #1e1e1e !important;
+    border-color: rgba(212, 175, 55, 0.2) !important;
+  }
+
+  [data-theme="dark"] .cart-item-img-wrapper {
+    background: #111 !important;
+    border-color: rgba(212, 175, 55, 0.15) !important;
+  }
+
+  [data-theme="dark"] .cart-item-name,
+  [data-theme="dark"] .summary-title,
+  [data-theme="dark"] .empty-cart-premium h3,
+  [data-theme="dark"] .qty-val,
+  [data-theme="dark"] .summary-row.total {
+    color: #fff !important;
+  }
+
+  [data-theme="dark"] .cart-item-meta,
+  [data-theme="dark"] .empty-cart-premium p,
+  [data-theme="dark"] .summary-row {
+    color: #b0b0b0 !important;
+  }
+
+  [data-theme="dark"] .qty-btn {
+    border-color: rgba(212, 175, 55, 0.4) !important;
+    color: #d4af37 !important;
+  }
+</style>
+
+<div class="cart-page-wrapper">
+  <div class="container-fluid px-2 px-sm-3 px-lg-5">
+    
+    <!-- Header -->
+    <div class="cart-header">
+      <h2><i class="fas fa-shopping-bag text-gold me-2"></i>Shopping Cart</h2>
+      <p class="text-muted">Review your selected pieces of handcrafted elegance</p>
+    </div>
+
+    {% if cart_items %}
+      <div class="row">
+        <!-- Cart Items List (8 columns) -->
+        <div class="col-lg-8">
+          <div class="cart-card-premium">
+            {% for item in cart_items %}
+            <div class="cart-item-row">
+              <div class="cart-item-img-wrapper">
+                <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}">
+              </div>
+              <div class="cart-item-info">
+                <a href="{% url 'product_detail' item.product.pk %}" class="cart-item-name d-block">{{ item.product.name }}</a>
+                <div class="cart-item-meta">{{ item.product.stone_type }} • {{ item.product.color }}</div>
+                <div class="d-flex justify-content-between align-items-center mt-2 flex-wrap gap-2">
+                  <div class="cart-item-price">₹{{ item.product.price }}</div>
+                  <div class="cart-item-qty">
+                    <button class="qty-btn" aria-label="Decrease quantity">-</button>
+                    <span class="qty-val">{{ item.quantity }}</span>
+                    <button class="qty-btn" aria-label="Increase quantity">+</button>
+                  </div>
+                </div>
+              </div>
+              <button class="cart-item-remove-btn" aria-label="Remove item">
+                <i class="fas fa-trash-alt"></i> Remove
+              </button>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Summary (4 columns) -->
+        <div class="col-lg-4">
+          <div class="summary-card">
+            <h3 class="summary-title">Order Summary</h3>
+            <div class="summary-row">
+              <span>Items Subtotal</span>
+              <span class="fw-bold">₹{{ total_price|default:"0.00" }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Making Charges</span>
+              <span>Calculate in store</span>
+            </div>
+            <div class="summary-row">
+              <span>GST (3%)</span>
+              <span>Calculate in store</span>
+            </div>
+            <div class="summary-row total">
+              <span>Estimated Total</span>
+              <span class="text-gold">₹{{ total_price|default:"0.00" }}</span>
+            </div>
+            <a href="https://wa.me/917058865990?text=Hello%20Aashutosh%20Jewellers,%20I%20would%20like%20to%20inquire%20about%20my%20shopping%20cart." target="_blank" class="btn btn-inquire-whatsapp d-flex align-items-center justify-content-center">
+              <i class="fab fa-whatsapp me-2 fs-5"></i> Inquire via WhatsApp
+            </a>
+          </div>
         </div>
       </div>
-      {% endfor %}
-    </div>
-  {% else %}
-    <p class="text-gray-600">Your cart is currently empty.</p>
-  {% endif %}
-</div>
+    {% else %}
+      <!-- Empty State -->
+      <div class="empty-cart-premium">
+        <i class="fas fa-shopping-bag"></i>
+        <h3>Your Cart is Empty</h3>
+        <p>Browse our collections and select pieces to enquire about or purchase.</p>
+        <a href="{% url 'shop' %}" class="btn btn-premium-gold px-4 py-2" style="border-radius: 8px; display: inline-block; text-decoration: none; font-size: 0.85rem;">
+          Explore Collections
+        </a>
+      </div>
+    {% endif %}
 
+  </div>
+</div>
 {% endblock %}

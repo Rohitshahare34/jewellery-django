@@ -6,26 +6,49 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+  /* Override global main padding to clear navbar exactly with no extra white gap */
+  main {
+    padding-top: 90px !important;
+  }
+  
+  @media (max-width: 991.98px) {
+    main {
+      padding-top: 75px !important;
+    }
+  }
+
   /* ====== SHOP LAYOUT DESIGN SYSTEM ====== */
   .shop-page-wrapper {
     font-family: 'Outfit', 'Inter', sans-serif;
-    padding: 100px 0 80px 0;
+    padding: 15px 0 80px 0;
     background: radial-gradient(circle at 50% 50%, rgba(254, 253, 249, 1) 0%, rgba(246, 243, 233, 1) 100%);
     min-height: 95vh;
   }
 
   /* ====== LUXURY SIDEBAR FILTERS ====== */
-  .filter-sidebar-premium {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(212, 175, 55, 0.18);
-    border-radius: 24px;
-    box-shadow: 0 15px 35px rgba(184, 149, 43, 0.04);
-    padding: 28px 24px;
-    position: sticky;
-    top: 100px;
-    transition: all 0.3s ease;
+  @media (min-width: 992px) {
+    .filter-sidebar-premium {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(212, 175, 55, 0.18);
+      border-radius: 24px;
+      box-shadow: 0 15px 35px rgba(184, 149, 43, 0.04);
+      padding: 28px 24px;
+      position: sticky;
+      top: 100px;
+      transition: all 0.3s ease;
+    }
+  }
+
+  /* Offcanvas styling overrides for mobile */
+  @media (max-width: 991.98px) {
+    .filter-sidebar-premium {
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1) !important;
+      border: none !important;
+      border-radius: 0 !important;
+      padding: 0 !important;
+    }
   }
 
   .filter-sidebar-premium h5 {
@@ -144,173 +167,6 @@
     color: #d4af37;
   }
 
-  /* ====== LUXURY PRODUCT CARD ====== */
-  .product-grid-container {
-    opacity: 1;
-    transition: opacity 0.3s ease;
-  }
-
-  .product-card-premium {
-    background: #fff;
-    border-radius: 20px;
-    border: 1px solid rgba(212, 175, 55, 0.12);
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  .product-card-premium:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 30px rgba(184, 149, 43, 0.08);
-    border-color: rgba(212, 175, 55, 0.35);
-  }
-
-  .product-img-wrapper-premium {
-    position: relative;
-    padding-bottom: 100%;
-    overflow: hidden;
-    background: #faf9f5;
-  }
-
-  .product-img-wrapper-premium img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-  }
-
-  .product-card-premium:hover .product-img-wrapper-premium img {
-    transform: scale(1.06);
-  }
-
-  /* Wishlist Icon floating on image */
-  .wishlist-btn-premium {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    z-index: 10;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(212, 175, 55, 0.2);
-    color: #777;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-    transition: all 0.3s ease;
-  }
-
-  .wishlist-btn-premium:hover {
-    background: #fff;
-    color: #dc3545;
-    transform: scale(1.1);
-    box-shadow: 0 6px 15px rgba(220, 53, 69, 0.15);
-  }
-
-  .wishlist-btn-premium.active {
-    color: #dc3545;
-  }
-
-  /* Badge styling */
-  .badge-premium {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    z-index: 9;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 0.75rem;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  }
-
-  .product-body-premium {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-  }
-
-  .product-title-premium {
-    font-weight: 700;
-    color: #111;
-    font-size: 1.05rem;
-    margin-bottom: 6px;
-    line-height: 1.4;
-    transition: color 0.3s ease;
-  }
-
-  .product-card-premium:hover .product-title-premium {
-    color: #b8952b;
-  }
-
-  .product-meta-premium {
-    color: #777;
-    font-size: 0.82rem;
-    margin-bottom: 10px;
-  }
-
-  .product-price-premium {
-    font-weight: 800;
-    color: #b8952b;
-    font-size: 1.15rem;
-    margin-bottom: 18px;
-  }
-
-  .product-actions-premium {
-    display: flex;
-    gap: 8px;
-    margin-top: auto;
-  }
-
-  /* ====== PREMIUM BUTTONS ====== */
-  .btn-premium-gold {
-    background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
-    border: none;
-    color: #111;
-    font-weight: 700;
-    font-size: 0.85rem;
-    padding: 9px 18px;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-  }
-
-  .btn-premium-gold:hover {
-    background: linear-gradient(135deg, #ffd700 30%, #ffd700 100%);
-    color: #000;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
-  }
-
-  .btn-premium-outline {
-    background: transparent;
-    border: 1.5px solid #d4af37;
-    color: #d4af37;
-    font-weight: 700;
-    font-size: 0.85rem;
-    padding: 9px 18px;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-  }
-
-  .btn-premium-outline:hover {
-    background: rgba(212, 175, 55, 0.08);
-    color: #b8952b;
-    border-color: #b8952b;
-    transform: translateY(-1px);
-  }
-
   .btn-premium-filter-apply {
     background: #111;
     color: #fff;
@@ -328,95 +184,53 @@
     transform: translateY(-1px);
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   }
-
-  /* ====== QUICK VIEW MODAL ====== */
-  .modal-content-premium {
-    border-radius: 24px;
-    border: 1px solid rgba(212, 175, 55, 0.25);
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(12px);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-  }
-
-  .modal-header-premium {
-    border-bottom: 1.5px solid rgba(212, 175, 55, 0.12) !important;
-    padding: 24px 30px;
-  }
-
-  .modal-body-premium {
-    padding: 30px;
-  }
-
-  /* ====== MOBILE OPTIMIZATIONS ====== */
-  @media (max-width: 991.98px) {
-    .shop-page-wrapper {
-      padding: 80px 0 60px 0;
-    }
-    .filter-sidebar-premium {
-      position: static;
-      margin-bottom: 30px;
-      padding: 20px;
-    }
-  }
-
-  /* Grid Wrap (2 columns on mobile) */
-  @media (max-width: 767.98px) {
-    .product-grid-col {
-      width: 50% !important; /* Force 2-columns */
-    }
-    .product-body-premium {
-      padding: 12px;
-    }
-    .product-title-premium {
-      font-size: 0.92rem;
-      margin-bottom: 4px;
-    }
-    .product-price-premium {
-      font-size: 1rem;
-      margin-bottom: 12px;
-    }
-    .product-actions-premium {
-      flex-direction: column;
-      gap: 6px;
-    }
-    .product-actions-premium .btn {
-      width: 100%;
-      text-align: center;
-      padding: 7px 10px;
-      font-size: 0.78rem;
-    }
-    .wishlist-btn-premium {
-      width: 32px;
-      height: 32px;
-      top: 10px;
-      right: 10px;
-    }
-    .badge-premium {
-      top: 10px;
-      left: 10px;
-      padding: 4px 8px;
-      font-size: 0.65rem;
-    }
-  }
 </style>
 
 <div class="shop-page-wrapper">
-  <div class="container-fluid px-lg-5">
+  <div class="container-fluid px-2 px-sm-3 px-lg-5">
+    
+    <!-- Title Section & Sort/Filter Header (Full width above columns) -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap pb-3 border-bottom" style="border-color: rgba(212,175,55,0.1) !important;">
+      <h2 class="section-title mb-0" style="font-size: 1.8rem; font-weight: 800; font-family: 'Outfit', sans-serif;">
+        {% if current_category %}
+          {{ current_category.name }}
+        {% else %}
+          Exquisite Showcase
+        {% endif %}
+      </h2>
+      <div class="d-flex align-items-center mt-3 mt-sm-0 gap-2">
+        <!-- Collapsible Toggle for mobile filters -->
+        <button class="btn btn-premium-outline btn-sm d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#filter-collapse" style="border-radius: 8px; border-color: rgba(212,175,55,0.3); color: #d4af37; font-weight: 600;">
+          <i class="fas fa-filter me-1"></i> Filters
+        </button>
+        
+        <span class="me-2 text-muted fw-semibold d-none d-sm-inline">Sort by:</span>
+        <select id="sort-select" class="form-select form-select-sm" style="width: auto; border-color: rgba(212, 175, 55, 0.25); border-radius: 8px;">
+          <option value="newest">Newest First</option>
+          <option value="price_low">Price: Low to High</option>
+          <option value="price_high">Price: High to Low</option>
+          <option value="name">Name A-Z</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Active Filters Chips -->
+    <div id="active-filters" class="filter-chip-container mb-4"></div>
+
     <div class="row">
-      
-      <!-- Filters Sidebar (4 columns) -->
+      <!-- Filters Sidebar (3 columns on desktop, collapsible on mobile) -->
       <div class="col-lg-3 col-md-12 mb-4">
-        <div class="filter-sidebar-premium">
-          <h5 class="d-flex align-items-center">
-            <i class="fas fa-filter text-gold me-2"></i> Filters
-          </h5>
-
-          <!-- Collapsible for mobile -->
-          <button class="btn btn-premium-outline w-100 mb-3 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#filter-collapse">
-            <i class="fas fa-sliders-h me-1"></i> Show Filters
-          </button>
-
-          <div class="collapse d-lg-block" id="filter-collapse">
+        <div class="offcanvas-lg offcanvas-start filter-sidebar-premium" tabindex="-1" id="filter-collapse" aria-labelledby="filter-collapse-label" style="background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); width: 280px; max-width: 80vw;">
+          <div class="offcanvas-header border-bottom d-lg-none" style="border-color: rgba(212,175,55,0.15) !important; padding: 20px;">
+            <h5 class="offcanvas-title fw-bold text-gold m-0" id="filter-collapse-label">
+              <i class="fas fa-filter me-2"></i>Filters
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#filter-collapse" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body flex-column p-4 p-lg-0">
+            <h5 class="d-none d-lg-flex align-items-center mb-4 pb-2 border-bottom" style="font-weight: 800; color: #111; font-size: 1.25rem; border-color: rgba(212, 175, 55, 0.15) !important;">
+              <i class="fas fa-filter text-gold me-2"></i> Filters
+            </h5>
             <form id="filter-form">
               <!-- Category Filter -->
               <div class="mb-4">
@@ -441,7 +255,7 @@
               </div>
 
               <!-- Filter Button -->
-              <button type="button" id="apply-filters" class="btn-premium-filter-apply">
+              <button type="button" id="apply-filters" class="btn-premium-filter-apply w-100" data-bs-dismiss="offcanvas" data-bs-target="#filter-collapse">
                 Apply Filters
               </button>
             </form>
@@ -449,32 +263,8 @@
         </div>
       </div>
 
-      <!-- Products Grid Section (8 columns) -->
+      <!-- Products Grid Section (9 columns) -->
       <div class="col-lg-9 col-md-12">
-        
-        <!-- Grid Header Navigation -->
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
-          <h2 class="section-title mb-0" style="font-size: 1.8rem; font-weight: 800;">
-            {% if current_category %}
-              {{ current_category.name }}
-            {% else %}
-              Exquisite Showcase
-            {% endif %}
-          </h2>
-          <div class="d-flex align-items-center mt-3 mt-sm-0">
-            <span class="me-2 text-muted fw-semibold">Sort by:</span>
-            <select id="sort-select" class="form-select form-select-sm" style="width: auto; border-color: rgba(212, 175, 55, 0.25); border-radius: 8px;">
-              <option value="newest">Newest First</option>
-              <option value="price_low">Price: Low to High</option>
-              <option value="price_high">Price: High to Low</option>
-              <option value="name">Name A-Z</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Active Filters Chips -->
-        <div id="active-filters" class="filter-chip-container"></div>
-
         <!-- Dynamic Loader -->
         <div id="loader" class="text-center py-5" style="display:none;">
           <div class="spinner-border text-gold" role="status">
@@ -483,11 +273,11 @@
         </div>
 
         <!-- Products Grid Container -->
-        <div class="row g-4 product-grid-container" id="products-container">
+        <div class="row g-2 g-md-4 product-grid-container" id="products-container">
           {% for product in products %}
           <!-- Responsive grid item: 2-cols on mobile, 4-cols on desktop -->
-          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 d-flex product-grid-col">
-            <div class="product-card-premium">
+          <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-6 d-flex product-grid-col">
+            <div class="product-card-premium w-100">
               <!-- Image Wrapper -->
               <div class="product-img-wrapper-premium">
                 <!-- Floating Wishlist Button -->
@@ -514,7 +304,7 @@
                 <!-- Action Buttons -->
                 <div class="product-actions-premium">
                   <a href="{% url 'product_detail' product.pk %}" class="btn btn-premium-gold flex-grow-1">View Details</a>
-                  <button class="btn btn-premium-outline flex-grow-1" data-bs-toggle="modal" data-bs-target="#quickViewModal-{{ product.pk }}">Quick View</button>
+                  <button class="btn btn-premium-outline flex-grow-1 d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#quickViewModal-{{ product.pk }}">Quick View</button>
                 </div>
               </div>
             </div>
@@ -546,6 +336,14 @@
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+          {% empty %}
+          <div class="col-12 text-center py-5">
+            <div class="p-5 rounded-4 bg-white shadow-sm border text-muted" style="border: 1px solid rgba(212, 175, 55, 0.12) !important;">
+              <i class="fas fa-search fs-2 text-gold mb-3 d-block"></i>
+              <h4 class="fw-bold text-dark">No Products Found</h4>
+              <p class="mb-0">Try adjusting your filters or price range to find your perfect masterpiece.</p>
             </div>
           </div>
           {% endfor %}
@@ -681,5 +479,6 @@ window.addEventListener('DOMContentLoaded', () => {
     updateActiveFiltersChips(); 
     updateSidebarCheckboxes();
 });
+
 </script>
 {% endblock %}

@@ -55,6 +55,7 @@ def metal_prices_context(request):
         'gold_22k': gold_22k,
         'gold_18k': gold_18k,
         'silver_rate': silver,
+        'active_rates': rates,
         'metal_rates_json': json.dumps(rates_list)
     }
 

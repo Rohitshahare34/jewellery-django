@@ -3,9 +3,20 @@
 
 {% block content %}
 <style>
+  /* Override global main padding to clear navbar exactly with no extra white gap */
+  main {
+    padding-top: 90px !important;
+  }
+  
+  @media (max-width: 991.98px) {
+    main {
+      padding-top: 75px !important;
+    }
+  }
+
   /* ====== WISHLIST PAGE STYLING ====== */
   .wishlist-wrapper {
-    padding: 60px 0;
+    padding: 15px 0 60px 0;
     background: linear-gradient(180deg, #fffdf8 0%, #f9f7f0 100%);
     min-height: 80vh;
   }
@@ -20,30 +31,43 @@
     color: #1a1a1a;
   }
 
-  .wishlist-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 25px;
-  }
-
   .wishlist-card {
     background: #fff;
     border-radius: 16px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
     overflow: hidden;
     transition: all 0.3s ease;
     position: relative;
+    border: 1px solid rgba(212, 175, 55, 0.12);
   }
 
   .wishlist-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.12);
+  }
+
+  .wishlist-img-wrapper {
+    height: 280px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  }
+
+  @media (max-width: 768px) {
+    .wishlist-img-wrapper {
+      height: 180px;
+    }
   }
 
   .wishlist-card img {
-    width: 100%;
-    height: 260px;
-    object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
     transition: transform 0.4s ease;
   }
 
@@ -55,35 +79,45 @@
     padding: 15px;
   }
 
-  .wishlist-body h5 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #222;
-    margin-bottom: 8px;
-  }
-
-  .wishlist-body p {
-    color: #666;
-    font-size: 0.95rem;
-    margin-bottom: 10px;
-  }
-
-  .wishlist-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: space-between;
-  }
-
-  .btn-remove {
-    background-color: #fff0f0;
-    border: 1px solid #f5baba;
+  .wishlist-delete-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     color: #d9534f;
-    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
   }
 
-  .btn-remove:hover {
-    background-color: #d9534f;
+  .wishlist-delete-btn:hover {
+    background: #d9534f;
     color: #fff;
+    transform: scale(1.1);
+  }
+
+  .wishlist-title-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .wishlist-price-text {
+    font-weight: 800;
+    color: #b8952b;
+    font-size: 1.15rem;
   }
 
   .btn-cart {
@@ -91,10 +125,25 @@
     border: none;
     color: #fff;
     transition: 0.3s;
+    font-weight: 700;
+    border-radius: 8px;
   }
 
   .btn-cart:hover {
     background-color: #b8952b;
+  }
+
+  @media (max-width: 768px) {
+    .wishlist-title-text {
+      font-size: 0.88rem;
+    }
+    .wishlist-price-text {
+      font-size: 0.95rem;
+    }
+    .btn-cart {
+      padding: 6px 8px;
+      font-size: 0.8rem;
+    }
   }
 
   .empty-wishlist {
@@ -137,24 +186,34 @@
     </div>
 
     {% if wishlist_items %}
-      <div class="wishlist-grid">
+      <div class="row g-2 g-md-4">
         {% for item in wishlist_items %}
-          <div class="wishlist-card">
-            <a href="{{ item.product.get_absolute_url }}">
-              <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}">
-            </a>
-            <div class="wishlist-body">
-              <h5>{{ item.product.name }}</h5>
-              <p class="mb-2">₹{{ item.product.price }}</p>
-              <div class="wishlist-actions">
-                <form method="post" action="{% url 'wishlist_toggle' item.product.id %}">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-remove btn-sm w-100">
-                    <i class="fas fa-times me-1"></i> Remove
-                  </button>
-                </form>
-                <a href="#" class="btn btn-cart btn-sm w-100">
-                  <i class="fas fa-shopping-bag me-1"></i> Add to Cart
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 d-flex">
+            <div class="wishlist-card w-100 d-flex flex-column justify-content-between position-relative">
+              
+              <!-- Floating Delete Button -->
+              <form method="post" action="{% url 'wishlist_toggle' item.product.id %}" class="m-0">
+                {% csrf_token %}
+                <button type="submit" class="wishlist-delete-btn" aria-label="Remove item">
+                  <i class="fas fa-times"></i>
+                </button>
+              </form>
+
+              <div>
+                <a href="{{ item.product.get_absolute_url }}">
+                  <div class="wishlist-img-wrapper">
+                    <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}">
+                  </div>
+                </a>
+                <div class="wishlist-body">
+                  <h5 class="wishlist-title-text">{{ item.product.name }}</h5>
+                  <p class="wishlist-price-text mb-0">₹{{ item.product.price }}</p>
+                </div>
+              </div>
+              
+              <div class="wishlist-body pt-0">
+                <a href="#" class="btn btn-cart btn-sm w-100 py-2 d-flex align-items-center justify-content-center">
+                  <i class="fas fa-shopping-bag me-2"></i> Add to Cart
                 </a>
               </div>
             </div>

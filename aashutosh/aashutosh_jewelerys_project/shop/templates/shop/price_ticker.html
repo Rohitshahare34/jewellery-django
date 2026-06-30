@@ -3,62 +3,29 @@
 <div class="price-ticker">
     <div class="ticker-wrapper">
         <div class="ticker-content" id="ticker-content">
-            <!-- Gold 24K Price -->
+            <!-- First set of rates (from database) -->
+            {% for rate in active_rates %}
             <div class="ticker-item">
-                <i class="fas fa-coins text-warning"></i>
-                <span class="metal-name">Gold 24K</span>
-                <span class="metal-price">₹<span id="gold-price">{{ gold_price.price_per_gram|default:"7250.00" }}</span>/g</span>
+                <i class="fas fa-coins {% if 'GOLD' in rate.metal_type %}text-warning{% else %}text-secondary{% endif %}" {% if 'SILVER' in rate.metal_type %}style="color: #C0C0C0;"{% endif %}></i>
+                <span class="metal-name">{{ rate.get_metal_type_display }}</span>
+                <span class="metal-price">₹<span id="price-{{ rate.metal_type|lower }}">{{ rate.rate_per_gram }}</span>/g</span>
             </div>
-
-            <!-- Divider -->
             <div class="ticker-divider"></div>
-
-            <!-- Gold 22K Price -->
-            <div class="ticker-item">
-                <i class="fas fa-coins text-warning"></i>
-                <span class="metal-name">Gold 22K</span>
-                <span class="metal-price">₹<span id="gold-22k-price">{{ gold_price.price_22k|default:"6646.00" }}</span>/g</span>
-            </div>
-
-            <!-- Divider -->
-            <div class="ticker-divider"></div>
-
-            <!-- Silver Price -->
-            <div class="ticker-item">
-                <i class="fas fa-coins" style="color: #C0C0C0;"></i>
-                <span class="metal-name">9 to 5 Silver Jewellery</span>
-            </div>
-
-            <!-- Divider -->
-            <div class="ticker-divider"></div>
+            {% endfor %}
 
             <!-- Duplicate content for seamless infinite scroll -->
+            {% for rate in active_rates %}
             <div class="ticker-item">
-                <i class="fas fa-coins text-warning"></i>
-                <span class="metal-name">Gold 24K</span>
-                <span class="metal-price">₹<span id="gold-price-2">{{ gold_price.price_per_gram|default:"7250.00" }}</span>/g</span>
+                <i class="fas fa-coins {% if 'GOLD' in rate.metal_type %}text-warning{% else %}text-secondary{% endif %}" {% if 'SILVER' in rate.metal_type %}style="color: #C0C0C0;"{% endif %}></i>
+                <span class="metal-name">{{ rate.get_metal_type_display }}</span>
+                <span class="metal-price">₹<span id="price-{{ rate.metal_type|lower }}-2">{{ rate.rate_per_gram }}</span>/g</span>
             </div>
-
             <div class="ticker-divider"></div>
-
-            <div class="ticker-item">
-                <i class="fas fa-coins text-warning"></i>
-                <span class="metal-name">Gold 22K</span>
-                <span class="metal-price">₹<span>{{ gold_price.price_22k|default:"6646.00" }}</span>/g</span>
-            </div>
-
-            <div class="ticker-divider"></div>
-
-            <div class="ticker-item">
-                <i class="fas fa-coins" style="color: #C0C0C0;"></i>
-                <span class="metal-name">9 to 5 Silver Jewellery</span>
-            </div>
-
-            <div class="ticker-divider"></div>
+            {% endfor %}
         </div>
     </div>
 </div>
 
 <!-- Link CSS and JS -->
-<link rel="stylesheet" href="{% static 'shop/css/price_ticker.css' %}">
+<link class="price-ticker-style" rel="stylesheet" href="{% static 'shop/css/price_ticker.css' %}">
 <script src="{% static 'shop/js/price_ticker.js' %}"></script>
