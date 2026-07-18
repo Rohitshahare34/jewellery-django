@@ -2344,27 +2344,27 @@
 <!-- Feedback Submission Popup Modal -->
 <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 20px; overflow: hidden; border: 2px solid rgba(212,175,55,0.4); box-shadow: 0 15px 40px rgba(0,0,0,0.6); background: #1a1a1a; color: white;">
+        <div class="modal-content" style="border-radius: 20px; overflow: hidden; border: 2px solid #d4af37; box-shadow: 0 15px 40px rgba(0,0,0,0.15); background: #ffffff; color: #2d2512;">
             <!-- Header -->
-            <div class="modal-header py-3 px-4" style="background: linear-gradient(135deg, #0f0f0f 0%, #2d2512 100%); border-bottom: 2px solid #FFD700;">
-                <h5 class="modal-title fw-bold text-gold" id="feedbackModalLabel" style="font-family: 'Cinzel', serif; color: #FFD700; margin: 0;">Share Your Experience</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header py-3 px-4" style="background: linear-gradient(135deg, #fdfbf7 0%, #f5eeda 100%); border-bottom: 2px solid #FFD700;">
+                <h5 class="modal-title fw-bold" id="feedbackModalLabel" style="font-family: 'Cinzel', serif; color: #b8952b; margin: 0;">Share Your Experience</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!-- Body -->
             <form id="feedbackForm" method="POST" action="{% url 'submit_testimonial' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="modal-body p-4">
                     <div class="mb-3">
-                        <label for="feedbackName" class="form-label text-gold fw-semibold">Your Name *</label>
-                        <input type="text" class="form-control bg-dark text-white border-secondary" id="feedbackName" name="name" required style="border-radius: 10px;">
+                        <label for="feedbackName" class="form-label fw-semibold" style="color: #b8952b;">Your Name *</label>
+                        <input type="text" class="form-control" id="feedbackName" name="name" required style="border-radius: 10px; background: #ffffff; color: #1a1a1a; border: 1px solid #d4af37;">
                     </div>
                     <div class="mb-3">
-                        <label for="feedbackDesignation" class="form-label text-gold">Designation / Role (Optional)</label>
-                        <input type="text" class="form-control bg-dark text-white border-secondary" id="feedbackDesignation" name="designation" placeholder="e.g. Verified Buyer, Customer" style="border-radius: 10px;">
+                        <label for="feedbackDesignation" class="form-label" style="color: #b8952b;">Designation / Role (Optional)</label>
+                        <input type="text" class="form-control" id="feedbackDesignation" name="designation" placeholder="e.g. Verified Buyer, Customer" style="border-radius: 10px; background: #ffffff; color: #1a1a1a; border: 1px solid #d4af37;">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-gold fw-semibold">Rating *</label>
-                        <div class="rating-stars d-flex gap-2 fs-4" style="cursor: pointer;">
+                        <label class="form-label fw-semibold" style="color: #b8952b;">Rating *</label>
+                        <div class="rating-stars d-flex gap-2 fs-4 text-warning" style="cursor: pointer;">
                             <i class="far fa-star star-btn" data-value="1"></i>
                             <i class="far fa-star star-btn" data-value="2"></i>
                             <i class="far fa-star star-btn" data-value="3"></i>
@@ -2374,26 +2374,26 @@
                         <input type="hidden" name="rating" id="feedbackRating" value="5">
                     </div>
                     <div class="mb-3">
-                        <label for="feedbackImage" class="form-label text-gold fw-semibold">Upload Product Image (Optional)</label>
-                        <input type="file" class="form-control bg-dark text-white border-secondary" id="feedbackImage" accept="image/*" style="border-radius: 10px;">
+                        <label for="feedbackImage" class="form-label fw-semibold" style="color: #b8952b;">Upload Product Image (Optional)</label>
+                        <input type="file" class="form-control" id="feedbackImage" accept="image/*" style="border-radius: 10px; background: #ffffff; color: #1a1a1a; border: 1px solid #d4af37;">
                         <small class="text-muted mt-1 d-block">Adjust, crop, and zoom your photo (just like Instagram/Facebook profile pictures!)</small>
                         
                         <!-- Cropper Workspace Container -->
                         <div id="cropperContainer" class="mt-3 d-none">
-                            <label class="text-gold small mb-1 d-block">Drag & adjust photo selection below:</label>
-                            <div style="height: 250px; background: #0c0c0c; border-radius: 10px; overflow: hidden; border: 1px solid rgba(212,175,55,0.3); position: relative;">
+                            <label class="small mb-1 d-block" style="color: #b8952b;">Drag & adjust photo selection below:</label>
+                            <div style="height: 250px; background: #f8f9fa; border-radius: 10px; overflow: hidden; border: 1px solid rgba(212,175,55,0.3); position: relative;">
                                 <img id="cropperImage" src="" style="max-width: 100%; display: block;">
                             </div>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="feedbackMessage" class="form-label text-gold fw-semibold">Your Feedback *</label>
-                        <textarea class="form-control bg-dark text-white border-secondary" id="feedbackMessage" name="message" rows="4" required style="border-radius: 10px;" placeholder="Tell us about your experience..."></textarea>
+                        <label for="feedbackMessage" class="form-label fw-semibold" style="color: #b8952b;">Your Feedback *</label>
+                        <textarea class="form-control" id="feedbackMessage" name="message" rows="4" required style="border-radius: 10px; background: #ffffff; color: #1a1a1a; border: 1px solid #d4af37;" placeholder="Tell us about your experience..."></textarea>
                     </div>
                     <div id="feedbackAlert" class="alert d-none py-2 px-3 small" style="border-radius: 10px;"></div>
                 </div>
                 <!-- Footer -->
-                <div class="modal-footer p-3" style="border-top: 1px solid rgba(255, 215, 0, 0.1); background: #0f0f0f;">
+                <div class="modal-footer p-3" style="border-top: 1px solid rgba(212, 175, 55, 0.15); background: #fdfbf7;">
                     <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-gold rounded-pill px-4" style="background: linear-gradient(135deg, #d4af37 0%, #b8952b 100%); border: none; color: white;">Submit Feedback</button>
                 </div>
