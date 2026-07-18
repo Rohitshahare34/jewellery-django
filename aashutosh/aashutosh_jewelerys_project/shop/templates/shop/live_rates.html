@@ -160,12 +160,29 @@
 
         <!-- Detailed Price Breakdown Table -->
         <div class="my-5">
-            <h3 class="text-center mb-4" style="font-family: 'Cinzel', serif; color: #4a3629; font-weight: 700;">Detailed Price Breakdown (per 1 Gram)</h3>
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-between mb-4 gap-3">
+                <h3 class="mb-0" style="font-family: 'Cinzel', serif; color: #4a3629; font-weight: 700;">Detailed Price Breakdown (per 1 Gram)</h3>
+                <button class="btn px-4 py-2 text-white fw-bold shadow-sm d-flex align-items-center gap-2" style="background: linear-gradient(135deg, #d4af37 0%, #daa520 100%); border-radius: 50px; border: none; font-family: 'Montserrat', sans-serif; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'" onclick="downloadRateCard()">
+                    <i class="fas fa-download"></i> Download Rate Card
+                </button>
+            </div>
             
-            <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 16px; border: 1px solid rgba(212,175,55,0.12);">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0" style="font-family: 'Montserrat', sans-serif;">
-                        <thead style="background-color: #f7f1eb; border-bottom: 2px solid rgba(212,175,55,0.2);">
+            <div id="priceBreakdownCard" class="card border-0 shadow-sm overflow-hidden position-relative" style="border-radius: 16px; border: 1px solid rgba(212,175,55,0.12); background-color: #ffffff;">
+                <!-- Header inside the card for branding/downloaded image -->
+                <div class="p-4 text-center border-bottom" style="background-color: #fdfbf7; border-bottom: 1px solid rgba(212,175,55,0.15);">
+                    <img src="{% static 'shop/images/logo_aashu.png' %}" alt="Aashutosh Jewellers Logo" style="height: 50px; object-fit: contain; margin-bottom: 8px;">
+                    <h4 class="fw-bold mb-1" style="font-family: 'Cinzel', serif; color: #4a3629; letter-spacing: 1px; font-size: 1.3rem;">Aashutosh Jewellers</h4>
+                    <p class="text-muted small mb-0" style="font-family: 'Montserrat', sans-serif; font-size: 0.85rem;">Live Metal Price Breakdown (per 1 Gram) | {% now "d M Y" %}</p>
+                </div>
+
+                <!-- Watermark Logo -->
+                <div class="watermark-logo-wrapper d-flex align-items-center justify-content-center position-absolute top-0 start-0 w-100 h-100" style="opacity: 0.035; pointer-events: none; z-index: 0; padding-top: 100px;">
+                    <img src="{% static 'shop/images/logo_aashu.png' %}" alt="Watermark" style="max-width: 45%; max-height: 50%; object-fit: contain;">
+                </div>
+
+                <div class="table-responsive position-relative" style="z-index: 1; background: transparent;">
+                    <table class="table table-hover align-middle mb-0" style="font-family: 'Montserrat', sans-serif; background: transparent;">
+                        <thead style="background-color: #fcfbf7; border-bottom: 2px solid rgba(212,175,55,0.2);">
                             <tr class="text-dark fw-bold">
                                 <th scope="col" class="py-3 px-4">Metal Type / Purity</th>
                                 <th scope="col" class="py-3">Current Price</th>
@@ -175,21 +192,21 @@
                                 <th scope="col" class="py-3 px-4 text-end">Final Price</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody style="background: transparent;">
                             {% for item in rates_with_breakdown %}
-                            <tr>
-                                <td class="py-3 px-4 fw-bold text-dark">
+                            <tr style="background: transparent;">
+                                <td class="py-3 px-4 fw-bold text-dark" style="background: transparent;">
                                     <div class="d-flex align-items-center gap-2">
                                         <span class="rounded-circle d-inline-block rate-dot-{% if 'GOLD' in item.rate.metal_type or 'Gold' in item.rate.metal_type %}gold{% else %}silver{% endif %}" style="width: 8px; height: 8px;"></span>
                                         {{ item.rate.get_metal_type_display }} ({{ item.rate.purity }}% Pure)
                                     </div>
                                 </td>
-                                <td class="py-3 text-secondary">
+                                <td class="py-3 text-secondary" style="background: transparent;">
                                     {% if item.breakdown.base_price > 0 %}
                                     ₹{{ item.breakdown.base_price|floatformat:2 }}
                                     {% endif %}
                                 </td>
-                                <td class="py-3 text-secondary">
+                                <td class="py-3 text-secondary" style="background: transparent;">
                                     {% if item.rate.show_making_charge and item.rate.making_charge > 0 %}
                                         {% if item.rate.making_type == 'FIXED' %}
                                         ₹{{ item.rate.making_charge|floatformat:2 }}/g
@@ -198,17 +215,17 @@
                                         {% endif %}
                                     {% endif %}
                                 </td>
-                                <td class="py-3 text-secondary">
+                                <td class="py-3 text-secondary" style="background: transparent;">
                                     {% if item.breakdown.subtotal > 0 %}
                                     ₹{{ item.breakdown.subtotal|floatformat:2 }}
                                     {% endif %}
                                 </td>
-                                <td class="py-3 text-secondary">
+                                <td class="py-3 text-secondary" style="background: transparent;">
                                     {% if item.rate.show_gst and item.breakdown.gst_amount > 0 %}
                                     ₹{{ item.breakdown.gst_amount|floatformat:2 }}
                                     {% endif %}
                                 </td>
-                                <td class="py-3 px-4 text-end fw-bold text-dark fs-5">₹{{ item.breakdown.total_amount|floatformat:2 }}</td>
+                                <td class="py-3 px-4 text-end fw-bold text-dark fs-5" style="background: transparent;">₹{{ item.breakdown.total_amount|floatformat:2 }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -298,6 +315,53 @@ function initLiveCalculator() {
     weightInput.addEventListener('input', calculate);
 
     calculate();
+}
+
+function downloadRateCard() {
+    const btn = document.querySelector('button[onclick="downloadRateCard()"]');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+    btn.disabled = true;
+
+    if (typeof html2canvas === 'undefined') {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+        script.onload = performDownload;
+        script.onerror = function() {
+            alert('Failed to load image generation library.');
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        };
+        document.head.appendChild(script);
+    } else {
+        performDownload();
+    }
+    
+    function performDownload() {
+        const element = document.getElementById('priceBreakdownCard');
+        
+        setTimeout(() => {
+            html2canvas(element, {
+                backgroundColor: '#ffffff',
+                scale: 2,
+                useCORS: true,
+                logging: false
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'Aashutosh_Jewellers_Live_Rates.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }).catch(err => {
+                console.error(err);
+                alert('Error downloading rate card.');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }, 300);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {

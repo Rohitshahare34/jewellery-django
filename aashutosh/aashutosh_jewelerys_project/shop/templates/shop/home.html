@@ -2,6 +2,10 @@
 {% load static %}
 
 {% block content %}
+<!-- Cropper.js CSS & JS CDN for Instagram/Facebook style profile image cropping -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <!-- ======== DISCOUNT POPUP MODAL ======== -->
 {% include 'shop/popup_modal.html' %}
 
@@ -362,6 +366,7 @@
     color: white !important;
     font-size: 0.9rem !important;
     box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3) !important;
+    z-index: 3 !important;
   }
 
   .testimonial-text {
@@ -1568,24 +1573,52 @@
     display: flex;
     gap: 1.5rem;
     overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
     padding: 1rem 0;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: #d4af37 #f0f0f0;
+    scrollbar-width: none;
   }
 
   .reels-container::-webkit-scrollbar {
-    height: 8px;
+    display: none;
   }
 
-  .reels-container::-webkit-scrollbar-track {
-    background: #f0f0f0;
-    border-radius: 4px;
+  /* Reel scroll buttons styles */
+  .reel-scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4a3629;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+    z-index: 10;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
-
-  .reels-container::-webkit-scrollbar-thumb {
-    background: #d4af37;
-    border-radius: 4px;
+  .reel-scroll-btn:hover {
+    background: #b89025;
+    color: white;
+    transform: translateY(-50%) scale(1.1);
+  }
+  .prev-btn {
+    left: -20px;
+  }
+  .next-btn {
+    right: -20px;
+  }
+  @media (max-width: 768px) {
+    .reel-scroll-btn {
+      display: none;
+    }
   }
 
   .reel-card {
@@ -1594,7 +1627,14 @@
     background: #fff;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    scroll-snap-align: start;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    cursor: pointer;
+  }
+  .reel-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
   }
 
   .reel-video-container {
@@ -1602,6 +1642,7 @@
     aspect-ratio: 9/16;
     background: #000;
     overflow: hidden;
+    position: relative;
   }
 
   .reel-video-container video {
@@ -1610,14 +1651,70 @@
     object-fit: cover;
   }
 
+  .play-overlay-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 52px;
+    height: 52px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.1rem;
+    opacity: 1;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    pointer-events: none;
+    z-index: 2;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  }
+  .reel-card:hover .play-overlay-btn {
+    background: rgba(184, 144, 37, 0.85);
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  .reel-mute-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 36px;
+    height: 36px;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 0.95rem;
+    cursor: pointer;
+    z-index: 5;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+  .reel-mute-btn:hover {
+    background: rgba(184, 144, 37, 0.85);
+    transform: scale(1.1);
+  }
+
   .reel-info {
-    padding: 1rem;
+    padding: 1.25rem 1rem;
+    background: #ffffff;
+    border-top: 1px solid rgba(0,0,0,0.03);
   }
 
   .reel-info h5 {
-    font-size: 1rem;
-    color: #333;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #2c2c2c;
+    font-family: 'Montserrat', sans-serif;
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* Mobile adjustments for Recommended and Reels */
@@ -1735,21 +1832,37 @@
 <section class="reels-section">
   <div class="container">
     <h3 class="reels-title">Jewellery Showcase</h3>
-    <div class="reels-container">
-      {% for reel in reels %}
-      <div class="reel-card">
-        <div class="reel-video-container">
-          <video loop muted playsinline {% if forloop.first %}autoplay{% endif %}>
-            <source src="{{ reel.video.url }}" type="video/mp4">
-          </video>
+    <div class="position-relative">
+      <!-- Left scroll button -->
+      <button class="reel-scroll-btn prev-btn" onclick="scrollReels(-1)">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+
+      <div class="reels-container">
+        {% for reel in reels %}
+        <div class="reel-card">
+          <div class="reel-video-container">
+            <video loop muted playsinline {% if forloop.first %}autoplay{% endif %} {% if reel.cover_image %}poster="{{ reel.cover_image.url }}"{% endif %}>
+              <source src="{{ reel.video.url }}" type="video/mp4">
+            </video>
+            <!-- Mute/Unmute Button -->
+            <button class="reel-mute-btn" onclick="event.stopPropagation(); toggleReelMute(this)" aria-label="Mute or Unmute Audio">
+              <i class="fas fa-volume-mute"></i>
+            </button>
+          </div>
+          {% if reel.title %}
+          <div class="reel-info">
+            <h5>{{ reel.title }}</h5>
+          </div>
+          {% endif %}
         </div>
-        {% if reel.title %}
-        <div class="reel-info">
-          <h5>{{ reel.title }}</h5>
-        </div>
-        {% endif %}
+        {% endfor %}
       </div>
-      {% endfor %}
+
+      <!-- Right scroll button -->
+      <button class="reel-scroll-btn next-btn" onclick="scrollReels(1)">
+        <i class="fas fa-chevron-right"></i>
+      </button>
     </div>
   </div>
 </section>
@@ -2096,8 +2209,14 @@
             <div class="testimonial-quote-box">
               <i class="fas fa-quote-left"></i>
             </div>
+            <!-- Product/Customer Image if uploaded -->
+            {% if testimonial.image %}
+            <div class="testimonial-img-wrapper" style="margin: -30px -24px 15px -24px; height: 180px; overflow: hidden; border-top-left-radius: 17px; border-top-right-radius: 17px; position: relative;">
+              <img src="{{ testimonial.image.url }}" class="w-100 h-100 testimonial-upload-img" style="object-fit: cover; cursor: pointer;" onclick="viewTestimonialImage('{{ testimonial.image.url }}')" alt="Review Image">
+            </div>
+            {% endif %}
             <!-- Star Rating -->
-            <div class="text-end text-warning mb-3">
+            <div class="text-start text-warning mb-2" style="font-size: 0.85rem; {% if not testimonial.image %}margin-top: 10px;{% endif %}">
               {% for i in "12345"|make_list %}
                 {% if forloop.counter <= testimonial.rating %}
                   <i class="fas fa-star"></i>
@@ -2126,7 +2245,7 @@
               <i class="fas fa-quote-left"></i>
             </div>
             <!-- Star Rating -->
-            <div class="text-end text-warning mb-3">
+            <div class="text-start text-warning mb-2" style="font-size: 0.85rem;">
               <i class="fas fa-star"></i>
               <i class="fas fa-star"></i>
               <i class="fas fa-star"></i>
@@ -2151,7 +2270,7 @@
             <div class="testimonial-quote-box">
               <i class="fas fa-quote-left"></i>
             </div>
-            <div class="text-end text-warning mb-3">
+            <div class="text-start text-warning mb-2" style="font-size: 0.85rem;">
               <i class="fas fa-star"></i>
               <i class="fas fa-star"></i>
               <i class="fas fa-star"></i>
@@ -2174,7 +2293,7 @@
             <div class="testimonial-quote-box">
               <i class="fas fa-quote-left"></i>
             </div>
-            <div class="text-end text-warning mb-3">
+            <div class="text-start text-warning mb-2" style="font-size: 0.85rem;">
               <i class="fas fa-star"></i>
               <i class="fas fa-star"></i>
               <i class="fas fa-star"></i>
@@ -2197,7 +2316,7 @@
             <div class="testimonial-quote-box">
               <i class="fas fa-quote-left"></i>
             </div>
-            <div class="text-end text-warning mb-3">
+            <div class="text-start text-warning mb-2" style="font-size: 0.85rem;">
               <i class="fas fa-star"></i>
               <i class="fas fa-star"></i>
               <i class="fas fa-star"></i>
@@ -2232,7 +2351,7 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!-- Body -->
-            <form id="feedbackForm" method="POST" action="{% url 'submit_testimonial' %}">
+            <form id="feedbackForm" method="POST" action="{% url 'submit_testimonial' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="modal-body p-4">
                     <div class="mb-3">
@@ -2253,6 +2372,19 @@
                             <i class="far fa-star star-btn" data-value="5"></i>
                         </div>
                         <input type="hidden" name="rating" id="feedbackRating" value="5">
+                    </div>
+                    <div class="mb-3">
+                        <label for="feedbackImage" class="form-label text-gold fw-semibold">Upload Product Image (Optional)</label>
+                        <input type="file" class="form-control bg-dark text-white border-secondary" id="feedbackImage" accept="image/*" style="border-radius: 10px;">
+                        <small class="text-muted mt-1 d-block">Adjust, crop, and zoom your photo (just like Instagram/Facebook profile pictures!)</small>
+                        
+                        <!-- Cropper Workspace Container -->
+                        <div id="cropperContainer" class="mt-3 d-none">
+                            <label class="text-gold small mb-1 d-block">Drag & adjust photo selection below:</label>
+                            <div style="height: 250px; background: #0c0c0c; border-radius: 10px; overflow: hidden; border: 1px solid rgba(212,175,55,0.3); position: relative;">
+                                <img id="cropperImage" src="" style="max-width: 100%; display: block;">
+                            </div>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="feedbackMessage" class="form-label text-gold fw-semibold">Your Feedback *</label>
@@ -2299,7 +2431,56 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Handle AJAX form submission
+    // Cropper instance variable
+    let cropper = null;
+    const feedbackImageInput = document.getElementById('feedbackImage');
+    const cropperImage = document.getElementById('cropperImage');
+    const cropperContainer = document.getElementById('cropperContainer');
+
+    // Handle feedback image selection and initialize cropper
+    feedbackImageInput.addEventListener('change', function(e) {
+        const files = e.target.files;
+        if (files && files.length > 0) {
+            const file = files[0];
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                cropperImage.onload = function() {
+                    try {
+                        if (cropper) {
+                            cropper.destroy();
+                        }
+                        cropper = new Cropper(cropperImage, {
+                            aspectRatio: 1.55,
+                            viewMode: 1,
+                            dragMode: 'move',
+                            autoCropArea: 1,
+                            restore: false,
+                            guides: true,
+                            center: true,
+                            highlight: false,
+                            cropBoxMovable: true,
+                            cropBoxResizable: true,
+                            toggleDragModeOnDblclick: false,
+                        });
+                    } catch (err) {
+                        console.error("Failed to initialize Cropper:", err);
+                    }
+                    cropperImage.onload = null;
+                };
+                cropperImage.src = event.target.result;
+                cropperContainer.classList.remove('d-none');
+            };
+            reader.readAsDataURL(file);
+        } else {
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+            cropperContainer.classList.add('d-none');
+        }
+    });
+
+    // Handle AJAX form submission with Cropper.js
     const feedbackForm = document.getElementById('feedbackForm');
     if (feedbackForm) {
         feedbackForm.addEventListener('submit', function(e) {
@@ -2316,100 +2497,156 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const formData = new FormData(form);
             
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
-                
-                if (data.success) {
-                    alertBox.className = 'alert alert-success py-2 px-3 small';
-                    alertBox.textContent = 'Thank you! Your feedback has been submitted successfully.';
-                    alertBox.classList.remove('d-none');
-                    
-                    // Prepend new card to the list
-                    const container = document.querySelector('.testimonials-section .row.g-4');
-                    
-                    // Build stars html dynamically
-                    let starsHtml = '';
-                    for (let j = 1; j <= 5; j++) {
-                        if (j <= data.testimonial.rating) {
-                            starsHtml += '<i class="fas fa-star"></i> ';
-                        } else {
-                            starsHtml += '<i class="far fa-star text-muted"></i> ';
-                        }
+            // Inner function to send request
+            const sendRequest = (dataToSend) => {
+                fetch(form.action, {
+                    method: 'POST',
+                    body: dataToSend,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
                     
-                    const newCard = `
-                      <div class="col-lg-3 col-md-6 col-12 d-flex">
-                        <div class="testimonial-card-wrapper w-100 d-flex flex-column">
-                          <div class="testimonial-card-bg-circles"></div>
-                          <div class="testimonial-card-shadow"></div>
-                          <div class="testimonial-bubble-card d-flex flex-column flex-grow-1">
-                            <div class="testimonial-quote-box">
-                              <i class="fas fa-quote-left"></i>
+                    if (data.success) {
+                        alertBox.className = 'alert alert-success py-2 px-3 small';
+                        alertBox.textContent = 'Thank you! Your feedback has been submitted successfully.';
+                        alertBox.classList.remove('d-none');
+                        
+                        // Prepend new card to the list
+                        const container = document.querySelector('.testimonials-section .row.g-4');
+                        
+                        // Build stars html dynamically
+                        let starsHtml = '';
+                        for (let j = 1; j <= 5; j++) {
+                            if (j <= data.testimonial.rating) {
+                                starsHtml += '<i class="fas fa-star"></i> ';
+                            } else {
+                                starsHtml += '<i class="far fa-star text-muted"></i> ';
+                            }
+                        }
+                        
+                        const newCard = `
+                          <div class="col-lg-3 col-md-6 col-12 d-flex">
+                            <div class="testimonial-card-wrapper w-100 d-flex flex-column">
+                              <div class="testimonial-card-bg-circles"></div>
+                              <div class="testimonial-card-shadow"></div>
+                              <div class="testimonial-bubble-card d-flex flex-column flex-grow-1">
+                                <div class="testimonial-quote-box">
+                                  <i class="fas fa-quote-left"></i>
+                                </div>
+                                ${data.testimonial.image_url ? `
+                                <div class="testimonial-img-wrapper" style="margin: -30px -24px 15px -24px; height: 180px; overflow: hidden; border-top-left-radius: 17px; border-top-right-radius: 17px; position: relative;">
+                                  <img src="${data.testimonial.image_url}" class="w-100 h-100 testimonial-upload-img" style="object-fit: cover; cursor: pointer;" onclick="viewTestimonialImage('${data.testimonial.image_url}')" alt="Review Image">
+                                </div>
+                                ` : ''}
+                                <div class="text-start text-warning mb-2" style="font-size: 0.85rem; ${!data.testimonial.image_url ? 'margin-top: 10px;' : ''}">
+                                  ${starsHtml}
+                                </div>
+                                <p class="testimonial-text flex-grow-1">${data.testimonial.message}</p>
+                                <h6 class="testimonial-author mt-3 mb-0">${data.testimonial.name}</h6>
+                                <small class="text-muted text-end block mt-1" style="font-size: 0.8rem;">${data.testimonial.designation}</small>
+                              </div>
                             </div>
-                            <div class="text-end text-warning mb-3">
-                              ${starsHtml}
-                            </div>
-                            <p class="testimonial-text flex-grow-1">${data.testimonial.message}</p>
-                            <h6 class="testimonial-author mt-3 mb-0">${data.testimonial.name}</h6>
-                            <small class="text-muted text-end block mt-1" style="font-size: 0.8rem;">${data.testimonial.designation}</small>
                           </div>
-                        </div>
-                      </div>
-                    `;
-                    
-                    // Remove dynamic empty state msg if any
-                    const emptyState = container.querySelector('.empty-testimonials');
-                    if (emptyState) {
-                        emptyState.remove();
-                    }
-                    
-                    container.insertAdjacentHTML('afterbegin', newCard);
-                    
-                    // Reset form and stars
-                    form.reset();
-                    highlightStars(5);
-                    ratingInput.value = 5;
-                    
-                    // Hide modal after a brief delay
-                    setTimeout(function() {
-                        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('feedbackModal'));
-                        if (modalInstance) {
-                            modalInstance.hide();
+                        `;
+                        
+                        // Remove dynamic empty state msg if any
+                        const emptyState = container.querySelector('.empty-testimonials');
+                        if (emptyState) {
+                            emptyState.remove();
                         }
-                        alertBox.classList.add('d-none');
-                    }, 1500);
-                    
-                } else {
+                        
+                        container.insertAdjacentHTML('afterbegin', newCard);
+                        
+                        // Reset form, stars, and cropper workspace
+                        form.reset();
+                        if (cropper) {
+                            cropper.destroy();
+                            cropper = null;
+                        }
+                        cropperContainer.classList.add('d-none');
+                        highlightStars(5);
+                        ratingInput.value = 5;
+                        
+                        // Hide modal after a brief delay
+                        setTimeout(function() {
+                            const modalInstance = bootstrap.Modal.getInstance(document.getElementById('feedbackModal'));
+                            if (modalInstance) {
+                                modalInstance.hide();
+                            }
+                            alertBox.classList.add('d-none');
+                        }, 1500);
+                        
+                    } else {
+                        alertBox.className = 'alert alert-danger py-2 px-3 small';
+                        alertBox.textContent = data.error || 'Something went wrong. Please check your inputs.';
+                        alertBox.classList.remove('d-none');
+                    }
+                })
+                .catch(error => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
                     alertBox.className = 'alert alert-danger py-2 px-3 small';
-                    alertBox.textContent = data.error || 'Something went wrong. Please check your inputs.';
+                    alertBox.textContent = 'An error occurred. Please try again.';
                     alertBox.classList.remove('d-none');
-                }
-            })
-            .catch(error => {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
-                alertBox.className = 'alert alert-danger py-2 px-3 small';
-                alertBox.textContent = 'An error occurred. Please try again.';
-                alertBox.classList.remove('d-none');
-                console.error(error);
-            });
+                    console.error(error);
+                });
+            };
+
+            // If we have an active cropper instance, get the cropped canvas as a blob
+            if (cropper) {
+                cropper.getCroppedCanvas({
+                    width: 560,
+                    height: 360,
+                    imageSmoothingEnabled: true,
+                    imageSmoothingQuality: 'high',
+                }).toBlob(function(blob) {
+                    formData.append('image', blob, 'feedback_cropped_image.png');
+                    sendRequest(formData);
+                }, 'image/png');
+            } else {
+                sendRequest(formData);
+            }
         });
     }
 });
+
+// Image Lightbox Viewer
+function viewTestimonialImage(imgUrl) {
+    let imageModal = document.getElementById('testimonialImageModal');
+    if (!imageModal) {
+        imageModal = document.createElement('div');
+        imageModal.id = 'testimonialImageModal';
+        imageModal.className = 'modal fade';
+        imageModal.tabIndex = -1;
+        imageModal.ariaHidden = 'true';
+        imageModal.innerHTML = `
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content" style="background: rgba(0, 0, 0, 0.95); border: none; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                    <div class="modal-header border-0 text-end p-2" style="position: absolute; right: 10px; top: 10px; z-index: 10;">
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));"></button>
+                    </div>
+                    <div class="modal-body p-0 text-center d-flex align-items-center justify-content-center" style="min-height: 250px;">
+                        <img id="testimonialModalImg" src="" class="img-fluid" style="max-height: 80vh; width: auto; object-fit: contain; padding: 20px;">
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(imageModal);
+    }
+    document.getElementById('testimonialModalImg').src = imgUrl;
+    const modal = new bootstrap.Modal(imageModal);
+    modal.show();
+}
 </script>
 
 <!-- ===== Contact Info Section ===== -->
@@ -2556,6 +2793,83 @@ function initHomeCalculator() {
 
     // Initial calculation
     calculate();
+}
+
+// Reels horizontal scroll navigation
+function scrollReels(direction) {
+    const container = document.querySelector('.reels-container');
+    if (container) {
+        const scrollAmount = 300 * direction;
+        container.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+        });
+    }
+}
+
+// Play/pause reels video on click
+document.addEventListener("DOMContentLoaded", function() {
+    const videos = document.querySelectorAll(".reel-video-container video");
+    
+    videos.forEach(video => {
+        const container = video.parentElement;
+        
+        // Add a play overlay button
+        const playButton = document.createElement("div");
+        playButton.className = "play-overlay-btn";
+        playButton.innerHTML = '<i class="fas fa-play"></i>';
+        container.appendChild(playButton);
+        
+        // Play/Pause toggle on click
+        container.addEventListener("click", function() {
+            if (video.paused) {
+                // Pause all other reels first
+                videos.forEach(v => {
+                    if (v !== video) v.pause();
+                });
+                
+                // Automatically unmute this video when user clicks to play it
+                video.muted = false;
+                
+                // Update corresponding mute/unmute button icon
+                const muteIcon = container.querySelector(".reel-mute-btn i");
+                if (muteIcon) {
+                    muteIcon.className = "fas fa-volume-up";
+                }
+                
+                video.play().catch(err => console.log("Play error:", err));
+            } else {
+                video.pause();
+            }
+        });
+        
+        // Sync button visibility with play state
+        video.addEventListener("play", () => {
+            playButton.style.opacity = "0";
+        });
+        video.addEventListener("pause", () => {
+            playButton.style.opacity = "1";
+        });
+        
+        // If already playing (due to autoplay first one), hide play button
+        if (!video.paused) {
+            playButton.style.opacity = "0";
+        }
+    });
+});
+
+// Mute/Unmute toggle function
+function toggleReelMute(button) {
+    const video = button.parentElement.querySelector('video');
+    if (video) {
+        video.muted = !video.muted;
+        const icon = button.querySelector('i');
+        if (video.muted) {
+            icon.className = 'fas fa-volume-mute';
+        } else {
+            icon.className = 'fas fa-volume-up';
+        }
+    }
 }
 
 // Run when DOM is loaded

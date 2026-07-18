@@ -538,11 +538,14 @@ def submit_testimonial(request):
     except ValueError:
         rating = 5
 
+    image = request.FILES.get('image')
+
     testimonial = Testimonial.objects.create(
         name=name,
         rating=rating,
         message=message,
         designation=designation,
+        image=image,
         is_approved=True  # Auto-approve so it shows on front page instantly
     )
 
@@ -553,6 +556,7 @@ def submit_testimonial(request):
             'rating': testimonial.rating,
             'message': testimonial.message,
             'designation': testimonial.designation,
+            'image_url': testimonial.image.url if testimonial.image else None,
             'created_at': testimonial.created_at.strftime('%Y-%m-%d')
         }
     })

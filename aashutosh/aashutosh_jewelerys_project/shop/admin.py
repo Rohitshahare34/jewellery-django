@@ -35,8 +35,9 @@ except admin.sites.NotRegistered:
 # -----------------------------
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'image_preview')
+    list_display = ('name', 'sort_order', 'image_preview')
     search_fields = ('name',)
+    list_editable = ('sort_order',)
 
     def image_preview(self, obj):
         """Show category image thumbnail in admin."""
@@ -122,7 +123,7 @@ class ProductImageInline(admin.TabularInline):
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
         'name', 'subcategory', 'get_category', 'metal_type', 
-        'display_purity', 'price', 'is_featured', 'badge', 
+        'display_purity', 'price', 'is_manual_price', 'is_featured', 'badge', 
         'stone_type', 'in_stock', 'image_preview'
     )
     search_fields = (
@@ -131,6 +132,7 @@ class ProductAdmin(admin.ModelAdmin):
         'subcategory__category__name'
     )
     list_filter = (
+        'is_manual_price',
         'metal_type', 
         'subcategory__category', 
         'is_featured', 
@@ -151,12 +153,13 @@ class ProductAdmin(admin.ModelAdmin):
                 'gold_purity', 'silver_purity',
                 'gold_weight', 'diamond_weight',
                 'diamond_clarity', 'diamond_color',
-                'stone_type', 'color'
+                'stone_type', 'color',
+                'occasion', 'collection'
             ),
             'classes': ('collapse',),
         }),
         ('Price Breakdown', {
-            'fields': ('gold_value', 'stone_value', 'making_charges', 'gst', 'total_price', 'price'),
+            'fields': ('is_manual_price', 'gold_value', 'stone_value', 'making_charges', 'gst', 'total_price', 'price'),
             'classes': ('collapse',),
         }),
     )
@@ -204,10 +207,19 @@ class ProductAdmin(admin.ModelAdmin):
 # -----------------------------
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):
-    list_display = ('name', 'rating', 'designation', 'is_approved', 'created_at')
+    list_display = ('name', 'rating', 'designation', 'image_preview', 'is_approved', 'created_at')
     list_filter = ('rating', 'is_approved', 'created_at')
     search_fields = ('name', 'message', 'designation')
     actions = ['approve_testimonials', 'disapprove_testimonials']
+
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" width="60" height="60" style="object-fit:cover;border-radius:5px;" />',
+                obj.image.url
+            )
+        return "No Image"
+    image_preview.short_description = "Uploaded Image"
 
     def approve_testimonials(self, request, queryset):
         queryset.update(is_approved=True)

@@ -9,10 +9,11 @@ from django.urls import reverse
 class Category(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     image = models.ImageField(upload_to='categories/', blank=True, null=True)
+    sort_order = models.IntegerField(default=0, help_text="Order of display (lower numbers first)")
 
     class Meta:
         verbose_name_plural = "Categories"
-        ordering = ['name']
+        ordering = ['sort_order', 'name']
 
     def __str__(self):
         return self.name
@@ -96,6 +97,9 @@ class Product(models.Model):
 
     # Purity choices separated for clarity:
     GOLD_PURITY_CHOICES = [
+        ('9K', '9K'),
+        ('10K', '10K'),
+        ('14K', '14K'),
         ('18K', '18K'),
         ('22K', '22K'),
         ('24K', '24K'),
@@ -133,6 +137,8 @@ class Product(models.Model):
     stone_type = models.CharField(max_length=20, choices=STONE_CHOICES, default='OTHER', blank=True, null=True)
     color = models.CharField(max_length=20, choices=COLOR_CHOICES, default='GOLD', blank=True, null=True)
     in_stock = models.BooleanField(default=True)
+    occasion = models.CharField(max_length=100, blank=True, null=True)
+    collection = models.CharField(max_length=100, blank=True, null=True)
 
     # --- Metal & Stone Details ---
     metal_type = models.CharField(max_length=20, choices=METAL_CHOICES, default='GOLD', blank=True, null=True)
@@ -186,6 +192,11 @@ class Product(models.Model):
     gst = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True, null=True)
 
     # --- Auto Total ---
+    is_manual_price = models.BooleanField(
+        default=False,
+        verbose_name="Manual Price Override",
+        help_text="Check this to manually enter pricing values (Metal Value, Making Charges, GST) and prevent automatic updates based on daily rates."
+    )
     total_price = models.DecimalField(max_digits=14, decimal_places=2, default=0, editable=False)
 
     class Meta:
@@ -201,6 +212,22 @@ class Product(models.Model):
         Recalculates gold/silver value, making charges, gst and total price
         based on the current MetalRate records in the database.
         """
+        if self.is_manual_price:
+            # Preserving manual values entered by admin. Just calculate total_price:
+            metal_total = (self.gold_value or 0) + (self.silver_value or 0) + (self.platinum_value or 0)
+            self.total_price = (
+                metal_total +
+                (self.stone_value or 0) +
+                (self.making_charges or 0) +
+                (self.gst or 0)
+            )
+            # If the user did not specify a price but specified breakdown, use total_price
+            if not self.price or self.price == 0:
+                self.price = self.total_price
+            if save:
+                super().save()
+            return
+
         rate = None
         weight = 0
         
@@ -212,11 +239,15 @@ class Product(models.Model):
             except:
                 pass
         elif self.metal_type == 'SILVER':
+            purity_code = f"SILVER_{self.silver_purity}" if self.silver_purity else "SILVER"
             weight = self.silver_weight or 0
             try:
-                rate = MetalRate.objects.get(metal_type='SILVER')
+                rate = MetalRate.objects.get(metal_type=purity_code)
             except:
-                pass
+                try:
+                    rate = MetalRate.objects.get(metal_type='SILVER')
+                except:
+                    pass
                 
         if rate:
             # 1. Calculate metal value
@@ -340,11 +371,11 @@ class MetalRate(models.Model):
     ]
     
     metal_type = models.CharField(
-        max_length=20, 
-        choices=METAL_CHOICES, 
+        max_length=50, 
         unique=True,
         blank=True,
-        null=True
+        null=True,
+        help_text="Enter metal rate code (e.g. GOLD_24K, GOLD_22K, GOLD_18K, GOLD_14K, GOLD_9K, SILVER_999, SILVER_STERLING, SILVER, PLATINUM)."
     )
     purity = models.DecimalField(
         max_digits=5, 
@@ -389,21 +420,39 @@ class MetalRate(models.Model):
         return f"{self.get_metal_type_display()} - ₹{self.rate_per_gram}/g"
     
     def get_metal_type_display(self):
-        # Return the display name from choices
+        if not self.metal_type:
+            return ""
+        # Return the display name from choices if available
         for choice in self.METAL_CHOICES:
             if choice[0] == self.metal_type:
                 return choice[1]
-        return self.metal_type
+        
+        # Parse dynamically (e.g. GOLD_14K -> 14K Gold, SILVER_999 -> 999 Silver)
+        parts = self.metal_type.split('_')
+        if len(parts) == 2:
+            metal, purity = parts
+            return f"{purity} {metal.capitalize()}"
+        return self.metal_type.replace('_', ' ').title()
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         
         # Automatically update all Product products matching this metal rate
-        if self.metal_type.startswith('GOLD_'):
+        if self.metal_type and self.metal_type.startswith('GOLD_'):
             purity = self.metal_type.replace('GOLD_', '')
             products = Product.objects.filter(metal_type='GOLD', gold_purity=purity)
-        elif self.metal_type == 'SILVER':
-            products = Product.objects.filter(metal_type='SILVER')
+        elif self.metal_type and self.metal_type.startswith('SILVER'):
+            purity = self.metal_type.replace('SILVER_', '')
+            if purity == 'SILVER':
+                products = Product.objects.filter(metal_type='SILVER')
+            else:
+                products = Product.objects.filter(metal_type='SILVER', silver_purity=purity)
+        elif self.metal_type and self.metal_type.startswith('PLATINUM'):
+            purity = self.metal_type.replace('PLATINUM_', '')
+            if purity == 'PLATINUM':
+                products = Product.objects.filter(metal_type='PLATINUM')
+            else:
+                products = Product.objects.filter(metal_type='PLATINUM', platinum_purity=purity)
         else:
             products = []
             
@@ -461,6 +510,7 @@ class Testimonial(models.Model):
     rating = models.PositiveIntegerField(default=5, blank=True, null=True)
     message = models.TextField(blank=True, null=True)
     designation = models.CharField(max_length=100, blank=True, default="Verified Buyer")
+    image = models.ImageField(upload_to='testimonials/', blank=True, null=True, help_text="Optional product/customer image uploaded with feedback")
     created_at = models.DateTimeField(auto_now_add=True)
     is_approved = models.BooleanField(default=True)
 

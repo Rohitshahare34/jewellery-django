@@ -20,16 +20,16 @@
     </ol>
   </nav>
 
-  <div class="row g-5">
+  <div class="row g-5 align-items-stretch">
     <!-- Product Images -->
-    <div class="col-lg-6">
-      <div class="product-image-main mb-4 text-center position-relative">
+    <div class="col-lg-6 d-flex flex-column">
+      <div class="product-image-main mb-4 text-center position-relative p-3 bg-white rounded shadow-sm d-flex align-items-center justify-content-center" style="min-height: 480px; height: 480px; border: 1px solid rgba(0,0,0,0.05);">
         <!-- Main Product Image -->
         <img id="mainProductImage"
              src="{{ product.image_url }}"
              alt="{{ product.name }}"
-             class="img-fluid rounded shadow w-100 product-zoom"
-             style="max-height: 500px; object-fit: contain; transition: 0.3s ease;">
+             class="img-fluid product-zoom"
+             style="max-height: 100%; max-width: 100%; object-fit: contain; transition: 0.3s ease; border-radius: 8px;">
 
         <!-- Badge (if any) -->
         {% if product.badge != 'NONE' %}
@@ -60,7 +60,7 @@
 
     <!-- Product Info -->
     <div class="col-lg-6">
-      <div class="product-info-card p-4 rounded shadow-sm">
+      <div class="product-info-card p-4 rounded shadow-sm" style="min-height: 480px; height: 100%;">
         <h1 class="display-5 fw-bold mb-3">{{ product.name }}</h1>
         <p class="h2 text-gold mb-4">₹{{ product.price }}</p>
 
@@ -145,13 +145,33 @@
                   <div class="accordion-body">
                     <div class="row">
                       <div class="col-md-4 mb-2">
-                        <p><strong>Metal Type:</strong><br>{{ product.metal_type|default:"Gold" }}</p>
+                        <p><strong>Metal Type:</strong><br>{{ product.get_metal_type_display|default:product.metal_type|default:"-" }}</p>
                       </div>
                       <div class="col-md-4 mb-2">
-                        <p><strong>Purity:</strong><br>{{ product.gold_purity|default:"22K" }}</p>
+                        <p><strong>Purity:</strong><br>
+                          {% if product.metal_type == 'GOLD' %}
+                            {{ product.gold_purity|default:"-" }}
+                          {% elif product.metal_type == 'SILVER' %}
+                            {{ product.get_silver_purity_display|default:product.silver_purity|default:"-" }}
+                          {% elif product.metal_type == 'PLATINUM' %}
+                            {{ product.get_platinum_purity_display|default:product.platinum_purity|default:"-" }}
+                          {% else %}
+                            -
+                          {% endif %}
+                        </p>
                       </div>
                       <div class="col-md-4 mb-2">
-                        <p><strong>Weight:</strong><br>{{ product.gold_weight|default:"15g" }}</p>
+                        <p><strong>Weight:</strong><br>
+                          {% if product.metal_type == 'GOLD' %}
+                            {% if product.gold_weight %}{{ product.gold_weight }} g{% else %}-{% endif %}
+                          {% elif product.metal_type == 'SILVER' %}
+                            {% if product.silver_weight %}{{ product.silver_weight }} g{% else %}-{% endif %}
+                          {% elif product.metal_type == 'PLATINUM' %}
+                            {% if product.platinum_weight %}{{ product.platinum_weight }} g{% else %}-{% endif %}
+                          {% else %}
+                            -
+                          {% endif %}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -168,13 +188,13 @@
                   <div class="accordion-body">
                     <div class="row">
                       <div class="col-md-4 mb-2">
-                        <p><strong>Diamond Weight:</strong><br>{{ product.diamond_weight|default:"0.75 ct" }}</p>
+                        <p><strong>Diamond Weight:</strong><br>{% if product.diamond_weight %}{{ product.diamond_weight }} ct{% else %}-{% endif %}</p>
                       </div>
                       <div class="col-md-4 mb-2">
-                        <p><strong>Clarity:</strong><br>{{ product.diamond_clarity|default:"VVS1" }}</p>
+                        <p><strong>Clarity:</strong><br>{{ product.diamond_clarity|default:"-" }}</p>
                       </div>
                       <div class="col-md-4 mb-2">
-                        <p><strong>Color:</strong><br>{{ product.diamond_color|default:"F" }}</p>
+                        <p><strong>Color:</strong><br>{{ product.diamond_color|default:"-" }}</p>
                       </div>
                     </div>
                   </div>
@@ -191,10 +211,10 @@
                   <div class="accordion-body">
                     <div class="row">
                       <div class="col-md-6 mb-2">
-                        <p><strong>Occasion:</strong><br>{{ product.occasion|default:"Festive / Wedding" }}</p>
+                        <p><strong>Occasion:</strong><br>{{ product.occasion|default:"-" }}</p>
                       </div>
                       <div class="col-md-6 mb-2">
-                        <p><strong>Collection:</strong><br>{{ product.collection|default:"Royal Heritage" }}</p>
+                        <p><strong>Collection:</strong><br>{{ product.collection|default:"-" }}</p>
                       </div>
                     </div>
                   </div>
@@ -230,8 +250,18 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>Value</td>
-                      <td>₹{{ product.gold_value|default:"0" }}</td>
+                      <td>Metal Value</td>
+                      <td>
+                        {% if product.metal_type == 'GOLD' %}
+                          ₹{{ product.gold_value|default:"0" }}
+                        {% elif product.metal_type == 'SILVER' %}
+                          ₹{{ product.silver_value|default:"0" }}
+                        {% elif product.metal_type == 'PLATINUM' %}
+                          ₹{{ product.platinum_value|default:"0" }}
+                        {% else %}
+                          ₹0
+                        {% endif %}
+                      </td>
                     </tr>
                     <tr>
                       <td>Stone Value</td>
@@ -242,7 +272,7 @@
                       <td>₹{{ product.making_charges|default:"0" }}</td>
                     </tr>
                     <tr>
-                      <td>GST (3%)</td>
+                      <td>GST</td>
                       <td>₹{{ product.gst|default:"0" }}</td>
                     </tr>
                     <tr class="table-warning fw-bold">
@@ -264,6 +294,21 @@
 
 <!-- ==================== SCRIPTS ==================== -->
 <script>
+function changeImage(element) {
+  const mainImage = document.getElementById('mainProductImage');
+  if (mainImage && element) {
+    mainImage.src = element.src;
+    
+    // Remove active-thumb class from all thumbnails
+    const thumbs = document.querySelectorAll('.product-thumb');
+    thumbs.forEach(thumb => {
+      thumb.classList.remove('active-thumb');
+    });
+    // Add active-thumb class to clicked thumbnail
+    element.classList.add('active-thumb');
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function() {
   const wishlistBtn = document.getElementById("wishlistBtn");
   const wishlistText = document.getElementById("wishlistText");

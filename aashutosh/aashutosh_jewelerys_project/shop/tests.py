@@ -131,10 +131,14 @@ class ShopTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(response.content, {
             'success': True,
+            'rates': {
+                'gold_22k': '6000.00'
+            },
             'gold': {
                 'price': '0',
                 'price_24k': '0',
                 'price_22k': '6000.00',
+                'price_18k': '0',
                 'change_percent': '0',
                 'is_up': True,
                 'last_updated': 'Updated today',
