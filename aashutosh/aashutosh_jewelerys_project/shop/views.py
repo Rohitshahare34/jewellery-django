@@ -267,6 +267,7 @@ def cart(request):
 # ======================================================
 # PROFILE & WISHLIST
 # ======================================================
+@login_required
 def profile_view(request):
     """
     Display the user's profile information along with their wishlist items.
@@ -382,6 +383,7 @@ def profile_edit(request):
     return render(request, 'shop/profile_edit.html', context)
 
 
+@login_required
 def edit_profile_view(request):
     """
     Allow the user to update their profile details.
@@ -408,6 +410,7 @@ def edit_profile_view(request):
 
 
 # ===== CHANGE PASSWORD PAGE =====
+@login_required
 def change_password_view(request):
     """
     Allow user to change their password securely.
@@ -450,6 +453,7 @@ def wishlist_toggle(request, product_id):
 
     return JsonResponse({"success": False, "message": "Invalid request"})
 
+@login_required
 def wishlist_view(request):
     """Display all wishlist items for the logged-in user."""
     wishlist_items = Wishlist.objects.filter(user=request.user, product__isnull=False).select_related("product")
