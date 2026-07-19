@@ -4,8 +4,8 @@ Pillow>=10.3.0
 python-decouple==3.8
 
 # === DATABASE SUPPORT ===
-psycopg2-binary==2.9.9          # PostgreSQL connector
-mysqlclient==2.2.0              # MySQL connector
+# psycopg2-binary==2.9.9          # PostgreSQL connector
+# mysqlclient==2.2.0              # MySQL connector
 dj-database-url==2.1.0          # Database URL parsing
 
 # === STATIC FILES & MEDIA ===
