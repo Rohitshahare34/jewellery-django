@@ -288,8 +288,8 @@ class PopupMessageAdmin(admin.ModelAdmin):
     def has_poster(self, obj):
         """Check if popup has a poster image"""
         if obj.poster_image:
-            return format_html('<span style="color: green;">✓ Has Poster</span>')
-        return format_html('<span style="color: orange;">No Poster</span>')
+            return format_html('<span style="color: green;">{}</span>', '✓ Has Poster')
+        return format_html('<span style="color: orange;">{}</span>', 'No Poster')
     has_poster.short_description = "Poster"
 
     def poster_preview(self, obj):
