@@ -39,7 +39,7 @@ django-haystack==3.2.1          # Search functionality
 whoosh==2.7.4                   # Search engine
 
 # === FORM & VALIDATION ===
-crispy-forms==2.1               # Better form rendering
+django-crispy-forms==2.1        # Better form rendering
 crispy-bootstrap5==0.7           # Bootstrap 5 forms
 django-phonenumber-field==7.1.0 # Phone number validation
 
