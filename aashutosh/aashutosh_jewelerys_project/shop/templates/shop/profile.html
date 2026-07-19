@@ -507,25 +507,27 @@
           <div id="wishlistContainer">
             {% if wishlist_items %}
               <div class="wishlist-grid-premium">
-                {% for item in wishlist_items %}
-                  {% with product=item.product %}
-                  <div class="wishlist-card-premium" id="wishlist-item-{{ product.id }}">
-                    <div class="wishlist-img-wrapper">
-                      <img src="{{ product.image_url }}" alt="{{ product.name }}">
-                    </div>
-                    <div class="wishlist-body-premium">
-                      <h6>{{ product.name }}</h6>
-                      <p class="wishlist-price-premium">₹{{ product.price }}</p>
-                      <div class="wishlist-actions-premium">
-                        <a href="{% url 'product_detail' product.id %}" class="btn btn-premium-dark-outline flex-grow-1">View Details</a>
-                        <button class="btn btn-premium-danger remove-wishlist-btn" data-product-id="{{ product.id }}">
-                          <i class="fas fa-trash-alt"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  {% endwith %}
-                {% endfor %}
+                 {% for item in wishlist_items %}
+                   {% if item.product %}
+                     {% with product=item.product %}
+                     <div class="wishlist-card-premium" id="wishlist-item-{{ product.id }}">
+                       <div class="wishlist-img-wrapper">
+                         <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                       </div>
+                       <div class="wishlist-body-premium">
+                         <h6>{{ product.name }}</h6>
+                         <p class="wishlist-price-premium">₹{{ product.price }}</p>
+                         <div class="wishlist-actions-premium">
+                           <a href="{% url 'product_detail' product.id %}" class="btn btn-premium-dark-outline flex-grow-1">View Details</a>
+                           <button class="btn btn-premium-danger remove-wishlist-btn" data-product-id="{{ product.id }}">
+                             <i class="fas fa-trash-alt"></i>
+                           </button>
+                         </div>
+                       </div>
+                     </div>
+                     {% endwith %}
+                   {% endif %}
+                 {% endfor %}
               </div>
             {% else %}
               <div class="text-center py-4 bg-light rounded-4 border border-dashed">

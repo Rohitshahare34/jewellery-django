@@ -69,6 +69,8 @@ def heal():
             'diamond_color': 'VARCHAR(50) NULL',
             'gold_purity': 'VARCHAR(10) NULL',
             'gold_weight': 'DECIMAL NULL',
+            'created_at': 'DATETIME NULL',
+            'updated_at': 'DATETIME NULL',
         }
 
         for col_name, col_type in missing_columns.items():

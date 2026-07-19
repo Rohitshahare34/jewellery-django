@@ -79,6 +79,6 @@ def wishlist_context(request):
     """Add user's wishlist product IDs and count to global context."""
     if request.user.is_authenticated:
         from .models import Wishlist
-        wishlist_ids = list(Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True))
+        wishlist_ids = list(Wishlist.objects.filter(user=request.user, product__isnull=False).values_list('product_id', flat=True))
         return {'user_wishlist_ids': wishlist_ids, 'wishlist_count': len(wishlist_ids)}
     return {'user_wishlist_ids': [], 'wishlist_count': 0}

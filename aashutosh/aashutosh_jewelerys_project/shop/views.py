@@ -272,7 +272,7 @@ def profile_view(request):
     Display the user's profile information along with their wishlist items.
     """
     user = request.user
-    wishlist_items = Wishlist.objects.filter(user=user).select_related('product')
+    wishlist_items = Wishlist.objects.filter(user=user, product__isnull=False).select_related('product')
 
     context = {
         'user': user,
@@ -452,7 +452,7 @@ def wishlist_toggle(request, product_id):
 
 def wishlist_view(request):
     """Display all wishlist items for the logged-in user."""
-    wishlist_items = Wishlist.objects.filter(user=request.user).select_related("product")
+    wishlist_items = Wishlist.objects.filter(user=request.user, product__isnull=False).select_related("product")
     return render(request, "shop/wishlist.html", {"wishlist_items": wishlist_items})
 
 
