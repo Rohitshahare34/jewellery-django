@@ -74,9 +74,9 @@
           </div>
           
           <div class="product-body-premium">
-            <h5 class="product-title-premium">{{ product.name }}</h5>
-            <p class="product-meta-premium mb-1">{{ product.stone_type }} • {{ product.color }}</p>
-            <p class="product-price-premium">₹{{ product.price }}</p>
+            <h5 class="product-title-premium">{{ product.name|title }}</h5>
+            <p class="product-meta-premium mb-1">{% if product.stone_type and product.stone_type != 'OTHER' %}{{ product.get_stone_type_display }}{% else %}{{ product.get_metal_type_display|default:product.metal_type|default:"Gold" }}{% endif %} • {{ product.get_color_display|default:product.color|default:"Yellow Gold" }}</p>
+            <p class="product-price-premium">₹{{ product.price|floatformat:2 }}</p>
             
             <!-- Action Buttons -->
             <div class="product-actions-premium">
