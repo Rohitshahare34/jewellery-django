@@ -3,10 +3,21 @@
 
 {% block content %}
 <style>
+  /* Override global main padding to clear navbar exactly with no extra white gap */
+  main {
+    padding-top: 90px !important;
+  }
+
+  @media (max-width: 991.98px) {
+    main {
+      padding-top: 75px !important;
+    }
+  }
+
   /* Base typography & container enhancements */
   .product-detail-wrapper {
     font-family: 'Outfit', 'Inter', sans-serif;
-    padding-top: 100px;
+    padding-top: 20px;
     padding-bottom: 70px;
     background: radial-gradient(circle at 50% 0%, rgba(254, 253, 249, 1) 0%, rgba(247, 244, 235, 0.6) 100%);
     min-height: 90vh;
@@ -14,7 +25,7 @@
 
   @media (max-width: 991.98px) {
     .product-detail-wrapper {
-      padding-top: 80px;
+      padding-top: 15px;
     }
   }
 
@@ -230,7 +241,7 @@
   /* Trust Badges Bar */
   .trust-features-bar {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 12px;
     margin-top: 28px;
     padding-top: 20px;
@@ -302,7 +313,7 @@
       grid-template-columns: 1fr;
     }
     .trust-features-bar {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
     }
   }
 </style>
@@ -500,25 +511,7 @@
             </button>
           </div>
 
-          <!-- Guarantee & Trust Badges -->
-          <div class="trust-features-bar">
-            <div class="trust-item">
-              <i class="fas fa-certificate"></i>
-              <span>100% Certified</span>
-            </div>
-            <div class="trust-item">
-              <i class="fas fa-sync-alt"></i>
-              <span>Lifetime Exchange</span>
-            </div>
-            <div class="trust-item">
-              <i class="fas fa-shield-alt"></i>
-              <span>Insured Shipping</span>
-            </div>
-            <div class="trust-item">
-              <i class="fas fa-store"></i>
-              <span>Akola Showroom</span>
-            </div>
-          </div>
+
 
         </div>
       </div>
