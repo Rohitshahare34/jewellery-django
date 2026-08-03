@@ -147,10 +147,8 @@ USE_TZ = True
 
 # --- Static and media files ---
 STATIC_URL = '/static/'
-# Let Django automatically discover static files inside each app and root static folder
 STATICFILES_DIRS = [
-    BASE_DIR / 'shop' / 'static',  # app's static folder
-    BASE_DIR / 'static',  # root static folder
+    BASE_DIR / 'static',  # root static folder (app static folders like 'shop/static' are discovered automatically)
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # for production (collectstatic)
 
