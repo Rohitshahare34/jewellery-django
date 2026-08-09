@@ -150,13 +150,14 @@ class ProductAdmin(admin.ModelAdmin):
         ('Product Details', {
             'fields': (
                 'metal_type',
-                'gold_purity', 'silver_purity',
-                'gold_weight', 'diamond_weight',
+                'gold_purity', 'silver_purity', 'platinum_purity',
+                'gross_weight', 'net_weight',
+                'gold_weight', 'silver_weight', 'platinum_weight',
+                'diamond_weight',
                 'diamond_clarity', 'diamond_color',
                 'stone_type', 'color',
                 'occasion', 'collection'
             ),
-            'classes': ('collapse',),
         }),
         ('Price Breakdown', {
             'fields': ('is_manual_price', 'gold_value', 'stone_value', 'making_charges', 'gst', 'total_price', 'price'),
@@ -375,3 +376,7 @@ class MetalRateAdmin(admin.ModelAdmin):
     )
     list_filter = ('metal_type', 'status')
     search_fields = ('metal_type',)
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return MetalRate.get_ordered_rates(qs)

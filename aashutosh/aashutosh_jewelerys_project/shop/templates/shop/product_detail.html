@@ -420,13 +420,17 @@
               <div>
                 <span class="spec-meta-label">Metal & Purity</span>
                 <p class="spec-meta-value">
-                  {{ product.get_metal_type_display|default:product.metal_type|default:"Gold" }}
-                  {% if product.metal_type == 'GOLD' and product.gold_purity %}
-                    ({{ product.gold_purity }})
-                  {% elif product.metal_type == 'SILVER' and product.silver_purity %}
-                    ({{ product.get_silver_purity_display|default:product.silver_purity }})
-                  {% elif product.metal_type == 'PLATINUM' and product.platinum_purity %}
-                    ({{ product.get_platinum_purity_display|default:product.platinum_purity }})
+                  {% if product.metal_type %}
+                    {{ product.get_metal_type_display }}
+                    {% if product.metal_type == 'GOLD' and product.gold_purity %}
+                      ({{ product.gold_purity }})
+                    {% elif product.metal_type == 'SILVER' and product.silver_purity %}
+                      ({{ product.get_silver_purity_display|default:product.silver_purity }})
+                    {% elif product.metal_type == 'PLATINUM' and product.platinum_purity %}
+                      ({{ product.get_platinum_purity_display|default:product.platinum_purity }})
+                    {% endif %}
+                  {% else %}
+                    -
                   {% endif %}
                 </p>
               </div>
@@ -440,14 +444,12 @@
               <div>
                 <span class="spec-meta-label">Approx Weight</span>
                 <p class="spec-meta-value">
-                  {% if product.metal_type == 'GOLD' and product.gold_weight %}
-                    {{ product.gold_weight }} g
-                  {% elif product.metal_type == 'SILVER' and product.silver_weight %}
-                    {{ product.silver_weight }} g
-                  {% elif product.metal_type == 'PLATINUM' and product.platinum_weight %}
-                    {{ product.platinum_weight }} g
+                  {% if product.gross_weight and product.gross_weight > 0 %}
+                    {{ product.gross_weight|floatformat:3 }} g
+                  {% elif product.effective_gross_weight %}
+                    {{ product.effective_gross_weight|floatformat:3 }} g
                   {% else %}
-                    Custom
+                    -
                   {% endif %}
                 </p>
               </div>
@@ -460,18 +462,13 @@
               </div>
               <div>
                 <span class="spec-meta-label">Stone Type</span>
-                <p class="spec-meta-value">{{ product.get_stone_type_display|default:"Standard" }}</p>
-              </div>
-            </div>
-
-            <!-- Color Specs -->
-            <div class="spec-card-mini">
-              <div class="spec-icon-box">
-                <i class="fas fa-palette"></i>
-              </div>
-              <div>
-                <span class="spec-meta-label">Color / Polish</span>
-                <p class="spec-meta-value">{{ product.get_color_display|default:"Yellow Gold" }}</p>
+                <p class="spec-meta-value">
+                  {% if product.stone_type and product.stone_type != 'NONE' %}
+                    {{ product.get_stone_type_display }}
+                  {% else %}
+                    None
+                  {% endif %}
+                </p>
               </div>
             </div>
 
@@ -556,31 +553,41 @@
                       <tbody>
                         <tr>
                           <td class="text-muted">Metal Type</td>
-                          <td class="fw-bold text-end">{{ product.get_metal_type_display|default:product.metal_type|default:"Gold" }}</td>
+                          <td class="fw-bold text-end">{{ product.get_metal_type_display|default:product.metal_type|default:"-" }}</td>
                         </tr>
                         <tr>
                           <td class="text-muted">Purity</td>
                           <td class="fw-bold text-end">
-                            {% if product.metal_type == 'GOLD' %}
-                              {{ product.gold_purity|default:"22K" }}
-                            {% elif product.metal_type == 'SILVER' %}
-                              {{ product.get_silver_purity_display|default:product.silver_purity|default:"Sterling 925" }}
-                            {% elif product.metal_type == 'PLATINUM' %}
-                              {{ product.get_platinum_purity_display|default:product.platinum_purity|default:"950" }}
+                            {% if product.metal_type == 'GOLD' and product.gold_purity %}
+                              {{ product.gold_purity }}
+                            {% elif product.metal_type == 'SILVER' and product.silver_purity %}
+                              {{ product.get_silver_purity_display|default:product.silver_purity }}
+                            {% elif product.metal_type == 'PLATINUM' and product.platinum_purity %}
+                              {{ product.get_platinum_purity_display|default:product.platinum_purity }}
                             {% else %}
-                              Standard
+                              -
                             {% endif %}
                           </td>
                         </tr>
                         <tr>
-                          <td class="text-muted">Weight</td>
+                          <td class="text-muted">Gross Weight</td>
                           <td class="fw-bold text-end">
-                            {% if product.metal_type == 'GOLD' and product.gold_weight %}
-                              {{ product.gold_weight }} g
-                            {% elif product.metal_type == 'SILVER' and product.silver_weight %}
-                              {{ product.silver_weight }} g
-                            {% elif product.metal_type == 'PLATINUM' and product.platinum_weight %}
-                              {{ product.platinum_weight }} g
+                            {% if product.gross_weight and product.gross_weight > 0 %}
+                              {{ product.gross_weight|floatformat:3 }} g
+                            {% elif product.effective_gross_weight %}
+                              {{ product.effective_gross_weight|floatformat:3 }} g
+                            {% else %}
+                              -
+                            {% endif %}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted">Net Weight</td>
+                          <td class="fw-bold text-end">
+                            {% if product.net_weight and product.net_weight > 0 %}
+                              {{ product.net_weight|floatformat:3 }} g
+                            {% elif product.effective_net_weight %}
+                              {{ product.effective_net_weight|floatformat:3 }} g
                             {% else %}
                               -
                             {% endif %}
@@ -601,11 +608,17 @@
                       <tbody>
                         <tr>
                           <td class="text-muted">Stone Type</td>
-                          <td class="fw-bold text-end">{{ product.get_stone_type_display|default:"None" }}</td>
+                          <td class="fw-bold text-end">
+                            {% if product.stone_type and product.stone_type != 'NONE' %}
+                              {{ product.get_stone_type_display }}
+                            {% else %}
+                              None
+                            {% endif %}
+                          </td>
                         </tr>
                         <tr>
                           <td class="text-muted">Diamond Weight</td>
-                          <td class="fw-bold text-end">{% if product.diamond_weight %}{{ product.diamond_weight }} ct{% else %}-{% endif %}</td>
+                          <td class="fw-bold text-end">{% if product.diamond_weight and product.diamond_weight > 0 %}{{ product.diamond_weight|floatformat:3 }}{% else %}-{% endif %}</td>
                         </tr>
                         <tr>
                           <td class="text-muted">Clarity & Color</td>

@@ -38,8 +38,17 @@ class Command(BaseCommand):
                 'status': True
             },
             {
+                'metal_type': 'GOLD_14K',
+                'purity': 58.3,
+                'rate_per_gram': 9200.00,
+                'making_charge': 15.0,
+                'making_type': 'PERCENTAGE',
+                'gst_percentage': 3.0,
+                'status': True
+            },
+            {
                 'metal_type': 'SILVER',
-                'purity': 99.5,
+                'purity': 92.5,
                 'rate_per_gram': 245.00,
                 'making_charge': 0.0,
                 'making_type': 'FIXED',

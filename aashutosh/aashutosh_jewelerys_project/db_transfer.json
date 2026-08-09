@@ -20,7 +20,7 @@
     "model": "auth.user",
     "fields": {
         "password": "pbkdf2_sha256$1000000$b71CgVtrd0Q6Tj3l46AZUr$tsRBOVqsuhDxOq1VmzcuH+1YM5G7GWZ8lDL62QDGXXY=",
-        "last_login": "2026-06-28T09:29:24.054Z",
+        "last_login": "2026-07-18T08:44:14.568Z",
         "is_superuser": true,
         "username": "aashutosh",
         "first_name": "",
@@ -122,7 +122,7 @@
     "model": "auth.user",
     "fields": {
         "password": "!VuH23IW7iv6SjC4XCXSHURVdkK6jBCYqS79y7Tul",
-        "last_login": "2026-06-23T16:53:00.467Z",
+        "last_login": "2026-06-30T15:09:51.506Z",
         "is_superuser": false,
         "username": "rohit",
         "first_name": "Rohit",
@@ -153,11 +153,29 @@
     }
 },
 {
+    "model": "auth.user",
+    "fields": {
+        "password": "!RD2lJDFxx5fCkbvOw95SF5VYz4qq8SKRUC0R1fky",
+        "last_login": "2026-07-19T11:00:08.671Z",
+        "is_superuser": false,
+        "username": "vrushabh0",
+        "first_name": "Vrushabh",
+        "last_name": "Gillarkar",
+        "email": "vrushabhgillarkar29@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-06-29T09:44:54.710Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
     "model": "shop.category",
     "pk": 1,
     "fields": {
         "name": "Gold for Mens",
-        "image": "categories/chain_Jxmtcam.jpg"
+        "image": "categories/chain_Jxmtcam.jpg",
+        "sort_order": 0
     }
 },
 {
@@ -165,7 +183,8 @@
     "pk": 2,
     "fields": {
         "name": "Silver For Mens",
-        "image": "categories/Silver_men_3CA3BZB.jpeg"
+        "image": "categories/Silver_men_3CA3BZB.jpeg",
+        "sort_order": 0
     }
 },
 {
@@ -219,15 +238,17 @@
         "name": "pendant 1",
         "subcategory": 4,
         "price": "1983612.56",
-        "description": "good",
+        "description": "goodcvbcv",
         "image": "jewellery/Pandants_mlNYpyo.jpg",
         "created_at": "2025-10-30T08:43:49.253Z",
-        "updated_at": "2026-06-28T09:51:25.514Z",
+        "updated_at": "2026-07-19T11:14:27.789Z",
         "is_featured": true,
         "badge": "TRENDING",
         "stone_type": "OTHER",
         "color": "GOLD",
         "in_stock": true,
+        "occasion": null,
+        "collection": null,
         "metal_type": "GOLD",
         "gold_purity": "18K",
         "gold_weight": "20.00",
@@ -244,6 +265,7 @@
         "stone_value": "500.00",
         "making_charges": "279752.00",
         "gst": "57760.56",
+        "is_manual_price": false,
         "total_price": "1983612.56"
     }
 },
@@ -263,6 +285,8 @@
         "stone_type": "EMERALD",
         "color": "SILVER",
         "in_stock": true,
+        "occasion": null,
+        "collection": null,
         "metal_type": "SILVER",
         "gold_purity": "OTHER",
         "gold_weight": "10.00",
@@ -279,6 +303,7 @@
         "stone_value": "0.00",
         "making_charges": "0.00",
         "gst": "0.00",
+        "is_manual_price": false,
         "total_price": "0.00"
     }
 },
@@ -292,12 +317,14 @@
         "description": "good",
         "image": "jewellery/mens_ring_MEAJKtn.jpg",
         "created_at": "2025-10-28T12:31:37.066Z",
-        "updated_at": "2026-06-28T09:51:25.515Z",
+        "updated_at": "2026-06-29T09:51:22.462Z",
         "is_featured": true,
         "badge": "NEW",
         "stone_type": "DIAMOND",
         "color": "GOLD",
         "in_stock": true,
+        "occasion": null,
+        "collection": null,
         "metal_type": "GOLD",
         "gold_purity": "18K",
         "gold_weight": "10.00",
@@ -314,6 +341,7 @@
         "stone_value": "0.00",
         "making_charges": "139876.00",
         "gst": "28880.28",
+        "is_manual_price": false,
         "total_price": "991556.28"
     }
 },
@@ -327,12 +355,14 @@
         "description": "good",
         "image": "jewellery/homedisplay.jpg",
         "created_at": "2025-10-28T12:03:06.159Z",
-        "updated_at": "2026-06-28T09:51:25.517Z",
+        "updated_at": "2026-06-29T09:51:22.464Z",
         "is_featured": true,
         "badge": "NEW",
         "stone_type": "OTHER",
         "color": "GOLD",
         "in_stock": true,
+        "occasion": null,
+        "collection": null,
         "metal_type": "GOLD",
         "gold_purity": "18K",
         "gold_weight": "20.00",
@@ -349,6 +379,7 @@
         "stone_value": "0.00",
         "making_charges": "279752.00",
         "gst": "57760.56",
+        "is_manual_price": false,
         "total_price": "1983112.56"
     }
 },
@@ -368,6 +399,8 @@
         "stone_type": "OTHER",
         "color": "GOLD",
         "in_stock": true,
+        "occasion": null,
+        "collection": null,
         "metal_type": "GOLD",
         "gold_purity": "22K",
         "gold_weight": "0.00",
@@ -384,6 +417,7 @@
         "stone_value": "0.80",
         "making_charges": "0.00",
         "gst": "0.00",
+        "is_manual_price": false,
         "total_price": "0.80"
     }
 },
@@ -437,7 +471,7 @@
         "show_making_charge": true,
         "show_gst": true,
         "created_at": "2026-06-20T13:27:36.335Z",
-        "updated_at": "2026-06-28T09:51:25.509Z"
+        "updated_at": "2026-06-29T09:51:22.438Z"
     }
 },
 {
@@ -493,12 +527,52 @@
 },
 {
     "model": "shop.testimonial",
+    "pk": 9,
+    "fields": {
+        "name": "cvc",
+        "rating": 5,
+        "message": "c",
+        "designation": "cbvcvv",
+        "image": "testimonials/feedback_cropped_image.png",
+        "created_at": "2026-07-18T09:19:30.050Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "shop.testimonial",
+    "pk": 8,
+    "fields": {
+        "name": "c,x",
+        "rating": 5,
+        "message": "vc,",
+        "designation": "x,c",
+        "image": "testimonials/freepik__young-man-adjusting-jacket-with-both-hands-beside-__20601.jpeg",
+        "created_at": "2026-07-18T09:17:47.390Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "shop.testimonial",
+    "pk": 7,
+    "fields": {
+        "name": "vrushabh",
+        "rating": 4,
+        "message": "ALL ARE  GRAAATE",
+        "designation": "nG",
+        "image": "testimonials/B612_20260223_161827_452.jpg.jpeg",
+        "created_at": "2026-07-18T09:11:03.987Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "shop.testimonial",
     "pk": 6,
     "fields": {
         "name": "Amit Singh",
         "rating": 4,
         "message": "Great collection! The making charges are reasonable.",
         "designation": "Verified Buyer",
+        "image": "",
         "created_at": "2026-06-23T17:58:29.830Z",
         "is_approved": true
     }
@@ -511,6 +585,7 @@
         "rating": 5,
         "message": "Excellent service and fast delivery! Highly recommend!",
         "designation": "Verified Buyer",
+        "image": "",
         "created_at": "2026-06-23T17:58:29.470Z",
         "is_approved": true
     }
@@ -523,6 +598,7 @@
         "rating": 5,
         "message": "Amazing jewellery! Loved the designs and quality!",
         "designation": "Verified Buyer",
+        "image": "",
         "created_at": "2026-06-23T17:58:28.969Z",
         "is_approved": true
     }
@@ -535,6 +611,7 @@
         "rating": 5,
         "message": "Excellent quality and fast delivery!",
         "designation": "Verified Buyer",
+        "image": "",
         "created_at": "2026-06-23T17:57:41.663Z",
         "is_approved": true
     }
@@ -547,6 +624,7 @@
         "rating": 5,
         "message": "Amazing jewellery! Loved the designs!",
         "designation": "Verified Buyer",
+        "image": "",
         "created_at": "2026-06-23T17:57:41.233Z",
         "is_approved": true
     }
@@ -559,8 +637,20 @@
         "rating": 5,
         "message": "nice",
         "designation": "Software engineer",
+        "image": "",
         "created_at": "2026-06-23T17:48:46.277Z",
         "is_approved": true
+    }
+},
+{
+    "model": "shop.reel",
+    "pk": 4,
+    "fields": {
+        "title": "mumbai",
+        "video": "reels/Mumbai.mp4",
+        "cover_image": "reels/covers/IMG_20241226_225630.jpg",
+        "created_at": "2026-07-18T08:59:38.425Z",
+        "is_active": true
     }
 },
 {
@@ -644,8 +734,8 @@
         "title": "Our Signature Collections",
         "subtitle": "Exquisite Designs Crafted for You",
         "is_active": true,
-        "created_at": "2026-06-28T09:39:14.393Z",
-        "updated_at": "2026-06-28T09:56:07.516Z"
+        "created_at": "2026-07-18T08:35:39.604Z",
+        "updated_at": "2026-07-18T08:35:39.604Z"
     }
 },
 {

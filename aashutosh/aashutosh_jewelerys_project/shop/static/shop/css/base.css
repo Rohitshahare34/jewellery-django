@@ -1635,6 +1635,11 @@ main {
   border-color: rgba(212, 175, 55, 0.5) !important;
 }
 
+[data-theme="dark"] .reel-info {
+  background: #1e1e1e !important;
+  border-top-color: rgba(212, 175, 55, 0.15) !important;
+}
+
 [data-theme="dark"] .reel-info h5 {
   color: #ffffff !important;
 }
@@ -1645,6 +1650,45 @@ main {
 
 [data-theme="dark"] .reels-container::-webkit-scrollbar-track {
   background: #222 !important;
+}
+
+/* Today's Rates & Calculator Dark Mode Fixes */
+[data-theme="dark"] .rate-item-row {
+  background: #1e1e1e !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(212, 175, 55, 0.2) !important;
+}
+
+[data-theme="dark"] .rate-item-row h6,
+[data-theme="dark"] .rate-item-row .fw-bold {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .rate-item-row .text-muted {
+  color: #b0b0b0 !important;
+}
+
+[data-theme="dark"] #homeCalcResult,
+[data-theme="dark"] #liveCalcResult,
+[data-theme="dark"] #homeMetalInfoCard {
+  background: #181818 !important;
+  border-color: rgba(212, 175, 55, 0.25) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] #homeCalcResult .text-dark,
+[data-theme="dark"] #liveCalcResult .text-dark,
+[data-theme="dark"] #homeMetalInfoCard .text-dark,
+[data-theme="dark"] #homeMetalInfoCard .bg-white {
+  background-color: #242424 !important;
+  color: #ffffff !important;
+  border-color: #333333 !important;
+}
+
+[data-theme="dark"] #homeCalcResult .text-muted,
+[data-theme="dark"] #liveCalcResult .text-muted,
+[data-theme="dark"] #homeMetalInfoCard .text-muted {
+  color: #cccccc !important;
 }
 
 

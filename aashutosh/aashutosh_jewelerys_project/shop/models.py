@@ -72,6 +72,10 @@ class Product(models.Model):
     ]
 
     STONE_CHOICES = [
+        ('NONE', 'None'),
+        ('MOISSANITE', 'Moissanite'),
+        ('LAB_GROWN', 'Lab Grown'),
+        ('AMERICAN', 'American Diamond'),
         ('DIAMOND', 'Diamond'),
         ('RUBY', 'Ruby'),
         ('EMERALD', 'Emerald'),
@@ -134,7 +138,7 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_featured = models.BooleanField(default=False)
     badge = models.CharField(max_length=20, choices=BADGE_CHOICES, default='NONE', blank=True, null=True)
-    stone_type = models.CharField(max_length=20, choices=STONE_CHOICES, default='OTHER', blank=True, null=True)
+    stone_type = models.CharField(max_length=20, choices=STONE_CHOICES, default='NONE', blank=True, null=True)
     color = models.CharField(max_length=20, choices=COLOR_CHOICES, default='GOLD', blank=True, null=True)
     in_stock = models.BooleanField(default=True)
     occasion = models.CharField(max_length=100, blank=True, null=True)
@@ -142,6 +146,10 @@ class Product(models.Model):
 
     # --- Metal & Stone Details ---
     metal_type = models.CharField(max_length=20, choices=METAL_CHOICES, default='GOLD', blank=True, null=True)
+
+    # Weights
+    gross_weight = models.DecimalField(max_digits=10, decimal_places=3, default=0, blank=True, null=True, help_text="Gross weight in grams")
+    net_weight = models.DecimalField(max_digits=10, decimal_places=3, default=0, blank=True, null=True, help_text="Net metal weight in grams")
 
     # Gold-specific fields
     gold_purity = models.CharField(
@@ -152,7 +160,7 @@ class Product(models.Model):
         null=True,
         help_text="Gold purity (only relevant when metal_type is Gold)"
     )
-    gold_weight = models.DecimalField(max_digits=8, decimal_places=2, default=0, blank=True, null=True)
+    gold_weight = models.DecimalField(max_digits=10, decimal_places=3, default=0, blank=True, null=True)
 
     # Silver-specific fields
     silver_purity = models.CharField(
@@ -163,7 +171,7 @@ class Product(models.Model):
         null=True,
         help_text="Silver purity (only relevant when metal_type is Silver)"
     )
-    silver_weight = models.DecimalField(max_digits=8, decimal_places=2, default=0, blank=True, null=True)
+    silver_weight = models.DecimalField(max_digits=10, decimal_places=3, default=0, blank=True, null=True)
 
     # Platinum-specific fields (optional)
     platinum_purity = models.CharField(
@@ -174,10 +182,10 @@ class Product(models.Model):
         null=True,
         help_text="Platinum purity (only relevant when metal_type is Platinum)"
     )
-    platinum_weight = models.DecimalField(max_digits=8, decimal_places=2, default=0, blank=True, null=True)
+    platinum_weight = models.DecimalField(max_digits=10, decimal_places=3, default=0, blank=True, null=True)
 
     # Shared stone fields
-    diamond_weight = models.DecimalField(max_digits=8, decimal_places=2, default=0, blank=True, null=True)
+    diamond_weight = models.DecimalField(max_digits=10, decimal_places=3, default=0, blank=True, null=True)
     diamond_clarity = models.CharField(max_length=50, blank=True, null=True)
     diamond_color = models.CharField(max_length=50, blank=True, null=True)
 
@@ -233,14 +241,14 @@ class Product(models.Model):
         
         if self.metal_type == 'GOLD':
             purity_code = f"GOLD_{self.gold_purity}" if self.gold_purity else "GOLD_22K"
-            weight = self.gold_weight or 0
+            weight = self.net_weight or self.gross_weight or self.gold_weight or 0
             try:
                 rate = MetalRate.objects.get(metal_type=purity_code)
             except:
                 pass
         elif self.metal_type == 'SILVER':
             purity_code = f"SILVER_{self.silver_purity}" if self.silver_purity else "SILVER"
-            weight = self.silver_weight or 0
+            weight = self.net_weight or self.gross_weight or self.silver_weight or 0
             try:
                 rate = MetalRate.objects.get(metal_type=purity_code)
             except:
@@ -363,6 +371,8 @@ class MetalRate(models.Model):
         ("GOLD_24K", "24K Gold"),
         ("GOLD_22K", "22K Gold"),
         ("GOLD_18K", "18K Gold"),
+        ("GOLD_14K", "14K Gold"),
+        ("GOLD_9K", "9K Gold"),
         ("SILVER", "92.5 Silver Jewellery"),
     ]
     MAKING_CHOICES = [
@@ -418,6 +428,26 @@ class MetalRate(models.Model):
 
     def __str__(self):
         return f"{self.get_metal_type_display()} - ₹{self.rate_per_gram}/g"
+
+    @classmethod
+    def get_ordered_rates(cls, qs=None):
+        """
+        Returns MetalRate queryset ordered logically:
+        All Gold rates sorted by purity descending (24K -> 22K -> 20K -> 18K -> 14K -> 12K -> 9K),
+        followed by Silver rates, Platinum, and any others.
+        """
+        from django.db.models import Q, Case, When, Value, IntegerField
+        if qs is None:
+            qs = cls.objects.filter(status=True)
+        return qs.annotate(
+            metal_category=Case(
+                When(Q(metal_type__icontains='GOLD'), then=Value(1)),
+                When(Q(metal_type__icontains='SILVER'), then=Value(2)),
+                When(Q(metal_type__icontains='PLATINUM'), then=Value(3)),
+                default=Value(4),
+                output_field=IntegerField(),
+            )
+        ).order_by('metal_category', '-purity')
     
     def get_metal_type_display(self):
         if not self.metal_type:

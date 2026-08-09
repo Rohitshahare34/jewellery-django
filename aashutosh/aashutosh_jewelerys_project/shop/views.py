@@ -16,7 +16,7 @@ from .models import Product, Category, SubCategory, Wishlist, PopupMessage, Test
 # ======================================================
 def live_rates(request):
     """Today's Rates Page"""
-    rates = MetalRate.objects.filter(status=True).order_by('metal_type')
+    rates = MetalRate.get_ordered_rates()
     rates_with_breakdown = []
     
     for rate in rates:
@@ -54,7 +54,7 @@ def live_rates(request):
 
 def rate_calculator(request):
     """Rate Calculator Page"""
-    metal_rates = MetalRate.objects.filter(status=True).order_by('metal_type')
+    metal_rates = MetalRate.get_ordered_rates()
     
     selected_metal = request.GET.get('metal', None)
     weight = request.GET.get('weight', None)
@@ -118,7 +118,7 @@ def home(request):
         signature_items = SignatureCollectionItem.objects.filter(collection=signature_collection, is_active=True).order_by('sort_order')
 
     # Get metal rates to display on home page
-    metal_rates = MetalRate.objects.filter(status=True).order_by('metal_type')
+    metal_rates = MetalRate.get_ordered_rates()
 
     context = {
         'featured_products': featured_products,
@@ -469,7 +469,7 @@ def get_metal_prices(request):
     Returns JSON response with gold and silver prices.
     """
     try:
-        rates = MetalRate.objects.filter(status=True)
+        rates = MetalRate.get_ordered_rates()
         rates_dict = {}
         for r in rates:
             rates_dict[r.metal_type.lower()] = str(r.rate_per_gram)

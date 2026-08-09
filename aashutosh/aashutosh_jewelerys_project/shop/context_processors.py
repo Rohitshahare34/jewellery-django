@@ -23,7 +23,7 @@ def metal_prices_context(request):
     
     # Build rates list dynamically from MetalRate database records
     rates_list = []
-    rates = MetalRate.objects.filter(status=True).order_by('metal_type')
+    rates = MetalRate.get_ordered_rates()
     
     for rate in rates:
         rates_list.append({
