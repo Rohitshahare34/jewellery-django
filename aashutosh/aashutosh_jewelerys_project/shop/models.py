@@ -58,6 +58,12 @@ class SubCategory(models.Model):
         """URL to view all products under this subcategory."""
         return reverse("subcategory_products", args=[str(self.id)])
 
+    @property
+    def product_count(self):
+        """Return count of products under this subcategory."""
+        return self.jewellery_items.count()
+
+
 
 # -----------------------------
 # PRODUCT MODEL
@@ -113,6 +119,8 @@ class Product(models.Model):
     SILVER_PURITY_CHOICES = [
         ('STERLING', 'Sterling (925)'),
         ('999', '999 Fine Silver'),
+        ('70', 'Silver (70%)'),
+        ('50', 'Silver (50%)'),
         ('OTHER', 'Other'),
     ]
 
@@ -196,6 +204,15 @@ class Product(models.Model):
     platinum_value = models.DecimalField(max_digits=12, decimal_places=2, default=0, blank=True, null=True)
 
     stone_value = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True, null=True)
+    making_per_gram = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        blank=True,
+        null=True,
+        verbose_name="Making Charge Per Gram (₹/g)",
+        help_text="Making charges per gram in ₹. Enter manually for Gold, Silver, and Platinum products."
+    )
     making_charges = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True, null=True)
     gst = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True, null=True)
 
@@ -217,84 +234,92 @@ class Product(models.Model):
 
     def recalculate_price(self, save=False):
         """
-        Recalculates gold/silver value, making charges, gst and total price
-        based on the current MetalRate records in the database.
+        Recalculates metal value, making charges, gst, and total price.
+        Formula:
+          1. Taxable Amount = Metal Value + Stone Value + Making Charges
+          2. GST (3%) = Taxable Amount * (gst_percentage / 100)
+          3. Total Estimated Price = Taxable Amount + GST
         """
-        if self.is_manual_price:
-            # Preserving manual values entered by admin. Just calculate total_price:
-            metal_total = (self.gold_value or 0) + (self.silver_value or 0) + (self.platinum_value or 0)
-            self.total_price = (
-                metal_total +
-                (self.stone_value or 0) +
-                (self.making_charges or 0) +
-                (self.gst or 0)
-            )
-            # If the user did not specify a price but specified breakdown, use total_price
-            if not self.price or self.price == 0:
-                self.price = self.total_price
-            if save:
-                super().save()
-            return
+        weight = float(self.net_weight or self.gross_weight or self.gold_weight or self.silver_weight or self.platinum_weight or 0)
+
+        # 1. Determine Making Charges (Check manual making_per_gram first, then manual making_charges, then rate default)
+        manual_making_per_gram = float(self.making_per_gram or 0)
+        manual_making_charges = float(self.making_charges or 0)
+
+        if manual_making_per_gram > 0:
+            self.making_charges = manual_making_per_gram * weight
+        elif manual_making_charges > 0:
+            # Keep manually entered making_charges
+            pass
 
         rate = None
-        weight = 0
-        
         if self.metal_type == 'GOLD':
             purity_code = f"GOLD_{self.gold_purity}" if self.gold_purity else "GOLD_22K"
-            weight = self.net_weight or self.gross_weight or self.gold_weight or 0
             try:
                 rate = MetalRate.objects.get(metal_type=purity_code)
-            except:
+            except Exception:
                 pass
         elif self.metal_type == 'SILVER':
             purity_code = f"SILVER_{self.silver_purity}" if self.silver_purity else "SILVER"
-            weight = self.net_weight or self.gross_weight or self.silver_weight or 0
             try:
                 rate = MetalRate.objects.get(metal_type=purity_code)
-            except:
+            except Exception:
                 try:
                     rate = MetalRate.objects.get(metal_type='SILVER')
-                except:
+                except Exception:
                     pass
-                
-        if rate:
-            # 1. Calculate metal value
-            metal_value = rate.rate_per_gram * weight
-            if self.metal_type == 'GOLD':
-                self.gold_value = metal_value
-                self.silver_value = 0
-                self.platinum_value = 0
-            elif self.metal_type == 'SILVER':
-                self.silver_value = metal_value
-                self.gold_value = 0
-                self.platinum_value = 0
-                
-            # 2. Calculate making charge based on the daily rate
-            if rate.making_type == 'FIXED':
-                self.making_charges = rate.making_charge * weight
-            else:
-                self.making_charges = (metal_value * rate.making_charge) / 100
-                
-            # 3. Calculate GST (3% of metal value + making charges)
-            subtotal = metal_value + (self.making_charges or 0)
-            self.gst = (subtotal * rate.gst_percentage) / 100
-            
-            # 4. Total Price
-            self.total_price = subtotal + (self.gst or 0) + (self.stone_value or 0)
-            self.price = self.total_price
-            
-            if save:
-                super().save()
+        elif self.metal_type == 'PLATINUM':
+            purity_code = f"PLATINUM_{self.platinum_purity}" if self.platinum_purity else "PLATINUM"
+            try:
+                rate = MetalRate.objects.get(metal_type=purity_code)
+            except Exception:
+                pass
+
+        # 2. Determine Metal Value
+        if self.is_manual_price:
+            metal_value = float((self.gold_value or 0) + (self.silver_value or 0) + (self.platinum_value or 0))
         else:
-            # Fallback if no rate exists: sum manual values
-            metal_total = (self.gold_value or 0) + (self.silver_value or 0) + (self.platinum_value or 0)
-            self.total_price = (
-                metal_total +
-                (self.stone_value or 0) +
-                (self.making_charges or 0) +
-                (self.gst or 0)
-            )
-            self.price = self.total_price
+            if rate and rate.rate_per_gram:
+                metal_value = float(rate.rate_per_gram) * weight
+                if self.metal_type == 'GOLD':
+                    self.gold_value = metal_value
+                    self.silver_value = 0
+                    self.platinum_value = 0
+                elif self.metal_type == 'SILVER':
+                    self.silver_value = metal_value
+                    self.gold_value = 0
+                    self.platinum_value = 0
+                elif self.metal_type == 'PLATINUM':
+                    self.platinum_value = metal_value
+                    self.gold_value = 0
+                    self.silver_value = 0
+            else:
+                metal_value = float((self.gold_value or 0) + (self.silver_value or 0) + (self.platinum_value or 0))
+
+            # Calculate making charge from rate IF not manually specified by product
+            if manual_making_per_gram <= 0 and manual_making_charges <= 0:
+                if rate and rate.making_charge:
+                    if rate.making_type == 'FIXED':
+                        self.making_charges = float(rate.making_charge) * weight
+                    else:
+                        self.making_charges = (metal_value * float(rate.making_charge)) / 100.0
+
+        # 3. Calculate GST and Total Price using exact client formula:
+        stone_val = float(self.stone_value or 0)
+        making_val = float(self.making_charges or 0)
+        taxable_amount = metal_value + stone_val + making_val
+
+        gst_percentage = float(rate.gst_percentage) if (rate and rate.gst_percentage) else 3.0
+
+        # If manual price and manual GST is given (>0), keep manual GST, else auto-calculate GST
+        if self.is_manual_price and self.gst and float(self.gst) > 0:
+            calculated_gst = float(self.gst)
+        else:
+            calculated_gst = (taxable_amount * gst_percentage) / 100.0
+            self.gst = calculated_gst
+
+        self.total_price = taxable_amount + calculated_gst
+        self.price = self.total_price
 
     def save(self, *args, **kwargs):
         """
@@ -302,6 +327,17 @@ class Product(models.Model):
         """
         self.recalculate_price(save=False)
         super().save(*args, **kwargs)
+
+    @property
+    def effective_making_per_gram(self):
+        """Returns manually set making_per_gram, or calculates it from making_charges / weight."""
+        if self.making_per_gram and float(self.making_per_gram) > 0:
+            return float(self.making_per_gram)
+        weight = float(self.net_weight or self.gross_weight or self.gold_weight or self.silver_weight or self.platinum_weight or 0)
+        making = float(self.making_charges or 0)
+        if weight > 0 and making > 0:
+            return making / weight
+        return 0
 
     def get_badge_color(self):
         colors = {
@@ -374,6 +410,8 @@ class MetalRate(models.Model):
         ("GOLD_14K", "14K Gold"),
         ("GOLD_9K", "9K Gold"),
         ("SILVER", "92.5 Silver Jewellery"),
+        ("SILVER_70", "70% Silver Jewellery"),
+        ("SILVER_50", "50% Silver Jewellery"),
     ]
     MAKING_CHOICES = [
         ("FIXED", "Fixed (₹/g)"),

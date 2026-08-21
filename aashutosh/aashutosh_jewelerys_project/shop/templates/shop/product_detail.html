@@ -75,6 +75,69 @@
     cursor: zoom-in;
   }
 
+  .main-img-card::after {
+    content: '🔍 Click to Expand';
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #ffd700;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .main-img-card:hover::after {
+    opacity: 1;
+  }
+
+  .lightbox-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 215, 0, 0.25);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+    color: #ffd700;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1060;
+  }
+  .lightbox-nav-btn:hover {
+    background: #ffd700;
+    color: #111;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+  }
+  .lightbox-prev { left: 15px; }
+  .lightbox-next { right: 15px; }
+
+  .lightbox-thumb-mini {
+    width: 55px;
+    height: 55px;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    opacity: 0.6;
+    transition: all 0.2s ease;
+  }
+  .lightbox-thumb-mini.active,
+  .lightbox-thumb-mini:hover {
+    border-color: #ffd700;
+    opacity: 1;
+  }
+
   /* Thumbnail Gallery */
   .thumb-gallery {
     display: flex;
@@ -349,7 +412,7 @@
       
       <!-- Left Column: Product Image & Gallery -->
       <div class="col-lg-6 d-flex flex-column">
-        <div class="main-img-card">
+        <div class="main-img-card" onclick="openLightboxCurrent()" title="Click to view full image">
           <!-- Main Product Image -->
           <img id="mainProductImage"
                src="{{ product.image_url }}"
@@ -370,14 +433,14 @@
           <img src="{{ product.image_url }}"
                alt="{{ product.name }}"
                class="product-thumb-item active-thumb"
-               onclick="changeImage(this)">
+               onclick="changeImage(this, 0)">
 
           <!-- Additional Images from Gallery -->
           {% for img in images %}
             <img src="{{ img.image.url }}"
                  alt="{{ img.alt_text|default:product.name }}"
                  class="product-thumb-item"
-                 onclick="changeImage(this)">
+                 onclick="changeImage(this, {{ forloop.counter }})">
           {% endfor %}
         </div>
       </div>
@@ -442,7 +505,7 @@
                 <i class="fas fa-weight-hanging"></i>
               </div>
               <div>
-                <span class="spec-meta-label">Approx Weight</span>
+                <span class="spec-meta-label">Total Weight</span>
                 <p class="spec-meta-value">
                   {% if product.gross_weight and product.gross_weight > 0 %}
                     {{ product.gross_weight|floatformat:3 }} g
@@ -599,13 +662,23 @@
                 </div>
               </div>
 
-              <!-- Diamond / Stone Details -->
+              <!-- Making & Stone Details -->
               <div class="col-md-6">
                 <div class="p-3 rounded-4 bg-light border">
-                  <h6 class="fw-bold mb-3 text-uppercase text-gold tracking-wider" style="font-size: 0.85rem;"><i class="fas fa-gem me-2"></i>Diamond & Stone Details</h6>
+                  <h6 class="fw-bold mb-3 text-uppercase text-gold tracking-wider" style="font-size: 0.85rem;"><i class="fas fa-hammer me-2"></i>Making & Stone Details</h6>
                   <div class="table-responsive">
                     <table class="table table-borderless table-sm mb-0">
                       <tbody>
+                        <tr>
+                          <td class="text-muted">Making Per Gram</td>
+                          <td class="fw-bold text-end">
+                            {% if product.effective_making_per_gram and product.effective_making_per_gram > 0 %}
+                              ₹{{ product.effective_making_per_gram|floatformat:2 }}/g
+                            {% else %}
+                              -
+                            {% endif %}
+                          </td>
+                        </tr>
                         <tr>
                           <td class="text-muted">Stone Type</td>
                           <td class="fw-bold text-end">
@@ -736,18 +809,123 @@
   </div>
 </div>
 
-<!-- JavaScript for Thumbnail Switching & Wishlist AJAX -->
+<!-- Fullscreen Product Image Lightbox Modal -->
+<div class="modal fade" id="imageLightboxModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content border-0 bg-dark text-white rounded-4 shadow-lg position-relative overflow-hidden">
+      <!-- Close Button -->
+      <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close" style="z-index: 1070; background-color: rgba(255,255,255,0.25); padding: 12px; border-radius: 50%;"></button>
+      
+      <div class="modal-body p-0 text-center position-relative d-flex flex-column align-items-center justify-content-center" style="min-height: 80vh; background: rgba(12,12,12,0.96);">
+        <!-- Navigation Prev -->
+        <button id="lightboxPrevBtn" class="lightbox-nav-btn lightbox-prev" onclick="prevLightboxImage()" aria-label="Previous Image">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <!-- Preview Image Container -->
+        <div class="lightbox-img-wrapper p-3 d-flex align-items-center justify-content-center" style="max-height: 75vh; width: 100%;">
+          <img id="lightboxImage" src="" alt="{{ product.name }}" class="img-fluid rounded-3" style="max-height: 70vh; object-fit: contain; box-shadow: 0 10px 40px rgba(0,0,0,0.8); transition: transform 0.3s ease;">
+        </div>
+
+        <!-- Navigation Next -->
+        <button id="lightboxNextBtn" class="lightbox-nav-btn lightbox-next" onclick="nextLightboxImage()" aria-label="Next Image">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+
+        <!-- Image Counter & Title -->
+        <div class="lightbox-footer py-2 px-3 text-center text-light" style="font-size: 0.95rem;">
+          <span class="fw-bold text-gold me-2">{{ product.name|title }}</span>
+          <span id="lightboxCounter" class="badge bg-warning text-dark font-weight-bold"></span>
+        </div>
+
+        <!-- Lightbox Thumbnails Row -->
+        <div id="lightboxThumbRow" class="d-flex justify-content-center gap-2 pb-3 flex-wrap"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript for Image Lightbox Preview, Gallery Switching & Wishlist -->
 <script>
-function changeImage(element) {
+const galleryImages = [
+  "{{ product.image_url }}",
+  {% for img in images %}
+    "{{ img.image.url }}",
+  {% endfor %}
+];
+let currentImageIndex = 0;
+
+function changeImage(element, index) {
   const mainImage = document.getElementById('mainProductImage');
   if (mainImage && element) {
     mainImage.src = element.src;
+    if (typeof index !== 'undefined') {
+      currentImageIndex = index;
+    }
     
     const thumbs = document.querySelectorAll('.product-thumb-item');
     thumbs.forEach(thumb => thumb.classList.remove('active-thumb'));
     element.classList.add('active-thumb');
   }
 }
+
+function openLightboxCurrent() {
+  openLightbox(currentImageIndex);
+}
+
+function openLightbox(index) {
+  if (index < 0) index = 0;
+  if (index >= galleryImages.length) index = galleryImages.length - 1;
+  
+  currentImageIndex = index;
+  const modalImg = document.getElementById('lightboxImage');
+  const counter = document.getElementById('lightboxCounter');
+  const thumbRow = document.getElementById('lightboxThumbRow');
+  
+  if (modalImg) modalImg.src = galleryImages[currentImageIndex];
+  if (counter) counter.textContent = `${currentImageIndex + 1} / ${galleryImages.length}`;
+  
+  // Update main product image thumbnail selection on page as well
+  const mainImage = document.getElementById('mainProductImage');
+  if (mainImage) mainImage.src = galleryImages[currentImageIndex];
+  const thumbs = document.querySelectorAll('.product-thumb-item');
+  thumbs.forEach((thumb, i) => {
+    if (i === currentImageIndex) thumb.classList.add('active-thumb');
+    else thumb.classList.remove('active-thumb');
+  });
+
+  // Render mini thumbs inside lightbox
+  if (thumbRow) {
+    thumbRow.innerHTML = galleryImages.map((src, i) => `
+      <img src="${src}" class="lightbox-thumb-mini ${i === currentImageIndex ? 'active' : ''}" onclick="openLightbox(${i})" alt="Thumb ${i+1}">
+    `).join('');
+  }
+  
+  const modalEl = document.getElementById('imageLightboxModal');
+  if (modalEl && typeof bootstrap !== 'undefined') {
+    const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+    modalInstance.show();
+  }
+}
+
+function prevLightboxImage() {
+  currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+  openLightbox(currentImageIndex);
+}
+
+function nextLightboxImage() {
+  currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+  openLightbox(currentImageIndex);
+}
+
+// Keyboard navigation (Arrow keys & Escape)
+document.addEventListener('keydown', function(e) {
+  const modalEl = document.getElementById('imageLightboxModal');
+  if (modalEl && modalEl.classList.contains('show')) {
+    if (e.key === 'ArrowLeft') prevLightboxImage();
+    if (e.key === 'ArrowRight') nextLightboxImage();
+  }
+});
 
 document.addEventListener("DOMContentLoaded", function() {
   const wishlistBtn = document.getElementById("wishlistBtn");

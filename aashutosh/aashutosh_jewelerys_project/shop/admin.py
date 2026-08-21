@@ -160,7 +160,7 @@ class ProductAdmin(admin.ModelAdmin):
             ),
         }),
         ('Price Breakdown', {
-            'fields': ('is_manual_price', 'gold_value', 'stone_value', 'making_charges', 'gst', 'total_price', 'price'),
+            'fields': ('is_manual_price', 'gold_value', 'stone_value', 'making_per_gram', 'making_charges', 'gst', 'total_price', 'price'),
             'classes': ('collapse',),
         }),
     )

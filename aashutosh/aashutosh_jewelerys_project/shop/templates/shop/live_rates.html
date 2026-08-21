@@ -345,7 +345,36 @@ function downloadRateCard() {
                 backgroundColor: '#ffffff',
                 scale: 2,
                 useCORS: true,
-                logging: false
+                logging: false,
+                windowWidth: 1024,
+                onclone: function(clonedDoc) {
+                    const clonedCard = clonedDoc.getElementById('priceBreakdownCard');
+                    if (clonedCard) {
+                        clonedCard.style.width = '850px';
+                        clonedCard.style.minWidth = '850px';
+                        clonedCard.style.maxWidth = '850px';
+                        clonedCard.style.margin = '0 auto';
+                        
+                        const clonedResponsive = clonedCard.querySelector('.table-responsive');
+                        if (clonedResponsive) {
+                            clonedResponsive.style.overflow = 'visible';
+                            clonedResponsive.style.width = '100%';
+                        }
+                        
+                        const clonedTable = clonedCard.querySelector('table');
+                        if (clonedTable) {
+                            clonedTable.style.width = '100%';
+                            clonedTable.style.fontSize = '14px';
+                        }
+
+                        const cells = clonedCard.querySelectorAll('th, td');
+                        cells.forEach(cell => {
+                            cell.style.padding = '12px 16px';
+                            cell.style.fontSize = '14px';
+                            cell.style.whiteSpace = 'nowrap';
+                        });
+                    }
+                }
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'Aashutosh_Jewellers_Live_Rates.png';

@@ -230,6 +230,18 @@
     color: #b8952b;
   }
 
+  .subcategory-count-badge {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #666;
+    margin-top: 4px;
+    transition: color 0.3s ease;
+  }
+
+  .subcategory-card-premium:hover .subcategory-count-badge {
+    color: #d4af37;
+  }
+
   /* ====== PREMIUM ACTION BUTTONS ====== */
   .btn-premium-gold {
     background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
@@ -330,8 +342,9 @@
                   <span class="btn overlay-btn-premium">View Products</span>
                 </div>
               </div>
-              <div class="subcategory-body-premium flex-grow-1 d-flex align-items-center justify-content-center">
-                <h5>{{ subcategory.name }}</h5>
+              <div class="subcategory-body-premium flex-grow-1 d-flex flex-column align-items-center justify-content-center">
+                <h5 class="mb-1">{{ subcategory.name }}</h5>
+                <span class="subcategory-count-badge">({{ subcategory.product_count }})</span>
               </div>
             </div>
           </a>
