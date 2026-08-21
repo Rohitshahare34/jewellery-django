@@ -983,6 +983,56 @@ main {
   background-color: #1a1a1a !important;
 }
 
+/* Rates & Calculator Light & Dark Mode Card System */
+.home-rates-card {
+  border-radius: 20px;
+  background: linear-gradient(145deg, #ffffff 0%, #fffdf6 100%);
+  border: 1px solid rgba(212,175,55,0.2);
+  color: #222222;
+}
+
+.home-calc-card {
+  border-radius: 20px;
+  background: linear-gradient(145deg, #ffffff 0%, #f7f9fc 100%);
+  border: 1px solid rgba(59,130,246,0.18);
+  color: #222222;
+}
+
+.home-rates-card h3,
+.home-calc-card h3 {
+  color: #111111;
+}
+
+.home-rates-card p,
+.home-calc-card p,
+.home-calc-card label {
+  color: #444444;
+}
+
+.rate-item-row {
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+}
+
+.rate-item-row h6 {
+  color: #111111;
+}
+
+#homeCalcResult {
+  background: #fdfbf7;
+  border: 1px solid rgba(212,175,55,0.2);
+}
+
+.home-info-mini-box {
+  background: #ffffff;
+  border: 1px solid #eeeeee;
+}
+
+.home-info-mini-box span.fw-bold {
+  color: #111111;
+}
+
 /* Dark Theme Enhancements for Today's Rates, Price Calculator & Live Rates Pages */
 [data-theme="dark"] .rates-calculator-section,
 [data-theme="dark"] section.bg-white,
@@ -992,6 +1042,19 @@ main {
   border-color: rgba(212, 175, 55, 0.15) !important;
 }
 
+[data-theme="dark"] .home-rates-card,
+[data-theme="dark"] .home-calc-card,
+[data-theme="dark"] .card[style*="background: linear-gradient"],
+[data-theme="dark"] .card[style*="background:linear-gradient"] {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+  border-color: rgba(212, 175, 55, 0.25) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .home-rates-card h3,
+[data-theme="dark"] .home-calc-card h3,
+[data-theme="dark"] .home-calc-card label,
 [data-theme="dark"] .rates-calculator-section h3,
 [data-theme="dark"] .rates-calculator-section h6,
 [data-theme="dark"] .rates-calculator-section p,
@@ -1000,18 +1063,12 @@ main {
   color: #ffffff !important;
 }
 
+[data-theme="dark"] .home-rates-card p,
+[data-theme="dark"] .home-calc-card p,
 [data-theme="dark"] .rates-calculator-section .text-muted,
 [data-theme="dark"] .rates-calculator-section p.text-muted,
 [data-theme="dark"] .rates-calculator-section span.text-muted {
   color: #b0b0b0 !important;
-}
-
-[data-theme="dark"] .card[style*="background: linear-gradient"],
-[data-theme="dark"] .card[style*="background:linear-gradient"] {
-  background: #1a1a1a !important;
-  color: #ffffff !important;
-  border-color: rgba(212, 175, 55, 0.25) !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
 }
 
 [data-theme="dark"] .rate-item-row {
@@ -1035,10 +1092,16 @@ main {
 [data-theme="dark"] #homeCalcResult .text-dark,
 [data-theme="dark"] #liveCalcResult .text-dark,
 [data-theme="dark"] #homeMetalInfoCard .text-dark,
-[data-theme="dark"] #homeMetalInfoCard .bg-white {
+[data-theme="dark"] #homeMetalInfoCard .bg-white,
+[data-theme="dark"] .home-info-mini-box {
   background-color: #181818 !important;
   color: #ffffff !important;
-  border-color: rgba(212, 175, 55, 0.2) !important;
+  border-color: rgba(212, 175, 55, 0.25) !important;
+}
+
+[data-theme="dark"] .home-info-mini-box span,
+[data-theme="dark"] .home-info-mini-box span.fw-bold {
+  color: #ffffff !important;
 }
 
 [data-theme="dark"] .rate-card-gold,
