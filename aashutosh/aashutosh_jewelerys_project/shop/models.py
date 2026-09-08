@@ -552,8 +552,19 @@ class MetalRate(models.Model):
         return qs.exclude(is_manual_price=True)
 
     def recalculate_matching_products(self):
-        """Apply Product.recalculate_price() and persist only derived price fields."""
+        """
+        Recalculate prices for matching products and persist ONLY derived price fields.
+
+        Production safety:
+        - Never delete, create, flush, or replace products/categories/media.
+        - Never UPDATE columns outside Product.RATE_DERIVED_FIELDS.
+        - Existing product rows keep the same primary keys.
+        """
         derived_fields = list(Product.RATE_DERIVED_FIELDS)
+        allowed = frozenset(Product.RATE_DERIVED_FIELDS)
+        if frozenset(derived_fields) != allowed:
+            raise ValueError("Refusing product update: field list is not the rate-derived allowlist.")
+
         batch = []
         batch_size = 250
         for product in self.get_matching_products().iterator(chunk_size=batch_size):

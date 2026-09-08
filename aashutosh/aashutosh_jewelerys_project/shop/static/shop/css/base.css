@@ -1173,9 +1173,7 @@ main {
   display: flex;
   flex-direction: column;
   height: 100%;
-}
 
-.product-card-premium:hover {
   transform: translateY(-6px);
   box-shadow: 0 12px 30px rgba(184, 149, 43, 0.08);
   border-color: rgba(212, 175, 55, 0.35);
@@ -1286,6 +1284,8 @@ main {
   display: flex;
   gap: 8px;
   margin-top: auto;
+  position: relative;
+  z-index: 3;
 }
 
 /* ====== PREMIUM BUTTONS ====== */
@@ -1871,4 +1871,4 @@ main {
 
 
 
-
+

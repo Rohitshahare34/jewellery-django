@@ -691,6 +691,7 @@
             if (!btn) return;
             
             e.preventDefault();
+            e.stopPropagation();
             const productId = btn.dataset.productId;
             
             fetch(`/wishlist/toggle/${productId}/`, {

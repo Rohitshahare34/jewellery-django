@@ -294,6 +294,8 @@
     display: flex;
     gap: 10px;
     margin-top: auto;
+    position: relative;
+    z-index: 3;
   }
 
   /* ====== PREMIUM BUTTONS ====== */
@@ -511,6 +513,7 @@
                    {% if item.product %}
                      {% with product=item.product %}
                      <div class="wishlist-card-premium" id="wishlist-item-{{ product.id }}">
+                       <a href="{% url 'product_detail' product.id %}" class="product-card-link" aria-label="{{ product.name }}"></a>
                        <div class="wishlist-img-wrapper">
                          <img src="{{ product.image_url }}" alt="{{ product.name }}">
                        </div>

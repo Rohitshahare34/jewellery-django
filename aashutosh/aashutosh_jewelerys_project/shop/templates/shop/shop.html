@@ -278,6 +278,7 @@
           <!-- Responsive grid item: 2-cols on mobile, 4-cols on desktop -->
           <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-6 d-flex product-grid-col">
             <div class="product-card-premium w-100">
+              <a href="{% url 'product_detail' product.pk %}" class="product-card-link" aria-label="{{ product.name }}"></a>
               <!-- Image Wrapper -->
               <div class="product-img-wrapper-premium">
                 <!-- Floating Wishlist Button -->

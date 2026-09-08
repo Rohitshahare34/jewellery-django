@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from django.test import TestCase
 
-from shop.models import Category, SubCategory, Product, MetalRate, ProductImage
+from shop.models import Category, SubCategory, Product, MetalRate, ProductImage, Testimonial
 
 
 def expected_breakdown(rate_per_gram, weight, making_per_gram, stone_value, gst_percentage=Decimal('3.0')):
@@ -210,3 +210,42 @@ class MetalRateProductRecalculationTests(TestCase):
         expected_gst = (taxable * Decimal('3.0')) / Decimal('100')
         self.assertEqual(product.gst, expected_gst)
         self.assertEqual(product.total_price, taxable + expected_gst)
+
+    def test_rate_update_preserves_record_counts_and_primary_keys(self):
+        """Rate save must not create/delete catalog, media, testimonial, or rate rows."""
+        Testimonial.objects.create(
+            name="Existing Client",
+            rating=5,
+            message="Kept after rate update",
+            is_approved=True,
+        )
+        before = {
+            'products': Product.objects.count(),
+            'product_ids': set(Product.objects.values_list('pk', flat=True)),
+            'categories': Category.objects.count(),
+            'category_ids': set(Category.objects.values_list('pk', flat=True)),
+            'subcategories': SubCategory.objects.count(),
+            'subcategory_ids': set(SubCategory.objects.values_list('pk', flat=True)),
+            'images': ProductImage.objects.count(),
+            'testimonials': Testimonial.objects.count(),
+            'testimonial_ids': set(Testimonial.objects.values_list('pk', flat=True)),
+            'rates': MetalRate.objects.count(),
+            'rate_ids': set(MetalRate.objects.values_list('pk', flat=True)),
+        }
+
+        self.gold_rate.rate_per_gram = Decimal('16000.00')
+        self.gold_rate.save()
+        self.silver_rate.rate_per_gram = Decimal('250.00')
+        self.silver_rate.save()
+
+        self.assertEqual(Product.objects.count(), before['products'])
+        self.assertEqual(set(Product.objects.values_list('pk', flat=True)), before['product_ids'])
+        self.assertEqual(Category.objects.count(), before['categories'])
+        self.assertEqual(set(Category.objects.values_list('pk', flat=True)), before['category_ids'])
+        self.assertEqual(SubCategory.objects.count(), before['subcategories'])
+        self.assertEqual(set(SubCategory.objects.values_list('pk', flat=True)), before['subcategory_ids'])
+        self.assertEqual(ProductImage.objects.count(), before['images'])
+        self.assertEqual(Testimonial.objects.count(), before['testimonials'])
+        self.assertEqual(set(Testimonial.objects.values_list('pk', flat=True)), before['testimonial_ids'])
+        self.assertEqual(MetalRate.objects.count(), before['rates'])
+        self.assertEqual(set(MetalRate.objects.values_list('pk', flat=True)), before['rate_ids'])

@@ -35,7 +35,8 @@
         <div class="row g-4">
             {% for product in products %}
             <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="card product-card h-100 border-0 shadow-sm">
+                <div class="card product-card h-100 border-0 shadow-sm position-relative">
+                    <a href="{% url 'product_detail' product.pk %}" class="product-card-link" aria-label="{{ product.name }}"></a>
                     <div class="position-relative">
                         <img src="{{ product.image.url }}" class="card-img-top product-image rounded-top" alt="{{ product.name }}">
                         {% if product.badge != 'NONE' %}
@@ -79,8 +80,14 @@
 }
 
 .product-card {
+    position: relative;
     border-radius: 15px;
     transition: transform 0.2s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+.product-card .btn-gold {
+    position: relative;
+    z-index: 3;
 }
 .product-card:hover {
     transform: translateY(-5px);
