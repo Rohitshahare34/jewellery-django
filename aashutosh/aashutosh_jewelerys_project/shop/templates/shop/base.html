@@ -685,6 +685,20 @@
             }, 4000);
         };
 
+        // Image, title, or price click opens the product detail page
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.wishlist-btn-premium, .remove-wishlist-btn, .product-actions-premium, .wishlist-actions-premium, [data-bs-toggle="modal"], .modal')) {
+                return;
+            }
+            const card = e.target.closest('.product-card-premium, .wishlist-card-premium');
+            if (!card) return;
+            if (e.target.closest('a[href]')) return;
+            const link = card.querySelector('.product-card-main-link, a.btn-premium-gold');
+            if (link && link.href) {
+                window.location.href = link.href;
+            }
+        });
+
         // Global document-level click delegation for wishlist toggling on any page
         document.addEventListener('click', function(e) {
             const btn = e.target.closest('.wishlist-btn-premium');

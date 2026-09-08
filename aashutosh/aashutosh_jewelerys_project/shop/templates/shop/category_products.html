@@ -59,12 +59,11 @@
       {% for product in products %}
       <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 d-flex product-grid-col">
         <div class="product-card-premium w-100">
-          <a href="{% url 'product_detail' product.pk %}" class="product-card-link" aria-label="{{ product.name }}"></a>
+          <button type="button" class="wishlist-btn-premium {% if product.id in user_wishlist_ids %}active{% endif %}" data-product-id="{{ product.id }}" aria-label="Add to Wishlist">
+            <i class="{% if product.id in user_wishlist_ids %}fas fa-heart text-danger{% else %}far fa-heart{% endif %}"></i>
+          </button>
+          <a href="{% url 'product_detail' product.pk %}" class="product-card-main-link">
           <div class="product-img-wrapper-premium">
-            <!-- Floating Wishlist Button -->
-            <button class="wishlist-btn-premium {% if product.id in user_wishlist_ids %}active{% endif %}" data-product-id="{{ product.id }}" aria-label="Add to Wishlist">
-              <i class="{% if product.id in user_wishlist_ids %}fas fa-heart text-danger{% else %}far fa-heart{% endif %}"></i>
-            </button>
             <img src="{{ product.image_url }}" alt="{{ product.name }}">
             
             {% if product.badge != 'NONE' %}
@@ -78,13 +77,12 @@
             <h5 class="product-title-premium">{{ product.name|title }}</h5>
             <p class="product-meta-premium mb-1">{% if product.stone_type and product.stone_type != 'OTHER' %}{{ product.get_stone_type_display }}{% else %}{{ product.get_metal_type_display|default:product.metal_type|default:"Gold" }}{% endif %} • {{ product.get_color_display|default:product.color|default:"Yellow Gold" }}</p>
             <p class="product-price-premium">₹{{ product.price|floatformat:2 }}</p>
-            
-            <!-- Action Buttons -->
+          </div>
+          </a>
             <div class="product-actions-premium">
               <a href="{% url 'product_detail' product.pk %}" class="btn btn-premium-gold flex-grow-1">View Details</a>
-              <button class="btn btn-premium-outline flex-grow-1 d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#quickViewModal-{{ product.pk }}">Quick View</button>
+              <button type="button" class="btn btn-premium-outline flex-grow-1 d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#quickViewModal-{{ product.pk }}">Quick View</button>
             </div>
-          </div>
         </div>
       </div>
 

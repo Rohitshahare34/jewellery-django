@@ -36,7 +36,7 @@
             {% for product in products %}
             <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="card product-card h-100 border-0 shadow-sm position-relative">
-                    <a href="{% url 'product_detail' product.pk %}" class="product-card-link" aria-label="{{ product.name }}"></a>
+                    <a href="{% url 'product_detail' product.pk %}" class="product-card-main-link">
                     <div class="position-relative">
                         <img src="{{ product.image.url }}" class="card-img-top product-image rounded-top" alt="{{ product.name }}">
                         {% if product.badge != 'NONE' %}
@@ -49,8 +49,9 @@
                         <h6 class="card-title fw-semibold mb-2">{{ product.name|truncatewords:4 }}</h6>
                         <p class="text-muted small mb-2">{{ product.stone_type }} • {{ product.color }}</p>
                         <p class="fw-bold text-gold mb-3">₹{{ product.price }}</p>
-                        <a href="{% url 'product_detail' product.pk %}" class="btn btn-gold btn-sm mt-auto">View Details</a>
                     </div>
+                    </a>
+                        <a href="{% url 'product_detail' product.pk %}" class="btn btn-gold btn-sm mt-auto mx-3 mb-3">View Details</a>
                 </div>
             </div>
             {% empty %}
