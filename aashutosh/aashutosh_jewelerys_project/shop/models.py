@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 from django.contrib.auth.models import User
 from django.urls import reverse
 
@@ -224,6 +224,17 @@ class Product(models.Model):
     )
     total_price = models.DecimalField(max_digits=14, decimal_places=2, default=0, editable=False)
 
+    # Fields derived by recalculate_price() when a metal rate or product is saved.
+    RATE_DERIVED_FIELDS = (
+        'gold_value',
+        'silver_value',
+        'platinum_value',
+        'making_charges',
+        'gst',
+        'total_price',
+        'price',
+    )
+
     class Meta:
         ordering = ['-created_at']
         verbose_name_plural = "Products"
@@ -320,6 +331,12 @@ class Product(models.Model):
 
         self.total_price = taxable_amount + calculated_gst
         self.price = self.total_price
+
+        if save:
+            if not self.pk:
+                super().save()
+            else:
+                super().save(update_fields=list(self.RATE_DERIVED_FIELDS))
 
     def save(self, *args, **kwargs):
         """
@@ -502,30 +519,56 @@ class MetalRate(models.Model):
             return f"{purity} {metal.capitalize()}"
         return self.metal_type.replace('_', ' ').title()
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        
-        # Automatically update all Product products matching this metal rate
-        if self.metal_type and self.metal_type.startswith('GOLD_'):
+    def get_matching_products(self):
+        """
+        Products whose prices depend on this MetalRate row.
+
+        Gold rates (GOLD_22K, GOLD_18K, ...) match Gold products of that purity.
+        Silver rates match Silver products: a generic SILVER row updates all
+        Silver products; SILVER_<purity> updates only that purity.
+        Manual-price products are excluded so daily rates cannot overwrite them.
+        """
+        if not self.metal_type:
+            return Product.objects.none()
+
+        if self.metal_type.startswith('GOLD_'):
             purity = self.metal_type.replace('GOLD_', '')
-            products = Product.objects.filter(metal_type='GOLD', gold_purity=purity)
-        elif self.metal_type and self.metal_type.startswith('SILVER'):
+            qs = Product.objects.filter(metal_type='GOLD', gold_purity=purity)
+        elif self.metal_type.startswith('SILVER'):
             purity = self.metal_type.replace('SILVER_', '')
             if purity == 'SILVER':
-                products = Product.objects.filter(metal_type='SILVER')
+                qs = Product.objects.filter(metal_type='SILVER')
             else:
-                products = Product.objects.filter(metal_type='SILVER', silver_purity=purity)
-        elif self.metal_type and self.metal_type.startswith('PLATINUM'):
+                qs = Product.objects.filter(metal_type='SILVER', silver_purity=purity)
+        elif self.metal_type.startswith('PLATINUM'):
             purity = self.metal_type.replace('PLATINUM_', '')
             if purity == 'PLATINUM':
-                products = Product.objects.filter(metal_type='PLATINUM')
+                qs = Product.objects.filter(metal_type='PLATINUM')
             else:
-                products = Product.objects.filter(metal_type='PLATINUM', platinum_purity=purity)
+                qs = Product.objects.filter(metal_type='PLATINUM', platinum_purity=purity)
         else:
-            products = []
-            
-        for product in products:
-            product.recalculate_price(save=True)
+            return Product.objects.none()
+
+        return qs.exclude(is_manual_price=True)
+
+    def recalculate_matching_products(self):
+        """Apply Product.recalculate_price() and persist only derived price fields."""
+        derived_fields = list(Product.RATE_DERIVED_FIELDS)
+        batch = []
+        batch_size = 250
+        for product in self.get_matching_products().iterator(chunk_size=batch_size):
+            product.recalculate_price(save=False)
+            batch.append(product)
+            if len(batch) >= batch_size:
+                Product.objects.bulk_update(batch, derived_fields, batch_size=batch_size)
+                batch = []
+        if batch:
+            Product.objects.bulk_update(batch, derived_fields, batch_size=batch_size)
+
+    def save(self, *args, **kwargs):
+        with transaction.atomic():
+            super().save(*args, **kwargs)
+            self.recalculate_matching_products()
 
 
 
