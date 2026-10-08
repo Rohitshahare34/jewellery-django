@@ -34,6 +34,7 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'shop/css/base.css' %}?v={% now 'U' %}">
+    <link rel="stylesheet" href="{% static 'promotions/css/promotions.css' %}?v={% now 'U' %}">
 </head>
 
 <body>
@@ -873,6 +874,10 @@
 
     {% block extra_scripts %}{% endblock %}
 
+    <!-- Festival Campaign Popup Modal & Floating Reel -->
+    {% include 'promotions/popup_modal.html' %}
+    {% include 'promotions/floating_video.html' %}
+    <script src="{% static 'promotions/js/promotions.js' %}?v={% now 'U' %}"></script>
     
 </body>
 </html>

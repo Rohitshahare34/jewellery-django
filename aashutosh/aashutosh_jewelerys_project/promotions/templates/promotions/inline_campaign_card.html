@@ -1,0 +1,138 @@
+{% if promotion_enabled and active_campaign and active_campaign.show_inline_card %}
+<!-- Wide Inline Promotional Campaign Card -->
+<div class="container max-w-1200 my-3 px-2 px-md-3">
+  <div class="inline-campaign-card theme-{{ active_campaign.theme_style|lower }} position-relative overflow-hidden">
+    
+    {% if active_campaign.card_background_image %}
+      <div class="inline-card-bg-img" style="background-image: url('{{ active_campaign.card_background_image.url }}');"></div>
+      <div class="inline-card-bg-overlay"></div>
+    {% endif %}
+
+    <div class="inline-campaign-card-inner d-flex flex-column flex-lg-row align-items-center justify-content-between py-2-5 py-md-3 px-3 px-md-4 gap-3 position-relative" style="z-index: 5;">
+      
+      <!-- Left Info Content (Unique Discount Details with Sparkle Icon) -->
+      <div class="campaign-info text-center text-lg-start d-flex align-items-center justify-content-center justify-content-lg-start gap-2 flex-grow-1">
+        <span class="d-none d-md-inline-block text-gold fs-5">✨</span>
+        {% if active_campaign.discount_details %}
+          <div class="campaign-details mb-0 font-medium">
+            {{ active_campaign.discount_details|safe }}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Right Action & Countdown (Horizontal Row on Desktop) -->
+      <div class="campaign-action-group text-center text-lg-end d-flex flex-column flex-md-row align-items-center justify-content-center gap-2 gap-md-3 flex-shrink-0 ms-lg-auto">
+        
+        <!-- Promo Code Box -->
+        {% if active_campaign.promo_code %}
+          <div class="promo-code-container d-inline-flex align-items-center gap-2 px-3 py-1-5 rounded-pill shadow-sm">
+            <span class="promo-code-lbl text-uppercase">USE CODE:</span>
+            <span class="promo-code-text font-monospace tracking-wide">{{ active_campaign.promo_code }}</span>
+            <button type="button" class="btn btn-sm btn-gold-copy ms-1 py-1 px-3" onclick="navigator.clipboard.writeText('{{ active_campaign.promo_code }}'); this.innerText='COPIED!'; setTimeout(() => this.innerText='COPY', 2000);">
+              COPY
+            </button>
+          </div>
+        {% endif %}
+
+        <!-- Countdown Timer -->
+        {% if active_campaign.show_countdown_timer and active_campaign.end_date %}
+          <div class="campaign-countdown-wrapper text-center my-0" data-start-date="{{ active_campaign.get_start_date_iso }}" data-end-date="{{ active_campaign.get_end_date_iso }}">
+            <div class="countdown-label text-uppercase mb-1" style="font-size: 0.68rem; letter-spacing: 0.5px;">
+              <i class="fas fa-clock me-1 text-gold"></i> <span class="timer-status-text">Offer Ends In:</span>
+            </div>
+            <div class="countdown-boxes d-flex justify-content-center align-items-center gap-1">
+              <div class="countdown-unit animated-timer-box">
+                <span class="countdown-val font-cinzel inline-days">00</span>
+                <span class="countdown-lbl">Days</span>
+              </div>
+              <span class="countdown-sep font-cinzel">:</span>
+              <div class="countdown-unit animated-timer-box">
+                <span class="countdown-val font-cinzel inline-hours">00</span>
+                <span class="countdown-lbl">Hrs</span>
+              </div>
+              <span class="countdown-sep font-cinzel">:</span>
+              <div class="countdown-unit animated-timer-box">
+                <span class="countdown-val font-cinzel inline-mins">00</span>
+                <span class="countdown-lbl">Mins</span>
+              </div>
+              <span class="countdown-sep font-cinzel">:</span>
+              <div class="countdown-unit animated-timer-box">
+                <span class="countdown-val font-cinzel inline-secs">00</span>
+                <span class="countdown-lbl">Secs</span>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Explore Button -->
+        <a href="{% url 'promotions:campaign_detail' active_campaign.slug %}" class="btn btn-gold-luxury px-3-5 py-2 rounded-pill text-uppercase fw-bold shadow-gold text-nowrap ms-md-1">
+          {{ active_campaign.announcement_link_text|default:"Shop Offer" }} <i class="fas fa-arrow-right ms-1"></i>
+        </a>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% if active_campaign.show_countdown_timer and active_campaign.end_date %}
+<script>
+(function() {
+  const container = document.querySelector('.campaign-countdown-wrapper[data-end-date]');
+  if (!container) return;
+  const endDateStr = container.getAttribute('data-end-date');
+  const startDateStr = container.getAttribute('data-start-date');
+  if (!endDateStr) return;
+
+  const endDate = new Date(endDateStr).getTime();
+  const startDate = startDateStr ? new Date(startDateStr).getTime() : 0;
+  const statusTextEl = container.querySelector('.timer-status-text');
+
+  function updateInlineTimer() {
+    const now = new Date().getTime();
+    let targetDate = endDate;
+    let isUpcoming = false;
+
+    if (startDate && now < startDate) {
+      targetDate = startDate;
+      isUpcoming = true;
+      if (statusTextEl) statusTextEl.innerText = 'Sale Starts In:';
+    } else {
+      if (statusTextEl) statusTextEl.innerText = 'Offer Ends In:';
+    }
+
+    const distance = targetDate - now;
+
+    const dEl = container.querySelector('.inline-days');
+    const hEl = container.querySelector('.inline-hours');
+    const mEl = container.querySelector('.inline-mins');
+    const sEl = container.querySelector('.inline-secs');
+
+    if (distance < 0) {
+      if (!isUpcoming) {
+        if (dEl) dEl.innerText = '00';
+        if (hEl) hEl.innerText = '00';
+        if (mEl) mEl.innerText = '00';
+        if (sEl) sEl.innerText = '00';
+        if (statusTextEl) statusTextEl.innerText = 'Offer Expired';
+        return;
+      }
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((distance % (1000 * 60)) / 1000);
+
+    if (dEl) dEl.innerText = String(Math.max(0, days)).padStart(2, '0');
+    if (hEl) hEl.innerText = String(Math.max(0, hours)).padStart(2, '0');
+    if (mEl) mEl.innerText = String(Math.max(0, mins)).padStart(2, '0');
+    if (sEl) sEl.innerText = String(Math.max(0, secs)).padStart(2, '0');
+  }
+
+  updateInlineTimer();
+  setInterval(updateInlineTimer, 1000);
+})();
+</script>
+{% endif %}
+{% endif %}

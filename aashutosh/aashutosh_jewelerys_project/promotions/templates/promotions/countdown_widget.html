@@ -1,0 +1,28 @@
+{% if active_campaign and active_campaign.show_countdown_timer and active_campaign.end_date %}
+<div class="promo-countdown-wrapper" id="promo-countdown-widget" data-end-date="{{ active_campaign.get_end_date_iso }}">
+    <div class="promo-countdown-title">
+        <i class="fas fa-hourglass-half me-2" style="color: #FFD700;"></i> {{ active_campaign.name }} — Offer Ends Soon!
+    </div>
+    <div class="promo-countdown-boxes">
+        <div class="promo-count-box">
+            <div class="promo-count-num" id="promo-days">00</div>
+            <div class="promo-count-label">Days</div>
+        </div>
+        <div class="promo-count-separator">:</div>
+        <div class="promo-count-box">
+            <div class="promo-count-num" id="promo-hours">00</div>
+            <div class="promo-count-label">Hours</div>
+        </div>
+        <div class="promo-count-separator">:</div>
+        <div class="promo-count-box">
+            <div class="promo-count-num" id="promo-mins">00</div>
+            <div class="promo-count-label">Mins</div>
+        </div>
+        <div class="promo-count-separator">:</div>
+        <div class="promo-count-box">
+            <div class="promo-count-num" id="promo-secs">00</div>
+            <div class="promo-count-label">Secs</div>
+        </div>
+    </div>
+</div>
+{% endif %}

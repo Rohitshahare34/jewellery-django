@@ -846,13 +846,14 @@
 </div>
 
 <!-- JavaScript for Image Lightbox Preview, Gallery Switching & Wishlist -->
+<script id="gallery-data" type="application/json">
+[
+  "{{ product.image_url|escapejs }}"{% for img in images %},
+  "{{ img.image.url|escapejs }}"{% endfor %}
+]
+</script>
 <script>
-const galleryImages = [
-  "{{ product.image_url }}",
-  {% for img in images %}
-    "{{ img.image.url }}",
-  {% endfor %}
-];
+const galleryImages = JSON.parse(document.getElementById('gallery-data').textContent);
 let currentImageIndex = 0;
 
 function changeImage(element, index) {

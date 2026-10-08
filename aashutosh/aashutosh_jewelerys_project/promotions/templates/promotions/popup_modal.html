@@ -1,0 +1,41 @@
+{% if active_campaign and active_campaign.show_popup_modal %}
+<div class="promo-modal-backdrop" id="promo-modal-backdrop" data-campaign-id="{{ active_campaign.id }}">
+    <div class="promo-modal-card shadow-lg">
+        <button class="promo-modal-close-btn" id="promo-modal-close" title="Close modal">&times;</button>
+        {% if active_campaign.popup_media_type == 'VIDEO' and active_campaign.popup_video %}
+        <video class="promo-modal-img" autoplay loop muted playsinline style="object-fit: cover; width: 100%; max-height: 240px; border: none;">
+            <source src="{{ active_campaign.popup_video.url }}" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+        {% elif active_campaign.popup_image %}
+        <img src="{{ active_campaign.popup_image.url }}" alt="{{ active_campaign.name }}" class="promo-modal-img" style="object-fit: cover; width: 100%; max-height: 240px; border: none;">
+        {% endif %}
+        <div class="promo-modal-body p-4 text-center">
+            {% if active_campaign.discount_label %}
+            <div class="campaign-badge mb-3 d-inline-flex">
+                <span class="badge-icon">✨</span>
+                <span class="badge-text">{{ active_campaign.discount_label }}</span>
+            </div>
+            {% endif %}
+
+            <h3 class="promo-modal-title font-cinzel text-uppercase mb-3">{{ active_campaign.headline|default:active_campaign.name }}</h3>
+            
+            {% if active_campaign.promo_code %}
+            <div class="promo-code-container d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill mb-3">
+                <span class="promo-code-lbl text-uppercase fw-bold">CODE:</span>
+                <span class="promo-code-text font-monospace tracking-wide">{{ active_campaign.promo_code }}</span>
+                <button type="button" class="btn btn-sm btn-gold-copy rounded-pill px-3 py-1 ms-1" onclick="navigator.clipboard.writeText('{{ active_campaign.promo_code }}'); this.innerText='COPIED!'; setTimeout(() => this.innerText='COPY', 2000);">
+                    COPY
+                </button>
+            </div>
+            {% endif %}
+
+            <div class="d-flex gap-2 justify-content-center mt-1">
+                <a href="{% url 'promotions:campaign_detail' slug=active_campaign.slug %}" class="btn btn-gold-luxury px-4 py-2 rounded-pill text-uppercase fw-bold shadow-gold">
+                    Shop Festival Offer <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}

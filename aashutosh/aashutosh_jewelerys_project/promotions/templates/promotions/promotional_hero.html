@@ -1,0 +1,125 @@
+{% if promotion_enabled and active_campaign and active_campaign.show_hero_override and active_campaign.hero_display_type == 'CAMPAIGN' %}
+<!-- Promotional Campaign Hero Section Override -->
+<section class="hero-section promo-hero-override position-relative overflow-hidden p-0 m-0 w-100">
+  
+  <!-- DESKTOP MEDIA CONTAINER (≥ 768px) -->
+  <div class="d-none d-md-block w-100 h-100 position-absolute top-0 start-0 bottom-0 end-0 p-0 m-0">
+    {% if active_campaign.hero_desktop_media_type == 'VIDEO' and active_campaign.hero_desktop_video %}
+      <video autoplay loop muted playsinline class="w-100 h-100 d-block border-0 p-0 m-0" style="object-fit: cover; object-position: center center;">
+        <source src="{{ active_campaign.hero_desktop_video.url }}" type="video/mp4">
+      </video>
+    {% elif active_campaign.hero_desktop_image %}
+      <img src="{{ active_campaign.hero_desktop_image.url }}" alt="{{ active_campaign.name }}" class="w-100 h-100 d-block border-0 p-0 m-0" style="object-fit: cover; object-position: center center;">
+    {% elif active_campaign.banner_image %}
+      <img src="{{ active_campaign.banner_image.url }}" alt="{{ active_campaign.name }}" class="w-100 h-100 d-block border-0 p-0 m-0" style="object-fit: cover; object-position: center center;">
+    {% endif %}
+  </div>
+
+  <!-- MOBILE MEDIA CONTAINER (< 768px) -->
+  <div class="d-block d-md-none w-100 h-100 position-absolute top-0 start-0 bottom-0 end-0 p-0 m-0">
+    {% if active_campaign.hero_mobile_media_type == 'VIDEO' and active_campaign.hero_mobile_video %}
+      <video autoplay loop muted playsinline class="w-100 h-100 d-block border-0 p-0 m-0" style="object-fit: cover; object-position: center center;">
+        <source src="{{ active_campaign.hero_mobile_video.url }}" type="video/mp4">
+      </video>
+    {% elif active_campaign.hero_mobile_image %}
+      <img src="{{ active_campaign.hero_mobile_image.url }}" alt="{{ active_campaign.name }}" class="w-100 h-100 d-block border-0 p-0 m-0" style="object-fit: cover; object-position: center center;">
+    {% elif active_campaign.hero_desktop_image %}
+      <img src="{{ active_campaign.hero_desktop_image.url }}" alt="{{ active_campaign.name }}" class="w-100 h-100 d-block border-0 p-0 m-0" style="object-fit: cover; object-position: center center;">
+    {% elif active_campaign.banner_image %}
+      <img src="{{ active_campaign.banner_image.url }}" alt="{{ active_campaign.name }}" class="w-100 h-100 d-block border-0 p-0 m-0" style="object-fit: cover; object-position: center center;">
+    {% endif %}
+  </div>
+
+  <!-- OPTIONAL TEXT OVERLAY (UNBOXED, BOTTOM-LEFT ALIGNED HERO TYPOGRAPHY) -->
+  {% if active_campaign.hero_show_text_overlay %}
+    <div class="hero-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%) !important; pointer-events: none; z-index: 2;"></div>
+    <div class="container-fluid h-100 d-flex align-items-end hero-container-overlay position-absolute top-0 start-0 bottom-0 end-0" style="z-index: 5;">
+      <div class="row align-items-end justify-content-start w-100 m-0 p-0">
+        <div class="col-lg-7 col-md-9 col-12 px-3 px-md-4 px-lg-5 pb-4">
+          <div class="hero-glass-card hero-unboxed-content text-start" style="background: transparent !important; background-color: transparent !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; padding: 0 !important; margin: 0 !important;">
+            
+            <!-- Glowing Offer Badge -->
+            {% if active_campaign.discount_label %}
+              <div class="campaign-badge mb-2 d-inline-flex">
+                <span class="badge-icon">⚡</span>
+                <span class="badge-text">{{ active_campaign.discount_label }}</span>
+              </div>
+            {% else %}
+              <div class="campaign-badge mb-2 d-inline-flex">
+                <span class="badge-icon">⚡</span>
+                <span class="badge-text">SPECIAL FESTIVE OFFER</span>
+              </div>
+            {% endif %}
+
+            <h1 class="hero-title text-uppercase font-cinzel mb-2 text-start">
+              {{ active_campaign.name }}
+            </h1>
+
+            {% if active_campaign.headline %}
+              <p class="hero-subtitle mb-3 text-start">
+                {{ active_campaign.headline }}
+              </p>
+            {% endif %}
+
+            <!-- Action Buttons (Single Row Left Aligned) -->
+            <div class="d-flex flex-nowrap gap-2 justify-content-start mt-2 hero-btn-group">
+              <a href="{% url 'promotions:campaign_detail' active_campaign.slug %}" class="btn btn-luxury-gold">
+                {{ active_campaign.announcement_link_text|default:"Shop Offer" }} <i class="fas fa-arrow-right ms-1"></i>
+              </a>
+              <a href="{% url 'shop' %}" class="btn btn-luxury-outline">
+                Browse Shop
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+</section>
+
+{% if active_campaign.show_countdown_timer and active_campaign.end_date %}
+<script>
+(function() {
+  const container = document.querySelector('.hero-countdown-wrapper[data-end-date]');
+  if (!container) return;
+  const endDateStr = container.getAttribute('data-end-date');
+  if (!endDateStr) return;
+
+  const targetDate = new Date(endDateStr).getTime();
+
+  function updateHeroTimer() {
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+
+    const dEl = container.querySelector('.hero-days');
+    const hEl = container.querySelector('.hero-hours');
+    const mEl = container.querySelector('.hero-mins');
+    const sEl = container.querySelector('.hero-secs');
+
+    if (distance < 0) {
+      if (dEl) dEl.innerText = '00';
+      if (hEl) hEl.innerText = '00';
+      if (mEl) mEl.innerText = '00';
+      if (sEl) sEl.innerText = '00';
+      return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((distance % (1000 * 60)) / 1000);
+
+    if (dEl) dEl.innerText = String(days).padStart(2, '0');
+    if (hEl) hEl.innerText = String(hours).padStart(2, '0');
+    if (mEl) mEl.innerText = String(mins).padStart(2, '0');
+    if (sEl) sEl.innerText = String(secs).padStart(2, '0');
+  }
+
+  updateHeroTimer();
+  setInterval(updateHeroTimer, 1000);
+})();
+</script>
+{% endif %}
+{% endif %}

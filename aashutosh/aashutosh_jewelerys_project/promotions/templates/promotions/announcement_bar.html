@@ -1,0 +1,17 @@
+{% if active_campaign and active_campaign.show_top_announcement %}
+<div class="promo-announcement-bar" id="promo-announcement-bar">
+    <div class="container d-flex align-items-center justify-content-between">
+        <div class="promo-announcement-content w-100">
+            <span class="promo-badge-tag">FESTIVAL OFFER</span>
+            <span>{{ active_campaign.announcement_text }}</span>
+            {% if active_campaign.promo_code %}
+            <span>Code: <strong class="promo-code-pill" data-code="{{ active_campaign.promo_code }}" title="Click to copy">{{ active_campaign.promo_code }}</strong></span>
+            {% endif %}
+            <a href="{% url 'promotions:campaign_detail' slug=active_campaign.slug %}" class="btn-promo-cta">
+                {{ active_campaign.announcement_link_text|default:"View Offers" }} <i class="fas fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+        <button class="promo-announcement-close" id="promo-announcement-close" title="Close announcement">&times;</button>
+    </div>
+</div>
+{% endif %}

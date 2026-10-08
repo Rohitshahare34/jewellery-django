@@ -1,0 +1,31 @@
+{% if active_campaign and active_campaign.show_floating_video %}
+  {% if active_campaign.floating_media_type == 'VIDEO' and active_campaign.floating_video or active_campaign.floating_media_type == 'IMAGE' and active_campaign.floating_image %}
+<div class="promo-floating-reel" id="promo-floating-reel">
+    <div class="promo-reel-header d-flex align-items-center justify-content-between px-2 py-1">
+        <span class="d-flex align-items-center gap-1 overflow-hidden flex-grow-1 me-1">
+          {% if active_campaign.floating_media_type == 'VIDEO' %}
+            <i class="fas fa-video me-1 text-gold" style="font-size: 0.65rem;"></i>
+          {% else %}
+            <i class="fas fa-image me-1 text-gold" style="font-size: 0.65rem;"></i>
+          {% endif %}
+          <strong class="text-truncate d-inline-block reel-title" style="color: #FFD700; font-size: 0.7rem; font-weight: 700;">{{ active_campaign.floating_video_title|default:"Festive Showcase" }}</strong>
+        </span>
+        <div class="promo-reel-controls d-flex align-items-center gap-1 flex-shrink-0">
+            <button type="button" class="promo-reel-btn" id="promo-reel-minimize" title="Minimize/Expand"><i class="fas fa-compress-alt" style="font-size: 0.55rem;"></i></button>
+            <button type="button" class="promo-reel-btn promo-reel-close-btn" id="promo-reel-close" title="Close Poster"><i class="fas fa-times" style="font-size: 0.6rem;"></i></button>
+        </div>
+    </div>
+
+    {% if active_campaign.floating_media_type == 'VIDEO' and active_campaign.floating_video %}
+      <video class="promo-reel-video" id="promo-reel-video-element" autoplay loop muted playsinline>
+          <source src="{{ active_campaign.floating_video.url }}" type="video/mp4">
+          Your browser does not support HTML5 video.
+      </video>
+    {% elif active_campaign.floating_media_type == 'IMAGE' and active_campaign.floating_image %}
+      <img src="{{ active_campaign.floating_image.url }}" alt="{{ active_campaign.floating_video_title|default:'Festive Showcase' }}" class="promo-reel-video" style="object-fit: cover; width: 100%; height: 100%;">
+    {% endif %}
+
+    <a href="{% url 'promotions:campaign_detail' slug=active_campaign.slug %}" class="promo-reel-overlay-link" title="View Campaign Details"></a>
+</div>
+  {% endif %}
+{% endif %}

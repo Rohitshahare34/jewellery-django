@@ -892,6 +892,11 @@
 </style>
 
 <!-- ===== Hero Section Slider ===== -->
+{% if promotion_enabled and active_campaign and active_campaign.show_hero_override and active_campaign.hero_display_type == 'CAMPAIGN' %}
+  {% include 'promotions/promotional_hero.html' %}
+{% elif promotion_enabled and active_campaign and active_campaign.show_hero_override and active_campaign.hero_display_type == 'HIDE' %}
+  <!-- Hero Section Hidden by Campaign Setting -->
+{% else %}
 <section class="hero-section">
   <div id="heroCarousel" class="carousel slide carousel-fade h-100" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="false">
     <div class="carousel-indicators">
@@ -904,7 +909,7 @@
     <div class="carousel-inner h-100">
       <!-- Slide 1: Modern Custom Jewellery -->
       <div class="carousel-item active h-100">
-        <img src="{% static 'hero-section-imgs/ChatGPT Image Jun 21, 2026, 07_50_50 PM.png' %}" class="d-block w-100 h-100" alt="Modern Custom Jewellery">
+        <img src="{% static 'hero-section-imgs/Elegant_and_classy.jpg' %}" class="d-block w-100 h-100" alt="Modern Custom Jewellery">
         <!-- Luxury overlay -->
         <div class="hero-overlay"></div>
         <div class="container h-100 d-flex align-items-center hero-container-overlay">
@@ -1089,17 +1094,24 @@
     </button>
   </div>
 </section>
+{% endif %}
 
 <!-- ===== Scrolling Collection Banner (Left to Right) ===== -->
 {% if signature_collection and signature_items %}
 <section class="scrolling-collections-section py-4">
-  <div class="scrolling-collections-title text-center mb-3">
+  {% if active_campaign.inline_card_position != 'BELOW' %}
+  <!-- Dynamic Inline Promotional Campaign Card (Above Signature Collections) -->
+  {% include "promotions/inline_campaign_card.html" %}
+  {% endif %}
+
+  <div class="scrolling-collections-title text-center mb-3 mt-3">
     {% if signature_collection.title %}
     <span class="text-gold font-cinzel text-uppercase tracking-wider small">{{ signature_collection.title }}</span>
     {% else %}
     <span class="text-gold font-cinzel text-uppercase tracking-wider small">Our Signature Collections</span>
     {% endif %}
   </div>
+
   <div class="collections-marquee-wrapper">
     <div class="collections-marquee-track">
         <!-- Group 1 (Dynamic from DB) -->
@@ -1183,7 +1195,14 @@
         </div>
     </div>
   </div>
+
+  {% if active_campaign.inline_card_position == 'BELOW' %}
+  <!-- Dynamic Inline Promotional Campaign Card (Below Signature Collections) -->
+  {% include "promotions/inline_campaign_card.html" %}
+  {% endif %}
 </section>
+{% else %}
+  {% include "promotions/inline_campaign_card.html" %}
 {% endif %}
 
 

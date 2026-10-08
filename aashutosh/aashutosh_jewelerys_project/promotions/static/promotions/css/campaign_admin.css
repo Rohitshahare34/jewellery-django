@@ -1,0 +1,534 @@
+/* ==========================================================================
+   AASHUTOSH JEWELLERS - CAMPAIGN MANAGER ADMIN DASHBOARD STYLES
+   ========================================================================== */
+
+:root {
+    --admin-gold: #D4AF37;
+    --admin-gold-dark: #996515;
+    --admin-bg: #f8fafc;
+    --admin-card-bg: #ffffff;
+    --admin-border: #e2e8f0;
+    --admin-text-main: #0f172a;
+    --admin-text-muted: #64748b;
+    --admin-radius: 12px;
+}
+
+#campaign-manager-dashboard {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: var(--admin-text-main);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 0;
+}
+
+/* --- 1. Top Campaign Summary Dashboard Card --- */
+.campaign-summary-card {
+    background: linear-gradient(135deg, #1e1b18 0%, #2d2415 50%, #1e1b18 100%);
+    border: 1.5px solid var(--admin-gold);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 25px;
+    color: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 0 20px rgba(212, 175, 55, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.campaign-summary-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.campaign-summary-title-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.campaign-diya-icon {
+    font-size: 2.2rem;
+    line-height: 1;
+}
+
+.campaign-summary-name {
+    font-size: 1.75rem !important;
+    font-weight: 800 !important;
+    color: #FFD700 !important;
+    margin: 0 0 4px 0 !important;
+    letter-spacing: 0.5px;
+    font-family: 'Cinzel', Georgia, serif;
+}
+
+.campaign-summary-headline {
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    margin: 0;
+    font-weight: 500;
+}
+
+.campaign-status-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.campaign-status-badge.status-live {
+    background-color: #28a745 !important;
+}
+
+.campaign-status-badge.status-scheduled {
+    background-color: #17a2b8 !important;
+}
+
+.campaign-status-badge.status-expired {
+    background-color: #dc3545 !important;
+}
+
+.campaign-status-badge.status-disabled,
+.campaign-status-badge.status-draft {
+    background-color: #6c757d !important;
+}
+
+.campaign-timer-strip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 8px;
+    padding: 8px 16px;
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+}
+
+.timer-icon {
+    font-size: 1.1rem;
+}
+
+.timer-label {
+    color: #cbd5e1;
+}
+
+.timer-value {
+    color: #FFD700;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.campaign-readiness-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 12px 18px;
+    border-radius: 10px;
+}
+
+.readiness-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+}
+
+.readiness-lbl {
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.readiness-val {
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.readiness-val.ready {
+    background: rgba(40, 167, 69, 0.25);
+    color: #4cd964;
+    border: 1px solid #28a745;
+}
+
+.readiness-val.missing {
+    background: rgba(220, 53, 69, 0.25);
+    color: #ff6b6b;
+    border: 1px solid #dc3545;
+}
+
+.campaign-summary-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-admin-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.btn-preview-desktop {
+    background: #334155;
+    color: #ffffff !important;
+    border: 1px solid #475569;
+}
+
+.btn-preview-desktop:hover {
+    background: #475569;
+}
+
+.btn-preview-mobile {
+    background: #334155;
+    color: #ffffff !important;
+    border: 1px solid #475569;
+}
+
+.btn-preview-mobile:hover {
+    background: #475569;
+}
+
+.btn-toggle-activate {
+    background: #28a745 !important;
+    color: #ffffff !important;
+    border: 1px solid #1e7e34 !important;
+    box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3) !important;
+}
+
+.btn-toggle-activate:hover {
+    background: #218838 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(40, 167, 69, 0.5) !important;
+}
+
+.btn-toggle-deactivate {
+    background: #dc3545 !important;
+    color: #ffffff !important;
+    border: 1px solid #bd2130 !important;
+    box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3) !important;
+}
+
+.btn-toggle-deactivate:hover {
+    background: #c82333 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(220, 53, 69, 0.5) !important;
+}
+
+.btn-save-primary {
+    background: linear-gradient(135deg, #FFD700 0%, #D4AF37 100%);
+    color: #000000 !important;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+}
+
+.btn-save-primary:hover {
+    background: linear-gradient(135deg, #FFF099 0%, #FFD700 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(255, 215, 0, 0.5);
+}
+
+/* --- 2. Django Admin Fieldsets Custom Card Styling --- */
+#content-main fieldset {
+    background: var(--admin-card-bg) !important;
+    border: 1px solid var(--admin-border) !important;
+    border-radius: var(--admin-radius) !important;
+    padding: 20px 24px !important;
+    margin-bottom: 24px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+}
+
+#content-main fieldset h2 {
+    background: #f8fafc !important;
+    color: #1e293b !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    padding: 12px 18px !important;
+    margin: -20px -24px 18px -24px !important;
+    border-bottom: 1px solid var(--admin-border) !important;
+    border-top-left-radius: var(--admin-radius) !important;
+    border-top-right-radius: var(--admin-radius) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    cursor: pointer;
+}
+
+#content-main fieldset.collapsed h2 {
+    margin-bottom: 0 !important;
+    border-bottom: none !important;
+}
+
+#content-main fieldset .description {
+    font-size: 0.88rem !important;
+    color: var(--admin-text-muted) !important;
+    margin-bottom: 16px !important;
+    line-height: 1.5 !important;
+    background: #f1f5f9;
+    padding: 10px 14px;
+    border-radius: 6px;
+    border-left: 3px solid var(--admin-gold);
+}
+
+/* --- 3. Hero Section 2-Column Media Grid Layout --- */
+.hero-media-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 18px;
+    margin-bottom: 18px;
+}
+
+@media (max-width: 850px) {
+    .hero-media-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.hero-col-card {
+    background: #f8fafc;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 18px;
+}
+
+.hero-col-card.desktop-col {
+    border-color: #cbd5e1;
+}
+
+.hero-col-card.mobile-col {
+    border-color: #cbd5e1;
+}
+
+.hero-col-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* --- 4. General Admin Inputs & Controls --- */
+#content-main .form-row {
+    padding: 10px 0 !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+}
+
+#content-main .form-row:last-child {
+    border-bottom: none !important;
+}
+
+#content-main label {
+    font-weight: 700 !important;
+    color: #334155 !important;
+    font-size: 0.9rem !important;
+}
+
+#content-main input[type="text"],
+#content-main input[type="url"],
+#content-main input[type="number"],
+#content-main select,
+#content-main textarea,
+.form-row select,
+fieldset select {
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 6px !important;
+    padding: 6px 12px !important;
+    font-size: 0.9rem !important;
+    box-shadow: none !important;
+    transition: border-color 0.2s ease !important;
+    box-sizing: border-box !important;
+    height: auto !important;
+    min-height: 38px !important;
+    line-height: 1.4 !important;
+    vertical-align: middle !important;
+}
+
+#content-main select,
+.form-row select,
+fieldset select {
+    height: 38px !important;
+    min-height: 38px !important;
+    line-height: 1.4 !important;
+    padding: 6px 28px 6px 12px !important;
+}
+
+#content-main input[type="text"]:focus,
+#content-main select:focus,
+#content-main textarea:focus {
+    border-color: var(--admin-gold) !important;
+    outline: none !important;
+}
+
+/* Save Submit Buttons */
+.submit-row {
+    background: #ffffff !important;
+    border: 1px solid var(--admin-border) !important;
+    border-radius: var(--admin-radius) !important;
+    padding: 16px 24px !important;
+    margin-top: 24px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+.submit-row input[type="submit"].default {
+    background: linear-gradient(135deg, #FFD700 0%, #D4AF37 100%) !important;
+    color: #000000 !important;
+    font-weight: 800 !important;
+    border: none !important;
+    padding: 10px 24px !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    box-shadow: 0 3px 10px rgba(212, 175, 55, 0.3) !important;
+}
+
+.submit-row input[type="submit"].default:hover {
+    background: linear-gradient(135deg, #FFF099 0%, #FFD700 100%) !important;
+}
+
+/* --- 5. Filter Horizontal Widget (selector) High-Contrast Redesign --- */
+.selector {
+    width: 100% !important;
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+}
+
+.selector .selector-available,
+.selector .selector-chosen {
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    background: #ffffff !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04) !important;
+}
+
+.selector .selector-available h2 {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+    color: #FFD700 !important;
+    font-weight: 800 !important;
+    font-size: 0.9rem !important;
+    padding: 10px 14px !important;
+    margin: 0 !important;
+    border-bottom: 1px solid #475569 !important;
+    letter-spacing: 0.5px !important;
+}
+
+.selector .selector-chosen h2 {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+    color: #4cd964 !important;
+    font-weight: 800 !important;
+    font-size: 0.9rem !important;
+    padding: 10px 14px !important;
+    margin: 0 !important;
+    border-bottom: 1px solid #334155 !important;
+    letter-spacing: 0.5px !important;
+}
+
+.selector .selector-available h2 p,
+.selector .selector-chosen h2 p,
+.selector h2 p.selector-filter {
+    color: #e2e8f0 !important;
+    font-size: 0.78rem !important;
+    margin-top: 4px !important;
+    font-weight: normal !important;
+    line-height: 1.3 !important;
+}
+
+.selector-filter {
+    background: #f8fafc !important;
+    padding: 8px 12px !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.selector-filter input {
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 6px !important;
+    padding: 6px 12px !important;
+    font-size: 0.88rem !important;
+    width: 100% !important;
+    background: #ffffff !important;
+}
+
+.selector select {
+    border: none !important;
+    padding: 8px !important;
+    font-size: 0.88rem !important;
+    height: 190px !important;
+    min-height: 190px !important;
+    background: #ffffff !important;
+    color: #1e293b !important;
+}
+
+.selector select option {
+    padding: 6px 10px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    color: #1e293b !important;
+}
+
+.selector select option:hover,
+.selector select option:focus {
+    background: #fef08a !important;
+    color: #000000 !important;
+}
+
+.selector-chooser {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 0 12px !important;
+}
+
+.selector-chooser li {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.selector-chooser a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 50% !important;
+    background: #ffffff !important;
+    border: 1.5px solid #cbd5e1 !important;
+    color: #334155 !important;
+    font-weight: bold !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05) !important;
+    transition: all 0.2s ease !important;
+}
+
+.selector-chooser a:hover {
+    background: var(--admin-gold) !important;
+    color: #000000 !important;
+    border-color: var(--admin-gold) !important;
+    transform: scale(1.1) !important;
+}
