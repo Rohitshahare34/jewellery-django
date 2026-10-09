@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'shop',  # Your app
+    'promotions',  # Festival & Promotion Campaign System
 ]
 
 # --- Allauth settings ---
@@ -115,6 +116,7 @@ TEMPLATES = [
                 'shop.context_processors.metal_prices_context',
                 'shop.context_processors.popup_context',
                 'shop.context_processors.wishlist_context',
+                'promotions.context_processors.promotion_context',
             ],
         },
     },
